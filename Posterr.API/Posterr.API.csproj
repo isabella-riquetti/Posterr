@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Posterr.DB\Posterr.DB.csproj" />
+    <ProjectReference Include="..\Posterr.Services\Posterr.Services.csproj" />
   </ItemGroup>
 
 </Project>

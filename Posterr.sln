@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.DB", "Posterr.DB\Po
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Posterr.Database", "Posterr.Database\Posterr.Database.sqlproj", "{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Services", "Posterr.Services\Posterr.Services.csproj", "{AF2C2831-7C65-4117-9866-F7B8588126AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

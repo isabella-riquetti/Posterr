@@ -8,6 +8,8 @@ using Microsoft.OpenApi.Models;
 using Posterr.DB;
 using System;
 using Posterr.DB.Models;
+using Posterr.Services.User;
+using Posterr.Services;
 
 namespace Posterr
 {
@@ -34,6 +36,8 @@ namespace Posterr
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Posterr", Version = "v1" });
             });
+
+            services.AddScoped<IUserService, UserService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
