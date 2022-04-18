@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32407.337
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32407.343
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.API", "Posterr.API\Posterr.API.csproj", "{C9DFAAE5-9C79-40FC-BCED-7DC06E75A706}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.DB", "Posterr.DB\Posterr.DB.csproj", "{DB65A4F4-8605-4280-BD0F-F1218433F287}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Posterr.Database", "Posterr.Database\Posterr.Database.sqlproj", "{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,12 @@ Global
 		{DB65A4F4-8605-4280-BD0F-F1218433F287}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB65A4F4-8605-4280-BD0F-F1218433F287}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB65A4F4-8605-4280-BD0F-F1218433F287}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCDCA7DC-84C1-41B2-AC48-FDF0A298D6F3}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

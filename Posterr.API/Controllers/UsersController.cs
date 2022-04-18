@@ -12,7 +12,7 @@ namespace Posterr.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/users")]
-    public class UsersController : ControllerBase
+    public class UsersController : BaseController
     {
         private readonly ApiContext _context;
         private readonly ILogger<UsersController> _logger;

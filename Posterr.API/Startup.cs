@@ -1,18 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
 using Posterr.DB;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Posterr.DB.Models;
 
 namespace Posterr
@@ -29,8 +23,11 @@ namespace Posterr
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase("Posterr"));
-            
+            //services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase("Posterr"));
+
+            services.AddDbContext<ApiContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ApiContext")));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -47,10 +44,10 @@ namespace Posterr
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Posterr v1"));
             }
-            
-            var context = serviceProvider.GetService<ApiContext>();
-            TestData(context);
-            
+
+            //var context = serviceProvider.GetService<ApiContext>();
+            //TestData(context);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -67,19 +64,19 @@ namespace Posterr
         {
             var testUser = new User
             {
-                Id = 1,
+                //Id = 1,
                 Name = "Isabella Emidio",
                 Username = "isabellaemidio"
             };
             var testUser2 = new User
             {
-                Id = 2,
+                //Id = 2,
                 Name = "Sandra Regina",
                 Username = "sandraregina"
             };
             var testUser3 = new User
             {
-                Id = 3,
+                //Id = 3,
                 Name = "Fabio Emidio",
                 Username = "fabioemidio"
             };
@@ -87,18 +84,23 @@ namespace Posterr
             context.Users.Add(testUser2);
             context.Users.Add(testUser3);
 
+            context.SaveChanges();
+
             var follow = new Follow
             {
+                //Id = 1,
                 FollowingId = testUser.Id,
                 FollowerId = testUser2.Id
             };
             var follow2 = new Follow
             {
+                //Id = 2,
                 FollowingId = testUser.Id,
                 FollowerId = testUser3.Id
             };
             var follow3 = new Follow
             {
+                //Id = 3,
                 FollowingId = testUser3.Id,
                 FollowerId = testUser.Id
             };
@@ -106,10 +108,12 @@ namespace Posterr
             context.Follows.Add(follow2);
             context.Follows.Add(follow3);
 
+
+            context.SaveChanges();
             var testPost = new Post
             {
-                Id = 1,
-                Content = "Hello Postter, I'm Isabella Emidio",
+                //Id = 1,
+                Content = "Hello Posterr, I'm Isabella Emidio",
                 CreatedAt = DateTime.Now,
                 UserId = testUser.Id
             };
