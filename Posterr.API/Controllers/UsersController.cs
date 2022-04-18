@@ -24,29 +24,38 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-
-        public async Task<IActionResult> Get()
+        [Route("{requestId}")]
+        // TODO: Move query to a separate class or repository
+        // TODO: Improve query to get only the count
+        public async Task<IActionResult> Get(string requestId)
         {
-            var users = await _context.Users
+            if (!int.TryParse(requestId, out int id) || id <= 0)
+            {
+                return BadRequest("The ID should be a number between 1 and 2147483647");
+            }           
+
+            var user = await _context.Users
+                .Where(u => u.Id == id)
                                  .Include(u => u.Posts)
                                  .Include(u => u.Followers)
                                  .Include(u => u.Following)
-                                 .ToArrayAsync();
+                                 .FirstOrDefaultAsync();
 
-            var response = users.Select(u => new
+            if (user == null)
             {
-                id = u.Id,
-                nome = u.Name,
-                username = u.Username,
-                followers = u.Followers.Count(),
-                following = u.Following.Count(),
-                posts = u.Posts.Select(p => new
-                {
-                    id = p.Id,
-                    content = p.Content,
-                    createdAt = p.CreatedAt
-                })
-            });
+                return NotFound("User not found");
+            }
+
+            var response = new
+            {
+                id = user.Id,
+                nome = user.Name,
+                createdAt = user.CreatedAt,
+                username = user.Username,
+                followers = user.Followers.Count(),
+                following = user.Following.Count(),
+                posts = user.Posts.Count()
+            };
             
             return Ok(response);
         }

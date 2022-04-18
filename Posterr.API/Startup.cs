@@ -23,6 +23,7 @@ namespace Posterr
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //In Memory
             //services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase("Posterr"));
 
             services.AddDbContext<ApiContext>(options =>
@@ -45,8 +46,9 @@ namespace Posterr
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Posterr v1"));
             }
 
-            //var context = serviceProvider.GetService<ApiContext>();
-            //TestData(context);
+            //In Memory or 1st local run
+            var context = serviceProvider.GetService<ApiContext>();
+            TestData(context);
 
             app.UseHttpsRedirection();
 
@@ -66,19 +68,22 @@ namespace Posterr
             {
                 //Id = 1,
                 Name = "Isabella Emidio",
-                Username = "isabellaemidio"
+                Username = "isabellaemidio",
+                CreatedAt = DateTime.Now,
             };
             var testUser2 = new User
             {
                 //Id = 2,
                 Name = "Sandra Regina",
-                Username = "sandraregina"
+                Username = "sandraregina",
+                CreatedAt = DateTime.Now,
             };
             var testUser3 = new User
             {
                 //Id = 3,
                 Name = "Fabio Emidio",
-                Username = "fabioemidio"
+                Username = "fabioemidio",
+                CreatedAt = DateTime.Now,
             };
             context.Users.Add(testUser);
             context.Users.Add(testUser2);
