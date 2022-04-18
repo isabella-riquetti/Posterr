@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Strider.DB.Models
+namespace Posterr.DB.Models
 {
-    internal class Post
+    public class Post
     {
         public int Id { get; set; }
         public User User { get; set; }

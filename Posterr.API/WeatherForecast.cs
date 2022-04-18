@@ -1,6 +1,6 @@
 using System;
 
-namespace Strider
+namespace Posterr
 {
     public class WeatherForecast
     {

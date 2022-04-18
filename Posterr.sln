@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.1.32407.343
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32407.337
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strider.API", "Strider\Strider.API.csproj", "{C9DFAAE5-9C79-40FC-BCED-7DC06E75A706}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.API", "Posterr.API\Posterr.API.csproj", "{C9DFAAE5-9C79-40FC-BCED-7DC06E75A706}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Strider.DB", "Strider.DB\Strider.DB.csproj", "{DB65A4F4-8605-4280-BD0F-F1218433F287}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.DB", "Posterr.DB\Posterr.DB.csproj", "{DB65A4F4-8605-4280-BD0F-F1218433F287}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
