@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Posterr.DB.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Posterr.Services.Model
@@ -11,5 +12,6 @@ namespace Posterr.Services.Model
         public int Posts { get; set; }
         public int Followers { get; set; }
         public int Following { get; set; }
+        public bool Followed { get; set; }
     }
 }

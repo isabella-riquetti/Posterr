@@ -2,7 +2,6 @@
 using Posterr.DB;
 using Posterr.Services.Model;
 using Posterr.Services.User;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,8 +16,22 @@ namespace Posterr.Services
             _context = context;
         }
         
-        public async Task<UserProfileModel> GetUserProfile(int id, int authenticatedUsedId)
+        public async Task<UserProfileModel> GetUserProfile(int id, int autheticatedUserId)
         {
+            /* Query:
+            * SELECT TOP(1) [u].[Id], CONVERT(VARCHAR(100), [u].[CreatedAt]) AS [CreatedAt], [u].[Username], (
+            *     SELECT COUNT(*)
+            *     FROM [Follows] AS [f]
+            *     WHERE [u].[Id] = [f].[FollowerId]) AS [Followers], (
+            *     SELECT COUNT(*)
+            *     FROM [Follows] AS [f0]
+            *     WHERE [u].[Id] = [f0].[FollowingId]) AS [Following], (
+            *     SELECT COUNT(*)
+            *     FROM [Posts] AS [p]
+            *     WHERE [u].[Id] = [p].[UserId]) AS [Posts]
+            * FROM [Users] AS [u]
+            * WHERE [u].[Id] = @__id_0
+            */
             var response = await _context.Users
                 .Include(u => u.Posts)
                 .Include(u => u.Followers)
@@ -27,12 +40,37 @@ namespace Posterr.Services
                 .Select(u => new UserProfileModel
                 {
                     Id = u.Id,
-                    CreatedAt = u.CreatedAt.ToShortDateString(),
+                    CreatedAt = u.CreatedAt.ToString(),
                     Username = u.Username,
                     Followers = u.Followers.Count(),
                     Following = u.Following.Count(),
-                    Posts = u.Posts.Count(),
+                    Posts = u.Posts.Count()
                 })
+                .FirstOrDefaultAsync();
+
+            response.Followed = await IsUsedFollowedByAuthenticatedUser(id, autheticatedUserId);
+
+            return response;
+        }
+
+
+        private async Task<bool> IsUsedFollowedByAuthenticatedUser(int id, int autheticatedUserId)
+        {
+            /* Query:
+            * SELECT TOP(1) CASE
+            *     WHEN EXISTS (
+            *         SELECT 1
+            *         FROM [Follows] AS [f]
+            *         WHERE ([u].[Id] = [f].[FollowingId]) AND ([f].[Id] = @__id_1)) THEN CAST(1 AS bit)
+            *     ELSE CAST(0 AS bit)
+            * END
+            * FROM [Users] AS [u]
+            * WHERE [u].[Id] = @__autheticatedUserId_0
+             */
+            var response = await _context.Users
+                .Include(u => u.Following)
+                .Where(u => u.Id == autheticatedUserId)
+                .Select(u => u.Following.Any(f => f.Id == id))
                 .FirstOrDefaultAsync();
 
             return response;

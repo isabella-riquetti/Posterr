@@ -5,6 +5,6 @@ namespace Posterr.Services.User
 {
     public interface IUserService
     {
-        public Task<UserProfileModel> GetUserProfile(int id, int authenticatedUsedId);
+        public Task<UserProfileModel> GetUserProfile(int id, int autheticatedUserId);
     }
 }
