@@ -37,8 +37,9 @@ namespace Posterr
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Posterr", Version = "v1" });
             });
 
-            services.AddScoped<IPostService, PostService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IFollowService, FollowService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

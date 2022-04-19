@@ -1,23 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Posterr.DB;
+﻿using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Services.Model;
 using Posterr.Services.User;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Posterr.Services
 {
-    public class UserService : IUserService
+    public class FollowService : IFollowService
     {
         private readonly ApiContext _context;
-        private readonly IPostService _postService;
 
-        public UserService(ApiContext context, IPostService postService)
+        public FollowService(ApiContext context)
         {
             _context = context;
-            _postService = postService;
         }
 
         public BaseResponse<string> FollowUser(int id, int authenticatedUserId)
@@ -30,14 +25,24 @@ namespace Posterr.Services
             if (follow != null)
             {
                 /* Query:
-                */
+                 * SET NOCOUNT ON;
+                 * UPDATE [Follows] SET [FollowerId] = @p0, [FollowingId] = @p1, [Unfollowed] = @p2
+                 * WHERE [Id] = @p3;
+                 * SELECT @@ROWCOUNT;
+                 */
                 follow.Unfollowed = false;
                 _context.Follows.Update(follow);
             }
             else
             {
                 /* Query:
-                */
+                 * SET NOCOUNT ON;
+                 * INSERT INTO [Follows] ([FollowerId], [FollowingId], [Unfollowed])
+                 * VALUES (@p0, @p1, @p2);
+                 * SELECT [Id]
+                 * FROM [Follows]
+                 * WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+                 */
                 Follow newFollow = new Follow()
                 {
                     FollowerId = authenticatedUserId,
@@ -58,8 +63,11 @@ namespace Posterr.Services
                 return BaseResponse<string>.CreateFailure("You don't follow this user");
             }
 
-            /* Query:
-            */
+            /*
+             * UPDATE [Follows] SET [FollowerId] = @p0, [FollowingId] = @p1, [Unfollowed] = @p2
+             * WHERE [Id] = @p3;
+             * SELECT @@ROWCOUNT;
+             */            
             follow.Unfollowed = true;
             _context.Follows.Update(follow);
             _context.SaveChanges();
@@ -67,42 +75,7 @@ namespace Posterr.Services
             return BaseResponse<string>.CreateSuccess("You unfollowed this user");
         }
 
-        public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int id, int autheticatedUserId)
-        {
-            /* Query:
-            */
-            var response = await _context.Users
-                .Where(u => u.Id == id)
-                .Select(u => new UserProfileModel
-                {
-                    Id = u.Id,
-                    CreatedAt = u.CreatedAt.ToString("MMMM dd, yyyy"),
-                    Username = u.Username,
-                    Followers = u.Following.Count(f => f.Unfollowed == false),
-                    Following = u.Followers.Count(f => f.Unfollowed == false),
-                    Posts = u.Posts.Count()
-                })
-                .FirstOrDefaultAsync();
-
-            if(response == null)
-            {
-                return BaseResponse<UserProfileModel>.CreateFailure("User not found");
-            }
-
-            BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(id);
-            if (!postsResponse.Success)
-            {
-                return BaseResponse<UserProfileModel>.CreateFailure(postsResponse.Message);
-            }
-            
-            response.TopPosts = postsResponse.Data;
-            response.Followed = IsUserFollowedByAuthenticatedUser(autheticatedUserId, id);
-
-            return BaseResponse<UserProfileModel>.CreateSuccess(response);
-        }
-
-
-        private bool IsUserFollowedByAuthenticatedUser(int follower, int following)
+        public bool IsUserFollowedByAuthenticatedUser(int follower, int following)
         {
             /* Query:
              */
@@ -115,6 +88,9 @@ namespace Posterr.Services
         private bool IsUserFollowedByAuthenticatedUser(int follower, int following, out Follow follow)
         {
             /* Query:
+             * SELECT TOP(1) [f].[Id], [f].[FollowerId], [f].[FollowingId], [f].[Unfollowed]
+             * FROM [Follows] AS [f]
+             * WHERE ([f].[FollowerId] = @__follower_0) AND ([f].[FollowingId] = @__following_
              */
             follow = _context.Follows
                 .FirstOrDefault(u => u.FollowerId == follower && u.FollowingId == following);

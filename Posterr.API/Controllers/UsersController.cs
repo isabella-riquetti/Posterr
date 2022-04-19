@@ -13,12 +13,14 @@ namespace Posterr.Controllers
     public class UsersController : BaseController
     {
         private readonly IUserService _userService;
+        private readonly IFollowService _followService;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, IFollowService followService, ILogger<UsersController> logger)
         {
             _logger = logger;
             _userService = userService;
+            _followService = followService;
         }
 
         [HttpGet]
@@ -49,7 +51,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
             
-            BaseResponse<string> response = _userService.FollowUser(id, AuthenticatedUserId);
+            BaseResponse<string> response = _followService.FollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
@@ -67,7 +69,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
             
-            BaseResponse<string> response = _userService.UnfollowUser(id, AuthenticatedUserId);
+            BaseResponse<string> response = _followService.UnfollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
