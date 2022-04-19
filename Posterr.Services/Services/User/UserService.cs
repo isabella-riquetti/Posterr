@@ -73,10 +73,17 @@ namespace Posterr.Services
         {
             throw new NotImplementedException();
         }
-                
-        public BaseResponse IsValidUser(int id)
+
+        public BaseResponse UserExist(int id)
         {
             /* Query:
+             * SELECT CASE
+             *     WHEN EXISTS (
+             *         SELECT 1
+             *         FROM [Users] AS [u]
+             *         WHERE [u].[Id] = @__id_0) THEN CAST(1 AS bit)
+             *     ELSE CAST(0 AS bit)
+             * END
              */
             bool response = _context.Users
                 .Any(u => u.Id == id);

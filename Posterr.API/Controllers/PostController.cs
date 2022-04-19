@@ -14,19 +14,19 @@ namespace Posterr.Controllers
     public class PostController : BaseController
     {
         private readonly IPostService _postService;
-        private readonly ILogger<PostController> _logger;
+        private readonly IUserService _userService;
 
-        public PostController(IPostService postService, ILogger<PostController> logger)
+        public PostController(IPostService postService, IUserService userService)
         {
-            _logger = logger;
             _postService = postService;
+            _userService = userService;
         }
 
         [HttpGet]
         [Route("byUser/{userId}/{skip?}")]
         public async Task<IActionResult> Get(int userId, int? skip)
         {
-            if(!ValidationHelper.IsValidUserId(userId, out string errorMessage)
+            if (!ValidationHelper.IsValidUser(userId, _userService.UserExist, out string errorMessage)
                 || !ValidationHelper.IsSkipPossible(skip, out errorMessage))
             {
                 return BadRequest(errorMessage);

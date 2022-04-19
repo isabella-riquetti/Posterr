@@ -27,11 +27,11 @@ namespace Posterr.Controllers
         [Route("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
-            
+
             BaseResponse<UserProfileModel> response = await _userService.GetUserProfile(id, AuthenticatedUserId);
 
             if(!response.Success)
@@ -46,11 +46,11 @@ namespace Posterr.Controllers
         [Route("follow/{id}")]
         public IActionResult Follow(int id)
         {
-            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
-            
+
             BaseResponse response = _followService.FollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {
@@ -64,11 +64,11 @@ namespace Posterr.Controllers
         [Route("unfollow/{id}")]
         public IActionResult Unfollow(int id)
         {
-            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
-            
+
             BaseResponse response = _followService.UnfollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {

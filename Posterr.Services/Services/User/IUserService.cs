@@ -6,6 +6,6 @@ namespace Posterr.Services.User
     public interface IUserService
     {
         public Task<BaseResponse<UserProfileModel>> GetUserProfile(int id, int autheticatedUserId);
-        BaseResponse IsValidUser(int id);
+        BaseResponse UserExist(int id);
     }
 }

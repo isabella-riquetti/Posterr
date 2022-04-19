@@ -16,10 +16,12 @@ namespace Posterr.Tests
         public async void GetUserPostsTest(GetUserPostsTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
-            
+            var userServiceSubstitute = Substitute.For<IUserService>();
+
+            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             postServiceSubstitute.GetUserPosts(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetUserPostsResponse);
 
-            var controller = new PostController(postServiceSubstitute, null);
+            var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
             IActionResult response = await controller.Get(test.UserId, test.Skip);
 
             if(!test.ExpectSuccess)
@@ -54,10 +56,20 @@ namespace Posterr.Tests
             },
             new GetUserPostsTestInput()
             {
+                TestName = "Fail, user does not exist",
+                ExpectSuccess = false,
+                UserId = 10,
+                Skip = 0,
+                UserExistExpectedResponse = BaseResponse.CreateError("User not found"),
+                ExpectedErrorMessage = "User not found"
+            },
+            new GetUserPostsTestInput()
+            {
                 TestName = "Fail, invalid skip",
                 ExpectSuccess = false,
                 UserId = 1,
                 Skip = -5,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "Cannot skip negative number of records"
             },
             new GetUserPostsTestInput()
@@ -66,6 +78,7 @@ namespace Posterr.Tests
                 ExpectSuccess = false,
                 UserId = 1,
                 Skip = 0,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateError("Error"),
                 ExpectedErrorMessage = "Error"
             },
@@ -75,6 +88,7 @@ namespace Posterr.Tests
                 ExpectSuccess = true,
                 UserId = 1,
                 Skip = 0,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()),
             },
             new GetUserPostsTestInput()
@@ -83,6 +97,7 @@ namespace Posterr.Tests
                 ExpectSuccess = true,
                 UserId = 1,
                 Skip = 0,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()
                 {
                     new PostResponseModel(new PostModel()
@@ -104,6 +119,7 @@ namespace Posterr.Tests
             public int? Skip { get; set; }
             public BaseResponse<IList<PostResponseModel>> GetUserPostsResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
+            public BaseResponse UserExistExpectedResponse { get; set; }
         }
         #endregion [Route("byUser/{userId}/{skip?}")]
     }

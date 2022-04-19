@@ -1,4 +1,7 @@
-﻿namespace Posterr.Services.Helpers
+﻿using Posterr.Services.Model;
+using System;
+
+namespace Posterr.Services.Helpers
 {
     public class ValidationHelper
     {
@@ -13,7 +16,24 @@
             errorMessage = null;
             return true;
         }
-        
+
+        public static bool IsValidUser(int id, Func<int, BaseResponse> userExist, out string errorMessage)
+        {
+            if (!IsValidUserId(id, out errorMessage))
+            {
+                return false;
+            }
+            BaseResponse responseUserExist = userExist(id);
+            if (!responseUserExist.Success)
+            {
+                errorMessage = responseUserExist.Message;
+                return false;
+            }
+
+            errorMessage = null;
+            return true;
+        }
+
         public static bool IsSkipPossible(int? skip, out string errorMessage)
         {
             if (skip < 0)

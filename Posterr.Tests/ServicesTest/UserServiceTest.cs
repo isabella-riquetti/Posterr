@@ -416,7 +416,7 @@ namespace Posterr.Tests.ServicesTest
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
             var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
-            BaseResponse response = service.IsValidUser(test.UserId);
+            BaseResponse response = service.UserExist(test.UserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }

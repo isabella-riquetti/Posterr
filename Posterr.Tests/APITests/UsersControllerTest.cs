@@ -18,6 +18,7 @@ namespace Posterr.Tests
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
+            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             userServiceSubstitute.GetUserProfile(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UserProfileResponse);
 
             var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
@@ -54,9 +55,18 @@ namespace Posterr.Tests
             },
             new GetProfileTestInput()
             {
+                TestName = "Fail, user does not exist",
+                ExpectSuccess = false,
+                UserId = 10,
+                UserExistExpectedResponse = BaseResponse.CreateError("User not found"),
+                ExpectedErrorMessage = "User not found"
+            },
+            new GetProfileTestInput()
+            {
                 TestName = "Fail at getting user",
                 ExpectSuccess = false,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "User not found",
                 UserProfileResponse = BaseResponse<UserProfileModel>.CreateError("User not found")
             },
@@ -65,6 +75,7 @@ namespace Posterr.Tests
                 TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 UserProfileResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
                     Id = 1,
@@ -85,6 +96,7 @@ namespace Posterr.Tests
             public int UserId { get; set; }
             public BaseResponse<UserProfileModel> UserProfileResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
+            public BaseResponse UserExistExpectedResponse { get; internal set; }
         }
         #endregion [Route("{id}")]
 
@@ -95,6 +107,7 @@ namespace Posterr.Tests
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
+            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             followServiceSubstitute.FollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.FollowResponse);
 
             var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
@@ -131,9 +144,18 @@ namespace Posterr.Tests
             },
             new FollowTestInput()
             {
+                TestName = "Fail, user does not exist",
+                ExpectSuccess = false,
+                UserId = 10,
+                UserExistExpectedResponse = BaseResponse.CreateError("User not found"),
+                ExpectedErrorMessage = "User not found"
+            },
+            new FollowTestInput()
+            {
                 TestName = "Fail at following",
                 ExpectSuccess = false,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "User is already followed by you",
                 FollowResponse = BaseResponse.CreateError("User is already followed by you")
             },
@@ -142,6 +164,7 @@ namespace Posterr.Tests
                 TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 FollowResponse = BaseResponse.CreateSuccess("You now follow this user")
             },
         };
@@ -152,6 +175,7 @@ namespace Posterr.Tests
             public int UserId { get; set; }
             public BaseResponse FollowResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
+            public BaseResponse UserExistExpectedResponse { get; set; }
         }
         #endregion [Route("follow/{id}")]
 
@@ -161,7 +185,8 @@ namespace Posterr.Tests
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
-            
+
+            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             followServiceSubstitute.UnfollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UnfollowResponse);
 
             var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
@@ -198,9 +223,18 @@ namespace Posterr.Tests
             },
             new UnfollowTestInput()
             {
+                TestName = "Fail, user does not exist",
+                ExpectSuccess = false,
+                UserId = 10,
+                UserExistExpectedResponse = BaseResponse.CreateError("User not found"),
+                ExpectedErrorMessage = "User not found"
+            },
+            new UnfollowTestInput()
+            {
                 TestName = "Fail at unfollowing",
                 ExpectSuccess = false,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "You don't follow this user",
                 UnfollowResponse = BaseResponse.CreateError("You don't follow this user")
             },
@@ -209,6 +243,7 @@ namespace Posterr.Tests
                 TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 UnfollowResponse = BaseResponse.CreateSuccess("You unfollowed this user")
             },
         };
@@ -219,6 +254,7 @@ namespace Posterr.Tests
             public int UserId { get; set; }
             public BaseResponse UnfollowResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
+            public BaseResponse UserExistExpectedResponse { get; set; }
         }
         #endregion [Route("unfollow/{id}")]
     }
