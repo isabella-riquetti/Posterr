@@ -11,6 +11,8 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Posterr.Database", "Posterr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Services", "Posterr.Services\Posterr.Services.csproj", "{AF2C2831-7C65-4117-9866-F7B8588126AD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Tests", "Posterr.Tests\Posterr.Tests.csproj", "{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF2C2831-7C65-4117-9866-F7B8588126AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
