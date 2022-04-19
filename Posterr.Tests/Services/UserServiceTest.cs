@@ -10,7 +10,7 @@ using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
 
-namespace Posterr.Tests.ServicesTest
+namespace Posterr.Tests.Services
 {
     public class UserServiceTest
     {
@@ -23,7 +23,7 @@ namespace Posterr.Tests.ServicesTest
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
             postServiceSubstitute.GetUserPosts(Arg.Any<int>()).Returns(test.GetUserPostsResponse);
-            followServiceSubstitute.IsUserFollowedByAuthenticatedUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
+            followServiceSubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
 
             var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
             BaseResponse<UserProfileModel> response = await service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
@@ -79,7 +79,7 @@ namespace Posterr.Tests.ServicesTest
                 TestName = "Success, follow someone",
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
-                    Id = 1,
+                    UserId = 1,
                     CreatedAt = "April 19, 2022",
                     Username = "Test1",
                     Followers = 0,
@@ -123,7 +123,7 @@ namespace Posterr.Tests.ServicesTest
                 TestName = "Success, is followed by someone",
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
-                    Id = 1,
+                    UserId = 1,
                     CreatedAt = "April 19, 2022",
                     Username = "Test1",
                     Followers = 1,
@@ -167,7 +167,7 @@ namespace Posterr.Tests.ServicesTest
                 TestName = "Success, is followed by the authenticated user",
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
-                    Id = 1,
+                    UserId = 1,
                     CreatedAt = "April 19, 2022",
                     Username = "Test1",
                     Followers = 1,
@@ -212,7 +212,7 @@ namespace Posterr.Tests.ServicesTest
                 TestName = "Success, has post, repost and quote post and over 5 posts",
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
-                    Id = 1,
+                    UserId = 1,
                     CreatedAt = "April 19, 2022",
                     Username = "Test1",
                     Followers = 0,
@@ -222,7 +222,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 6,
+                            PostId = 6,
                             Username = "Test1",
                             Content = "Hi again",
                             CreatedAt = new DateTime(2022,4,19, 0, 5, 0).ToString(),
@@ -231,7 +231,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 5,
+                            PostId = 5,
                             Username = "Test1",
                             Content = "Hi",
                             CreatedAt = new DateTime(2022,4,19, 0, 4, 0).ToString(),
@@ -240,7 +240,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 4,
+                            PostId = 4,
                             Username = "Test1",
                             Content = "Hello you too!",
                             CreatedAt = new DateTime(2022,4,19, 0, 3, 0).ToString(),
@@ -248,7 +248,7 @@ namespace Posterr.Tests.ServicesTest
                             IsRequote = true,
                             Quoted = new QuotedModel()
                             {
-                                Id = 1,
+                                PostId = 1,
                                 Username = "Test2",
                                 Content = "Hello",
                                 CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString()
@@ -256,14 +256,14 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Username = "Test2",
                             Content = "Hello",
                             CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString(),
                             IsRepost = true,
                             Repost = new RepostedModel()
                             {
-                                Id = 3,
+                                PostId = 3,
                                 CreatedAt = new DateTime(2022,4,19, 0, 2, 0).ToString(),
                                 Username = "Test1"
                             },
@@ -271,7 +271,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Username = "Test1",
                             Content = "Hello Everyone",
                             CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString(),
@@ -286,52 +286,52 @@ namespace Posterr.Tests.ServicesTest
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
                     .CreateSuccess(new List<PostResponseModel>()
                     {
-                        new PostResponseModel(new PostModel()
+                        new PostResponseModel(new PostsModel()
                         {
-                            Id = 6,
+                            PostId = 6,
                             Username = "Test1",
                             Content = "Hi again",
                             CreatedAt = new DateTime(2022,4,19, 0, 5, 0).ToString(),
                             OriginalPost = null
                         }),
-                        new PostResponseModel(new PostModel()
+                        new PostResponseModel(new PostsModel()
                         {
-                            Id = 5,
+                            PostId = 5,
                             Username = "Test1",
                             Content = "Hi",
                             CreatedAt = new DateTime(2022,4,19, 0, 4, 0).ToString(),
                             OriginalPost = null
                         }),
-                        new PostResponseModel(new PostModel()
+                        new PostResponseModel(new PostsModel()
                         {
-                            Id = 4,
+                            PostId = 4,
                             Username = "Test1",
                             Content = "Hello you too!",
                             CreatedAt = new DateTime(2022,4,19, 0, 3, 0).ToString(),
-                            OriginalPost = new PostModel()
+                            OriginalPost = new PostsModel()
                             {
-                                Id = 1,
+                                PostId = 1,
                                 Username = "Test2",
                                 Content = "Hello",
                                 CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString()
                             }
                         }),
-                        new PostResponseModel(new PostModel()
+                        new PostResponseModel(new PostsModel()
                         {
-                            Id = 3,
+                            PostId = 3,
                             Username = "Test1",
                             CreatedAt = new DateTime(2022,4,19, 0, 2, 0).ToString(),
-                            OriginalPost = new PostModel()
+                            OriginalPost = new PostsModel()
                             {
-                                Id = 1,
+                                PostId = 1,
                                 Username = "Test2",
                                 Content = "Hello",
                                 CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString()
                             }
                         }),
-                        new PostResponseModel(new PostModel()
+                        new PostResponseModel(new PostsModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Username = "Test1",
                             Content = "Hello Everyone",
                             CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString(),
@@ -416,7 +416,7 @@ namespace Posterr.Tests.ServicesTest
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
             var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
-            BaseResponse response = service.UserExist(test.UserId);
+            BaseResponse response = service.UserExists(test.UserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }

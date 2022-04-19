@@ -23,7 +23,7 @@ namespace Posterr.Services
             _followService = followService;
         }
 
-        public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int id, int autheticatedUserId)
+        public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId)
         {
             /* Query:
              * SELECT TOP(1) [u].[Id], [u].[CreatedAt], [u].[Username], (
@@ -40,10 +40,10 @@ namespace Posterr.Services
              * WHERE [u].[Id] = @__id_0
             */
             var response = await _context.Users
-                .Where(u => u.Id == id)
+                .Where(u => u.Id == userId)
                 .Select(u => new UserProfileModel
                 {
-                    Id = u.Id,
+                    UserId = u.Id,
                     CreatedAt = u.CreatedAt.ToString("MMMM dd, yyyy"),
                     Username = u.Username,
                     Followers = u.Following.Count(f => f.Unfollowed == false),
@@ -57,19 +57,19 @@ namespace Posterr.Services
                 return BaseResponse<UserProfileModel>.CreateError("User not found");
             }
 
-            BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(id);
+            BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(userId);
             if (!postsResponse.Success)
             {
                 return BaseResponse<UserProfileModel>.CreateError(postsResponse.Message);
             }
             
             response.TopPosts = postsResponse.Data;
-            response.Followed = _followService.IsUserFollowedByAuthenticatedUser(autheticatedUserId, id);
+            response.Followed = _followService.IsUserFollowedBy(autheticatedUserId, userId);
 
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }
 
-        public BaseResponse UserExist(int id)
+        public BaseResponse UserExists(int id)
         {
             /* Query:
              * SELECT CASE

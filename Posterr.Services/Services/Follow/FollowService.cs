@@ -17,11 +17,12 @@ namespace Posterr.Services
 
         public BaseResponse FollowUser(int id, int authenticatedUserId)
         {
-            if (IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
+            if (IsUserFollowedBy(authenticatedUserId, id, out Follow follow))
             {
                 return BaseResponse.CreateError("User is already followed by you");
             }
 
+            // Case we don't have a follow yet, we should create one
             if (follow != null)
             {
                 /* Query:
@@ -33,6 +34,7 @@ namespace Posterr.Services
                 follow.Unfollowed = false;
                 _context.Follows.Update(follow);
             }
+            // Case we already have a followed with the Unfollowed true, we should change it to false
             else
             {
                 /* Query:
@@ -53,12 +55,12 @@ namespace Posterr.Services
             }
             _context.SaveChanges();
 
-            return BaseResponse.CreateSuccess("You now follow this user");
+            return BaseResponse.CreateSuccess();
         }
 
         public BaseResponse UnfollowUser(int id, int authenticatedUserId)
         {
-            if (!IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
+            if (!IsUserFollowedBy(authenticatedUserId, id, out Follow follow))
             {
                 return BaseResponse.CreateError("You don't follow this user");
             }
@@ -72,20 +74,27 @@ namespace Posterr.Services
             _context.Follows.Update(follow);
             _context.SaveChanges();
 
-            return BaseResponse.CreateSuccess("You unfollowed this user");
+            return BaseResponse.CreateSuccess();
         }
 
-        public bool IsUserFollowedByAuthenticatedUser(int follower, int following)
+        public bool IsUserFollowedBy(int followerUserId, int followingUserId)
         {
             /* Query:
              */
             bool response = _context.Follows
-                .Any(u => u.FollowerId == follower && u.FollowingId == following && u.Unfollowed == false);
+                .Any(u => u.FollowerId == followerUserId && u.FollowingId == followingUserId && u.Unfollowed == false);
 
             return response;
         }
 
-        private bool IsUserFollowedByAuthenticatedUser(int follower, int following, out Follow follow)
+        /// <summary>
+        /// Check if the FollowerUserId follows the FollowingUserId and return the Follow DB object in case it is followed
+        /// </summary>
+        /// <param name="followerUserId">The user ID that we test if it's following</param>
+        /// <param name="followingUserId">The user ID that we test if it's followed</param>
+        /// <param name="follow">The Follow object from the DB</param>
+        /// <returns>If the FollowerUserId follows the FollowingUserId</returns>
+        private bool IsUserFollowedBy(int followerUserId, int followingUserId, out Follow follow)
         {
             /* Query:
              * SELECT TOP(1) [f].[Id], [f].[FollowerId], [f].[FollowingId], [f].[Unfollowed]
@@ -93,7 +102,7 @@ namespace Posterr.Services
              * WHERE ([f].[FollowerId] = @__follower_0) AND ([f].[FollowingId] = @__following_
              */
             follow = _context.Follows
-                .FirstOrDefault(u => u.FollowerId == follower && u.FollowingId == following);
+                .FirstOrDefault(u => u.FollowerId == followerUserId && u.FollowingId == followingUserId);
 
             return follow != null && follow.Unfollowed == false;
         }

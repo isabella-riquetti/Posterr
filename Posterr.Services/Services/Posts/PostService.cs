@@ -17,7 +17,7 @@ namespace Posterr.Services
             _context = context;
         }
 
-        public async Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int id, int skip = 0, int limit = 5)
+        public async Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5)
         {            
             /* Query:
              * SELECT [t].[Id]
@@ -51,19 +51,19 @@ namespace Posterr.Services
              */
             var response = await _context.Posts
                 .Include(p => p.OriginalPost)
-                .Where(p => p.UserId == id)
+                .Where(p => p.UserId == userId)
                 .OrderByDescending(p => p.CreatedAt)
-                .Skip(skip * limit)
-                .Take(limit)
-                .Select(p => new PostModel
+                .Skip(skipPages * pageSize)
+                .Take(pageSize)
+                .Select(p => new PostsModel
                 {
-                    Id = p.Id,
+                    PostId = p.Id,
                     Content = p.Content,
                     CreatedAt = p.CreatedAt.ToString(),
                     Username = p.User.Username,
-                    OriginalPost = p.OriginalPost != null ? new PostModel
+                    OriginalPost = p.OriginalPost != null ? new PostsModel
                     {
-                        Id = p.OriginalPost.Id,
+                        PostId = p.OriginalPost.Id,
                         Username = p.OriginalPost.User.Username,
                         Content = p.OriginalPost.Content,
                         CreatedAt = p.OriginalPost.CreatedAt.ToString()

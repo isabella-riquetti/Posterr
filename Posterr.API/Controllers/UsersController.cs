@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
@@ -14,68 +13,66 @@ namespace Posterr.Controllers
     {
         private readonly IUserService _userService;
         private readonly IFollowService _followService;
-        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, IFollowService followService, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, IFollowService followService)
         {
-            _logger = logger;
             _userService = userService;
             _followService = followService;
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [Route("{userId}")]
+        public async Task<IActionResult> GetUserProfile(int userId)
         {
-            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<UserProfileModel> response = await _userService.GetUserProfile(id, AuthenticatedUserId);
+            BaseResponse<UserProfileModel> userProfileResponse = await _userService.GetUserProfile(userId, AuthenticatedUserId);
 
-            if(!response.Success)
+            if(!userProfileResponse.Success)
             {
-                return BadRequest(response.Message);
+                return BadRequest(userProfileResponse.Message);
             }
 
-            return Ok(response.Data);
+            return Ok(userProfileResponse.Data);
         }
 
         [HttpGet]
-        [Route("follow/{id}")]
-        public IActionResult Follow(int id)
+        [Route("follow/{userId}")]
+        public IActionResult Follow(int userId)
         {
-            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse response = _followService.FollowUser(id, AuthenticatedUserId);
-            if (!response.Success)
+            BaseResponse followUserResponse = _followService.FollowUser(userId, AuthenticatedUserId);
+            if (!followUserResponse.Success)
             {
-                return BadRequest(response.Message);
+                return BadRequest(followUserResponse.Message);
             }
 
-            return Ok(response.Message);
+            return Ok();
         }
 
         [HttpGet]
-        [Route("unfollow/{id}")]
-        public IActionResult Unfollow(int id)
+        [Route("unfollow/{userId}")]
+        public IActionResult UnfollowUser(int userId)
         {
-            if (!ValidationHelper.IsValidUser(id, _userService.UserExist, out string errorMessage))
+            if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse response = _followService.UnfollowUser(id, AuthenticatedUserId);
-            if (!response.Success)
+            BaseResponse unfollowUserResponse = _followService.UnfollowUser(userId, AuthenticatedUserId);
+            if (!unfollowUserResponse.Success)
             {
-                return BadRequest(response.Message);
+                return BadRequest(unfollowUserResponse.Message);
             }
 
-            return Ok(response.Message);
+            return Ok();
         }
     }
 }

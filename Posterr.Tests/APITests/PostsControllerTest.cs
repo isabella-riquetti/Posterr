@@ -7,22 +7,22 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Posterr.Tests
+namespace Posterr.Tests.Controllers
 {
     public class PostsControllerTest
     {
-        #region [Route("byUser/{userId}/{skip?}")]
+        #region [Route("byUser/{userId}/{skipPages?}")]
         [Theory, MemberData(nameof(GetUserPostsTests))]
         public async void GetUserPostsTest(GetUserPostsTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
 
-            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
+            userServiceSubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             postServiceSubstitute.GetUserPosts(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetUserPostsResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.Get(test.UserId, test.Skip);
+            IActionResult response = await controller.GetUserPosts(test.UserId, test.Skip);
 
             if(!test.ExpectSuccess)
             {
@@ -100,9 +100,9 @@ namespace Posterr.Tests
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()
                 {
-                    new PostResponseModel(new PostModel()
+                    new PostResponseModel(new PostsModel()
                     {
-                        Id = 1,
+                        PostId = 1,
                         Username = "test",
                         Content = "test",
                         CreatedAt = DateTime.Now.ToString(),
@@ -121,6 +121,6 @@ namespace Posterr.Tests
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("byUser/{userId}/{skip?}")]
+        #endregion [Route("byUser/{userId}/{skipPages?}")]
     }
 }

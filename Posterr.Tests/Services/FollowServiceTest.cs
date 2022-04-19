@@ -1,16 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NSubstitute;
-using Posterr.DB;
+﻿using Posterr.DB;
 using Posterr.Services;
 using Posterr.Services.Model;
-using Posterr.Services.User;
 using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
 
-namespace Posterr.Tests.ServicesTest
+namespace Posterr.Tests.Services
 {
     public class FollowServiceTest
     {
@@ -90,7 +87,7 @@ namespace Posterr.Tests.ServicesTest
                         CreatedAt = DateTime.Now
                     }
                 },
-                ExpectedResponse = BaseResponse.CreateSuccess("You now follow this user")
+                ExpectedResponse = BaseResponse.CreateSuccess()
             },
             new FollowUserTestInput()
             {
@@ -123,7 +120,7 @@ namespace Posterr.Tests.ServicesTest
                         Unfollowed = true
                     }
                 },
-                ExpectedResponse = BaseResponse.CreateSuccess("You now follow this user")
+                ExpectedResponse = BaseResponse.CreateSuccess()
             }
         };
         public class FollowUserTestInput : DatatbaseTestInput
@@ -247,7 +244,7 @@ namespace Posterr.Tests.ServicesTest
                         Unfollowed = false
                     }
                 },
-                ExpectedResponse = BaseResponse.CreateSuccess("You unfollowed this user")
+                ExpectedResponse = BaseResponse.CreateSuccess()
             },
         };
         public class UnfollowUserTestInput : DatatbaseTestInput

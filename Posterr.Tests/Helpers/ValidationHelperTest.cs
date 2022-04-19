@@ -15,7 +15,7 @@ namespace Posterr.Tests.Helpers
         [Theory, MemberData(nameof(IsSkipPossibleTests))]
         public void IsSkipPossibleTest(IsSkipPossibleTestInput test)
         {
-            bool response = ValidationHelper.IsSkipPossible(test.Skip, out string errorMessage);
+            bool response = ValidationHelper.IsSkipPagePossible(test.Skip, out string errorMessage);
 
             Assert.Equal(test.ExpectedResponse, response);
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
@@ -100,11 +100,11 @@ namespace Posterr.Tests.Helpers
         }
         #endregion IsValidUserId
 
-        #region IsValidUserId
+        #region IsValidUser
         [Theory, MemberData(nameof(IsValidUserTests))]
         public void IsValidUserTest(IsValidUserTestInput test)
         {
-            bool response = ValidationHelper.IsValidUserId(test.UserId, out string errorMessage);
+            bool response = ValidationHelper.IsValidUser(test.UserId, test.ExpectedUserExistsFuncWithResponse, out string errorMessage);
 
             Assert.Equal(test.ExpectedResponse, response);
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
@@ -131,14 +131,14 @@ namespace Posterr.Tests.Helpers
                 TestName = "Fail, user does not exist",
                 UserId = 0,
                 ExpectedResponse = false,
-                UserExistFunc = (id) => BaseResponse.CreateError("User does not exist"),
+                ExpectedUserExistsFuncWithResponse = (id) => BaseResponse.CreateError("User does not exist"),
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new IsValidUserTestInput()
             {
                 TestName = "Success, positive ID",
                 UserId = 7,
-                UserExistFunc = (id) => BaseResponse.CreateSuccess(),
+                ExpectedUserExistsFuncWithResponse = (id) => BaseResponse.CreateSuccess(),
                 ExpectedResponse = true
             },
         };
@@ -146,7 +146,7 @@ namespace Posterr.Tests.Helpers
         {
             public string TestName { get; set; }
             public int UserId { get; set; }
-            public Func<int, BaseResponse> UserExistFunc { get; set; }
+            public Func<int, BaseResponse> ExpectedUserExistsFuncWithResponse { get; set; }
             public bool ExpectedResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }

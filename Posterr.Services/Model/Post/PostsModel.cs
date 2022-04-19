@@ -1,12 +1,15 @@
 ﻿namespace Posterr.Services.Model
 {
-    public class PostModel
+    /// <summary>
+    /// Database friendly return format, should return only the essential data
+    /// </summary>
+    public class PostsModel
     {
-        public int Id { get; set; }
+        public int PostId { get; set; }
         public string Username { get; set; }
         public string Content { get; set; }
         public string CreatedAt { get; set; }
-        public PostModel OriginalPost { get; set; }
+        public PostsModel OriginalPost { get; set; }
     }
 
     /// <summary>
@@ -21,26 +24,26 @@
         {
             
         }
-        public PostResponseModel(PostModel postModel)
+        public PostResponseModel(PostsModel postModel)
         {
             this.IsRequote = postModel.OriginalPost != null && postModel.Content != null;
             this.IsRepost = postModel.OriginalPost != null && postModel.Content == null;
             if (this.IsRepost)
             {
-                this.Id = postModel.OriginalPost.Id;
+                this.PostId = postModel.OriginalPost.PostId;
                 this.Content = postModel.OriginalPost.Content;
                 this.Username = postModel.OriginalPost.Username;
                 this.CreatedAt = postModel.OriginalPost.CreatedAt;
                 this.Repost = new RepostedModel()
                 {
-                    Id = postModel.Id,
+                    PostId = postModel.PostId,
                     Username = postModel.Username,
                     CreatedAt = postModel.CreatedAt
                 };
             }
             else
             {
-                this.Id = postModel.Id;
+                this.PostId = postModel.PostId;
                 this.Content = postModel.Content;
                 this.Username = postModel.Username;
                 this.CreatedAt = postModel.CreatedAt;
@@ -49,7 +52,7 @@
                 {
                     this.Quoted = new QuotedModel()
                     {
-                        Id = postModel.OriginalPost.Id,
+                        PostId = postModel.OriginalPost.PostId,
                         Username = postModel.OriginalPost.Username,
                         Content = postModel.OriginalPost.Content,
                         CreatedAt = postModel.OriginalPost.CreatedAt
@@ -58,7 +61,7 @@
             }            
         }
         
-        public int Id { get; set; }
+        public int PostId { get; set; }
         public string Username { get; set; }
         public string CreatedAt { get; set; }
         public string Content { get; set; }
@@ -73,7 +76,7 @@
 
     public class RepostedModel
     {
-        public int Id { get; set; }
+        public int PostId { get; set; }
         public string Username { get; set; }
         public string CreatedAt { get; set; }
     }

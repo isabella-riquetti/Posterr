@@ -7,22 +7,22 @@ using System;
 using System.Collections.Generic;
 using Xunit;
 
-namespace Posterr.Tests
+namespace Posterr.Tests.Controllers
 {
     public class UsersControllerTest
     {
-        #region [Route("{id}")]
+        #region [Route("{userId}")]
         [Theory, MemberData(nameof(GetProfileTests))]
         public async void GetProfileTest(GetProfileTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
-            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
+            userServiceSubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             userServiceSubstitute.GetUserProfile(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UserProfileResponse);
 
-            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
-            IActionResult response = await controller.Get(test.UserId);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
+            IActionResult response = await controller.GetUserProfile(test.UserId);
 
             if(!test.ExpectSuccess)
             {
@@ -78,7 +78,7 @@ namespace Posterr.Tests
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 UserProfileResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
-                    Id = 1,
+                    UserId = 1,
                     CreatedAt = DateTime.Now.ToString(),
                     Followed = true,
                     Followers = 1,
@@ -98,19 +98,19 @@ namespace Posterr.Tests
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; internal set; }
         }
-        #endregion [Route("{id}")]
+        #endregion [Route("{userId}")]
 
-        #region [Route("follow/{id}")]
+        #region [Route("follow/{userId}")]
         [Theory, MemberData(nameof(FollowTests))]
         public void FollowTest(FollowTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
-            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
+            userServiceSubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             followServiceSubstitute.FollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.FollowResponse);
 
-            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
             IActionResult response = controller.Follow(test.UserId);
 
             if (!test.ExpectSuccess)
@@ -120,8 +120,7 @@ namespace Posterr.Tests
             }
             else
             {
-                Assert.IsType<OkObjectResult>(response);
-                Assert.Equal(test.FollowResponse.Message, ((OkObjectResult)response).Value);
+                Assert.IsType<OkResult>(response);
             }
         }
 
@@ -165,7 +164,7 @@ namespace Posterr.Tests
                 ExpectSuccess = true,
                 UserId = 1,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
-                FollowResponse = BaseResponse.CreateSuccess("You now follow this user")
+                FollowResponse = BaseResponse.CreateSuccess()
             },
         };
         public class FollowTestInput
@@ -177,20 +176,20 @@ namespace Posterr.Tests
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("follow/{id}")]
+        #endregion [Route("follow/{userId}")]
 
-        #region [Route("unfollow/{id}")]
+        #region [Route("unfollow/{userId}")]
         [Theory, MemberData(nameof(UnfollowTests))]
         public void UnfollowTest(UnfollowTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
 
-            userServiceSubstitute.UserExist(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
+            userServiceSubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistExpectedResponse);
             followServiceSubstitute.UnfollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UnfollowResponse);
 
-            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
-            IActionResult response = controller.Unfollow(test.UserId);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
+            IActionResult response = controller.UnfollowUser(test.UserId);
 
             if (!test.ExpectSuccess)
             {
@@ -199,8 +198,7 @@ namespace Posterr.Tests
             }
             else
             {
-                Assert.IsType<OkObjectResult>(response);
-                Assert.Equal(test.UnfollowResponse.Message, ((OkObjectResult)response).Value);
+                Assert.IsType<OkResult>(response);
             }
         }
 
@@ -244,7 +242,7 @@ namespace Posterr.Tests
                 ExpectSuccess = true,
                 UserId = 1,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
-                UnfollowResponse = BaseResponse.CreateSuccess("You unfollowed this user")
+                UnfollowResponse = BaseResponse.CreateSuccess()
             },
         };
         public class UnfollowTestInput
@@ -256,6 +254,6 @@ namespace Posterr.Tests
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("unfollow/{id}")]
+        #endregion [Route("unfollow/{userId}")]
     }
 }

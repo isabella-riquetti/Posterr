@@ -23,23 +23,23 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("byUser/{userId}/{skip?}")]
-        public async Task<IActionResult> Get(int userId, int? skip)
+        [Route("byUser/{userId}/{skipPages?}")]
+        public async Task<IActionResult> GetUserPosts(int userId, int? skipPages)
         {
-            if (!ValidationHelper.IsValidUser(userId, _userService.UserExist, out string errorMessage)
-                || !ValidationHelper.IsSkipPossible(skip, out errorMessage))
+            if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage)
+                || !ValidationHelper.IsSkipPagePossible(skipPages, out errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<IList<PostResponseModel>> userProfileModel = await _postService.GetUserPosts(userId, skip ?? 0);
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetUserPosts(userId, skipPages ?? 0);
 
-            if (!userProfileModel.Success)
+            if (!userPostsResponse.Success)
             {
-                return BadRequest(userProfileModel.Message);
+                return BadRequest(userPostsResponse.Message);
             }
 
-            return Ok(userProfileModel.Data);
+            return Ok(userPostsResponse.Data);
         }
     }
 }

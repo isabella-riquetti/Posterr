@@ -10,7 +10,7 @@ using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
 
-namespace Posterr.Tests.ServicesTest
+namespace Posterr.Tests.Services
 {
     public class PostServiceTest
     {
@@ -56,7 +56,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Hello",
                             CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                             Username = "TestUsername1",
@@ -95,14 +95,14 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Hello",
                             CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                             Username = "TestUsername1",
                             IsRepost = true,
                             Repost = new RepostedModel()
                             {
-                                Id = 2,
+                                PostId = 2,
                                 CreatedAt = new DateTime(2022,4,19,13,23,15).ToString(),
                                 Username = "TestUsername1"
                             },
@@ -110,7 +110,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Hello",
                             CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                             Username = "TestUsername1",
@@ -155,14 +155,14 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Hello Posterr",
                             CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                             Username = "TestUsername2",
                             IsRepost = true,
                             Repost = new RepostedModel()
                             {
-                                Id = 2,
+                                PostId = 2,
                                 CreatedAt = new DateTime(2022,4,19,13,24,15).ToString(),
                                 Username = "TestUsername1"
                             },
@@ -213,7 +213,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Content = "I'm new here",
                             CreatedAt = new DateTime(2022,4,19,13,25,00).ToString(),
                             Username = "TestUsername1",
@@ -221,7 +221,7 @@ namespace Posterr.Tests.ServicesTest
                             IsRequote = true,
                             Quoted = new QuotedModel()
                             {
-                                Id = 1,
+                                PostId = 1,
                                 Content = "Hello",
                                 CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                                 Username = "TestUsername1"
@@ -229,7 +229,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Hello",
                             CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                             Username = "TestUsername1",
@@ -275,7 +275,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Content = "I'm new too!",
                             CreatedAt = new DateTime(2022,4,19,13,27,40).ToString(),
                             Username = "TestUsername1",
@@ -283,7 +283,7 @@ namespace Posterr.Tests.ServicesTest
                             IsRequote = true,
                             Quoted = new QuotedModel()
                             {
-                                Id = 1,
+                                PostId = 1,
                                 Content = "Hello, I'm new here",
                                 CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
                                 Username = "TestUsername2"
@@ -335,7 +335,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 5,
+                            PostId = 5,
                             Content = "Post 5",
                             CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
                             Username = "TestUsername1",
@@ -344,7 +344,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 4,
+                            PostId = 4,
                             Content = "Post 4",
                             CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
                             Username = "TestUsername1",
@@ -353,7 +353,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 3,
+                            PostId = 3,
                             Content = "Post 3",
                             CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
                             Username = "TestUsername1",
@@ -362,7 +362,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Content = "Post 2",
                             CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
                             Username = "TestUsername1",
@@ -371,7 +371,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Post 1",
                             CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
                             Username = "TestUsername1",
@@ -441,7 +441,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 7,
+                            PostId = 7,
                             Content = "Post 7",
                             CreatedAt = new DateTime(2022,4,19,13,7,0).ToString(),
                             Username = "TestUsername1",
@@ -450,7 +450,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 6,
+                            PostId = 6,
                             Content = "Post 6",
                             CreatedAt = new DateTime(2022,4,19,13,6,0).ToString(),
                             Username = "TestUsername1",
@@ -459,7 +459,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 5,
+                            PostId = 5,
                             Content = "Post 5",
                             CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
                             Username = "TestUsername1",
@@ -468,7 +468,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 4,
+                            PostId = 4,
                             Content = "Post 4",
                             CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
                             Username = "TestUsername1",
@@ -477,7 +477,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 3,
+                            PostId = 3,
                             Content = "Post 3",
                             CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
                             Username = "TestUsername1",
@@ -563,7 +563,7 @@ namespace Posterr.Tests.ServicesTest
                     {
                         new PostResponseModel()
                         {
-                            Id = 2,
+                            PostId = 2,
                             Content = "Post 2",
                             CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
                             Username = "TestUsername1",
@@ -572,7 +572,7 @@ namespace Posterr.Tests.ServicesTest
                         },
                         new PostResponseModel()
                         {
-                            Id = 1,
+                            PostId = 1,
                             Content = "Post 1",
                             CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
                             Username = "TestUsername1",
