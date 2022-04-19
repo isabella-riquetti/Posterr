@@ -9,15 +9,15 @@
         /// <returns>The header user id or the defailt one</returns>
         public static int GetUserFromHeader(Microsoft.AspNetCore.Http.HttpRequest request)
         {
-            if (request.Headers.ContainsKey("AuthenticatedUserId"))
+            if (request?.Headers?.ContainsKey("AuthenticatedUserId") == true)
             {
-                var userId = int.Parse(request.Headers["AuthenticatedUserId"]);
-                return userId;
+                if(int.TryParse(request.Headers["AuthenticatedUserId"], out int userId))
+                {
+                    return userId;
+                }
             }
-            else
-            {
-                return 1;
-            }
+            
+            return 1;
         }
     }
 }
