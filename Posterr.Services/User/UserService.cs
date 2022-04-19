@@ -51,7 +51,7 @@ namespace Posterr.Services
                 .FirstOrDefaultAsync();
 
             response.Followed = await IsUsedFollowedByAuthenticatedUser(id, autheticatedUserId);
-            response.TopPosts = await _postService.GetUserPosts(id, 0);
+            response.TopPosts = await _postService.GetUserPosts(id);
 
             return response;
         }

@@ -17,7 +17,7 @@ namespace Posterr.Services
             _context = context;
         }
 
-        public async Task<IList<PostResponseModel>> GetUserPosts(int id, int skip, int limit = 5)
+        public async Task<IList<PostResponseModel>> GetUserPosts(int id, int skip = 0, int limit = 5)
         {
             /* Query:
              * SELECT [t].[Id]
@@ -53,7 +53,7 @@ namespace Posterr.Services
                 .Include(p => p.OriginalPost)
                 .Where(p => p.UserId == id)
                 .OrderByDescending(p => p.CreatedAt)
-                .Skip(skip)
+                .Skip(skip * limit)
                 .Take(limit)
                 .Select(p => new PostModel
                 {

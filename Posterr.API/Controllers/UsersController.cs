@@ -27,9 +27,9 @@ namespace Posterr.Controllers
 
         [HttpGet]
         [Route("{requestId}")]
-        public async Task<IActionResult> Get(string requestId)
+        public async Task<IActionResult> Get(int id)
         {
-            if (!int.TryParse(requestId, out int id) || id <= 0)
+            if (id <= 0)
             {
                 return BadRequest("The ID should be a number between 1 and 2147483647");
             }
