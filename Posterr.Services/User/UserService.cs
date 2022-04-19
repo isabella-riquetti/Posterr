@@ -24,7 +24,7 @@ namespace Posterr.Services
         {
             if (IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
             {
-                return BaseResponse<string>.CreateFailure("User is already followed by you.");
+                return BaseResponse<string>.CreateFailure("User is already followed by you");
             }
 
             if (follow != null)
@@ -48,14 +48,14 @@ namespace Posterr.Services
             }
             _context.SaveChanges();
 
-            return BaseResponse<string>.CreateSuccess("You now follow this user.");
+            return BaseResponse<string>.CreateSuccess("You now follow this user");
         }
 
         public BaseResponse<string> UnfollowUser(int id, int authenticatedUserId)
         {
             if (!IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
             {
-                return BaseResponse<string>.CreateFailure("You don't follow this user.");
+                return BaseResponse<string>.CreateFailure("You don't follow this user");
             }
 
             /* Query:
@@ -64,7 +64,7 @@ namespace Posterr.Services
             _context.Follows.Update(follow);
             _context.SaveChanges();
 
-            return BaseResponse<string>.CreateSuccess("You unfollowed this user.");
+            return BaseResponse<string>.CreateSuccess("You unfollowed this user");
         }
 
         public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int id, int autheticatedUserId)
@@ -86,7 +86,7 @@ namespace Posterr.Services
 
             if(response == null)
             {
-                return BaseResponse<UserProfileModel>.CreateFailure("User not found.");
+                return BaseResponse<UserProfileModel>.CreateFailure("User not found");
             }
 
             BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(id);
