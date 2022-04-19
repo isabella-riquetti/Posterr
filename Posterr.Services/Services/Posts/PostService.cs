@@ -92,6 +92,7 @@ namespace Posterr.Services
             {
                 CreatedAt = request.CreatedAt,
                 Content = request.Content,
+                OriginalPostId = request.OriginalPostId,
                 UserId = authenticatedUserId
             };
             _context.Posts.Add(post);

@@ -179,6 +179,34 @@ namespace Posterr.Tests.Controllers
                             IsRequote = false
                         }),
             },
+            new CreatePostTestInput()
+            {
+                TestName = "Success, create quotepost",
+                ExpectSuccess = true,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    OriginalPostId = 1,
+                    Content = "Test Content"
+                },
+                CreatePostResponse = BaseResponse<PostResponseModel>
+                    .CreateSuccess(
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Test Content 2",
+                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = true,
+                            Quoted = new QuotedModel()
+                            {
+                                PostId = 1,
+                                Content = "Hello",
+                                CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                                Username = "TestUsername2"
+                            }
+                        }),
+            },
         };
         public class CreatePostTestInput
         {

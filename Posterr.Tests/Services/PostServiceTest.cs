@@ -714,6 +714,112 @@ namespace Posterr.Tests.Services
                         OriginalPostId = null
                     }
                 }
+            },
+            new CreatePostTestInput()
+            {
+                TestName = "Success, a repost",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    OriginalPostId = 1
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>
+                    .CreateSuccess(
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = true,
+                            Repost = new RepostedModel()
+                            {
+                                PostId = 2,
+                                CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                                Username = "TestUsername1"
+                            },
+                            IsRequote = false
+                        }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new CreatePostTestInput()
+            {
+                TestName = "Success, a quotepost",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    Content = "Hello, how are you?",
+                    OriginalPostId = 1
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>
+                    .CreateSuccess(
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Hello, how are you?",
+                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = true,
+                            Quoted = new QuotedModel()
+                            {
+                                PostId = 1,
+                                Content = "Hello",
+                                CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                                Username = "TestUsername2"
+                            }
+                        }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    }
+                }
             }
         };
         public class CreatePostTestInput : DatatbaseTestInput
