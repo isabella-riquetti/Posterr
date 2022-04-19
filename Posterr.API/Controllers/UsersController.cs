@@ -51,13 +51,13 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
             
-            BaseResponse<string> response = _followService.FollowUser(id, AuthenticatedUserId);
+            BaseResponse response = _followService.FollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
 
-            return Ok(response.Data);
+            return Ok(response.Message);
         }
 
         [HttpGet]
@@ -69,13 +69,13 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
             
-            BaseResponse<string> response = _followService.UnfollowUser(id, AuthenticatedUserId);
+            BaseResponse response = _followService.UnfollowUser(id, AuthenticatedUserId);
             if (!response.Success)
             {
                 return BadRequest(response.Message);
             }
 
-            return Ok(response.Data);
+            return Ok(response.Message);
         }
     }
 }

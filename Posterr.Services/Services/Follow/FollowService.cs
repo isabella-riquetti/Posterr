@@ -15,11 +15,11 @@ namespace Posterr.Services
             _context = context;
         }
 
-        public BaseResponse<string> FollowUser(int id, int authenticatedUserId)
+        public BaseResponse FollowUser(int id, int authenticatedUserId)
         {
             if (IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
             {
-                return BaseResponse<string>.CreateFailure("User is already followed by you");
+                return BaseResponse.CreateError("User is already followed by you");
             }
 
             if (follow != null)
@@ -53,14 +53,14 @@ namespace Posterr.Services
             }
             _context.SaveChanges();
 
-            return BaseResponse<string>.CreateSuccess("You now follow this user");
+            return BaseResponse.CreateSuccess("You now follow this user");
         }
 
-        public BaseResponse<string> UnfollowUser(int id, int authenticatedUserId)
+        public BaseResponse UnfollowUser(int id, int authenticatedUserId)
         {
             if (!IsUserFollowedByAuthenticatedUser(authenticatedUserId, id, out Follow follow))
             {
-                return BaseResponse<string>.CreateFailure("You don't follow this user");
+                return BaseResponse.CreateError("You don't follow this user");
             }
 
             /*
@@ -72,7 +72,7 @@ namespace Posterr.Services
             _context.Follows.Update(follow);
             _context.SaveChanges();
 
-            return BaseResponse<string>.CreateSuccess("You unfollowed this user");
+            return BaseResponse.CreateSuccess("You unfollowed this user");
         }
 
         public bool IsUserFollowedByAuthenticatedUser(int follower, int following)
