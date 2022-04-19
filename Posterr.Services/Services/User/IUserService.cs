@@ -1,4 +1,5 @@
 ﻿using Posterr.Services.Model;
+using Posterr.Services.Model.User;
 using System.Threading.Tasks;
 
 namespace Posterr.Services.User
@@ -12,6 +13,19 @@ namespace Posterr.Services.User
         /// <param name="authenticatedUserId">The current authenticated, is used to check to check whether the user is followed by it</param>
         /// <returns>The profile ingo and last 5 posts</returns>
         public Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId);
-        BaseResponse UserExists(int id);
+
+        /// <summary>
+        /// Check if the user id exist in the database
+        /// </summary>
+        /// <param name="userId">The user id</param>
+        /// <returns>If the user exist</returns>
+        BaseResponse UserExists(int userId);
+
+        /// <summary>
+        /// Create the User (just for testing)
+        /// </summary>
+        /// <param name="request">The username and name</param>
+        /// <returns>The generate user id</returns>
+        BaseResponse<int> CreateUser(CreateUserRequestModel request);
     }
 }

@@ -151,5 +151,61 @@ namespace Posterr.Tests.Helpers
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion IsValidUser
+
+        #region IsValidUsername
+        [Theory, MemberData(nameof(IsValidUsernameTests))]
+        public void IsValidUsernameTest(IsValidUsernameTestInput test)
+        {
+            bool response = ValidationHelper.IsValidUsername(test.Username, out string errorMessage);
+
+            Assert.Equal(test.ExpectedResponse, response);
+            Assert.Equal(test.ExpectedErrorMessage, errorMessage);
+        }
+
+        public static TheoryData<IsValidUsernameTestInput> IsValidUsernameTests = new TheoryData<IsValidUsernameTestInput>()
+        {
+            new IsValidUsernameTestInput()
+            {
+                TestName = "Fail, empty",
+                Username = "",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Username should be alphanumeric and under 14 characters"
+            },
+            new IsValidUsernameTestInput()
+            {
+                TestName = "Fail, spaces",
+                Username = "user name",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Username should be alphanumeric and under 14 characters"
+            },
+            new IsValidUsernameTestInput()
+            {
+                TestName = "Fail, special characters",
+                Username = "user-name",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Username should be alphanumeric and under 14 characters"
+            },
+            new IsValidUsernameTestInput()
+            {
+                TestName = "Fail, over 14",
+                Username = "theusernamethatistoobig",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Username should be alphanumeric and under 14 characters"
+            },
+            new IsValidUsernameTestInput()
+            {
+                TestName = "Succes, valid",
+                Username = "theusernameok",
+                ExpectedResponse = true
+            }
+        };
+        public class IsValidUsernameTestInput
+        {
+            public string TestName { get; set; }
+            public string Username { get; set; }
+            public bool ExpectedResponse { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+        }
+        #endregion IsValidUserId
     }
 }

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
+using Posterr.Services.Model.User;
 
 namespace Posterr.Tests.Services
 {
@@ -30,7 +31,6 @@ namespace Posterr.Tests.Services
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
-
 
         public static TheoryData<GetUserProfileTestInput> GetUserProfileTests = new TheoryData<GetUserProfileTestInput>()
         {
@@ -450,6 +450,77 @@ namespace Posterr.Tests.Services
             public string TestName { get; set; }
             public int UserId { get; set; }
             public BaseResponse ExpectedResponse { get; set; }
+        }
+        #endregion IsValidUser
+
+        #region CreateUser
+        [Theory, MemberData(nameof(CreateUserTests))]
+        public void CreateUserTest(CreateUserTestInput test)
+        {
+            ApiContext apiContext = test.CreateNewInMemoryContext();
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var followServiceSubstitute = Substitute.For<IFollowService>();
+
+            var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
+            BaseResponse<int> response = service.CreateUser(test.Request);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse);
+        }
+
+        public static TheoryData<CreateUserTestInput> CreateUserTests = new TheoryData<CreateUserTestInput>()
+        {
+            new CreateUserTestInput()
+            {
+                TestName = "User already exists",
+                Request = new CreateUserRequestModel()
+                {
+                    Username = "TestUsername1"
+                },
+                UsersToAdd = new List<User>()
+                {
+                    new User()
+                    {
+                        Name = "TestName1",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                ExpectedResponse = BaseResponse<int>.CreateError("User already exists"),
+            },
+            new CreateUserTestInput()
+            {
+                TestName = "Create the user successfully without a name",
+                Request = new CreateUserRequestModel()
+                {
+                    Username = "Test1"
+                },
+                UsersToAdd = new List<User>()
+                {
+                    new User()
+                    {
+                        Name = "OtherName",
+                        Username = "OtherUsername",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                ExpectedResponse = BaseResponse<int>.CreateSuccess(2),
+            },
+            new CreateUserTestInput()
+            {
+                TestName = "Create the user successfully",
+                Request = new CreateUserRequestModel()
+                {
+                    Name = "TestName1",
+                    Username = "TestUsername1"
+                },
+                ExpectedResponse = BaseResponse<int>.CreateSuccess(1),
+            }
+        };
+        public class CreateUserTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            public CreateUserRequestModel Request { get; set; }
+            public BaseResponse<int> ExpectedResponse { get; set; }
         }
         #endregion IsValidUser
     }

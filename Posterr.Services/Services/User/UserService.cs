@@ -2,6 +2,7 @@
 using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Services.Model;
+using Posterr.Services.Model.User;
 using Posterr.Services.User;
 using System;
 using System.Collections.Generic;
@@ -87,8 +88,63 @@ namespace Posterr.Services
             {
                 return BaseResponse.CreateError("User not found");
             }
-
+            
             return BaseResponse.CreateSuccess();
+        }
+
+        public BaseResponse<int> CreateUser(CreateUserRequestModel request)
+        {
+            BaseResponse<int> userExist = _UserExists(request.Username);
+            if (userExist.Success)
+            {
+                return BaseResponse<int>.CreateError("User already exists");
+            }
+
+            var user = new DB.Models.User()
+            {
+                Username = request.Username,
+                Name = String.IsNullOrEmpty(request.Name) ? request.Username : request.Name,
+                CreatedAt = DateTime.Now
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            BaseResponse<int> newUser = _UserExists(request.Username);
+            if (!newUser.Success)
+            {
+                return BaseResponse<int>.CreateError("User could not be created");
+            }
+
+            return newUser;
+        }
+
+        /// <summary>
+        /// Check if the user exist by the username and return the id case exist
+        /// </summary>
+        /// <param name="username">Expected username</param>
+        /// <returns>The userid in case exists</returns>
+        private BaseResponse<int> _UserExists(string username)
+        {
+            /* Query:
+             * SELECT CASE
+             *     WHEN EXISTS (
+             *         SELECT 1
+             *         FROM [Users] AS [u]
+             *         WHERE [u].[Username] = @__username_0) THEN CAST(1 AS bit)
+             *     ELSE CAST(0 AS bit)
+             * END
+             */
+            int response = _context.Users
+                .Where(u => u.Username == username)
+                .Select(u => u.Id)
+                .FirstOrDefault();
+
+            if (response == 0)
+            {
+                return BaseResponse<int>.CreateError("User not found");
+            }
+
+            return BaseResponse<int>.CreateSuccess(response);
         }
     }
 }

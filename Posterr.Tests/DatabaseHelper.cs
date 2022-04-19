@@ -23,7 +23,7 @@ namespace Posterr.Tests
                    .Options;
 
             var apiContext = new ApiContext(options);
-            AddValues(apiContext);
+            _AddValues(apiContext);
             return apiContext;
         }
 
@@ -32,7 +32,7 @@ namespace Posterr.Tests
         /// </summary>
         /// <param name="context">The context</param>
         /// <param name="input">The values that shold be added</param>
-        private void AddValues(ApiContext context)
+        private void _AddValues(ApiContext context)
         {
             if (UsersToAdd != null)
             {
