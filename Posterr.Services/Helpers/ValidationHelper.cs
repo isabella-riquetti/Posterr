@@ -80,5 +80,22 @@ namespace Posterr.Services.Helpers
             errorMessage = null;
             return true;
         }
+
+        /// <summary>
+        /// Validate if the post content is not empty and under 777 charactes
+        /// <param name="content">The content to be validates</param>
+        /// <param name="errorMessage">Error message, case any</param>
+        /// <returns>The skip is valid or not</returns>
+        public static bool IsValidPostContent(string content, out string errorMessage)
+        {
+            if (string.IsNullOrEmpty(content) || content.Length > 777)
+            {
+                errorMessage = "Post content cannot be empty and should be under 777 characters";
+                return false;
+            }
+
+            errorMessage = null;
+            return true;
+        }
     }
 }

@@ -122,5 +122,72 @@ namespace Posterr.Tests.Controllers
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
         #endregion [Route("byUser/{userId}/{skipPages?}")]
+
+        #region POST [Route("create")]
+        [Theory, MemberData(nameof(CreatePostTests))]
+        public async void CreatePostTest(CreatePostTestInput test)
+        {
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var userServiceSubstitute = Substitute.For<IUserService>();
+
+            postServiceSubstitute.CreatePost(test.Request, Arg.Any<int>()).Returns(test.CreatePostResponse);
+
+            var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
+            IActionResult response = await controller.CreatePost(test.Request);
+
+            if (!test.ExpectSuccess)
+            {
+                Assert.IsType<BadRequestObjectResult>(response);
+                Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
+            }
+            else
+            {
+                Assert.IsType<OkObjectResult>(response);
+                Assert.Equal(test.CreatePostResponse.Data, ((OkObjectResult)response).Value);
+            }
+        }
+
+        public static TheoryData<CreatePostTestInput> CreatePostTests = new TheoryData<CreatePostTestInput>()
+        {
+            new CreatePostTestInput()
+            {
+                TestName = "Fail, invalid content",
+                ExpectSuccess = false,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    Content = ""
+                },
+                ExpectedErrorMessage = "Post content cannot be empty and should be under 777 characters"
+            },
+            new CreatePostTestInput()
+            {
+                TestName = "Success, create post",
+                ExpectSuccess = true,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    Content = "Test Content"
+                },
+                CreatePostResponse = BaseResponse<PostResponseModel>
+                    .CreateSuccess(
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Test Content",
+                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        }),
+            },
+        };
+        public class CreatePostTestInput
+        {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+            public CreatePostRequestModel Request { get; set; }
+            public BaseResponse<PostResponseModel> CreatePostResponse { get; set; }
+        }
+        #endregion POST [Route("create")]
     }
 }

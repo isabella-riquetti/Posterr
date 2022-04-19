@@ -207,5 +207,54 @@ namespace Posterr.Tests.Helpers
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion IsValidUserId
+
+        #region IsValidContent
+        [Theory, MemberData(nameof(IsValidContentTests))]
+        public void IsValidContentTest(IsValidContentTestInput test)
+        {
+            bool response = ValidationHelper.IsValidPostContent(test.Content, out string errorMessage);
+
+            Assert.Equal(test.ExpectedResponse, response);
+            Assert.Equal(test.ExpectedErrorMessage, errorMessage);
+        }
+
+        public static TheoryData<IsValidContentTestInput> IsValidContentTests = new TheoryData<IsValidContentTestInput>()
+        {
+            new IsValidContentTestInput()
+            {
+                TestName = "Fail, null",
+                Content = null,
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Post content cannot be empty and should be under 777 characters"
+            },
+            new IsValidContentTestInput()
+            {
+                TestName = "Fail, empty",
+                Content = "",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Post content cannot be empty and should be under 777 characters"
+            },
+            new IsValidContentTestInput()
+            {
+                TestName = "Fail, over 777 characters (801)",
+                Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis sed enim a condimentum.",
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Post content cannot be empty and should be under 777 characters"
+            },
+            new IsValidContentTestInput()
+            {
+                TestName = "Succes, valid, under 777 characters",
+                Content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis",
+                ExpectedResponse = true
+            }
+        };
+        public class IsValidContentTestInput
+        {
+            public string TestName { get; set; }
+            public string Content { get; set; }
+            public bool ExpectedResponse { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+        }
+        #endregion IsValidUserId
     }
 }

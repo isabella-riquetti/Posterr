@@ -660,5 +660,72 @@ namespace Posterr.Tests.Services
 
         }
         #endregion GetUserProfile
+
+        #region GetUserPosts
+        [Theory, MemberData(nameof(CreatePostTests))]
+        public async void CreatePostTest(CreatePostTestInput test)
+        {
+            ApiContext apiContext = test.CreateNewInMemoryContext();
+
+            var service = new PostService(apiContext);
+            BaseResponse<PostResponseModel> response = await service.CreatePost(test.Request, test.AuthenticatedUserId);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
+        }
+
+
+        public static TheoryData<CreatePostTestInput> CreatePostTests = new TheoryData<CreatePostTestInput>()
+        {
+            new CreatePostTestInput()
+            {
+                TestName = "Success, one basic post",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                {
+                    Content = "Test Content"
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>
+                    .CreateSuccess(
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Test Content",
+                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    }
+                }
+            }
+        };
+        public class CreatePostTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            
+            public int AuthenticatedUserId { get; set; }
+            public CreatePostRequestModel Request { get; set; }
+
+            public BaseResponse<PostResponseModel> ExpectedResponse { get; set; }
+
+        }
+        #endregion GetUserProfile
     }
 }

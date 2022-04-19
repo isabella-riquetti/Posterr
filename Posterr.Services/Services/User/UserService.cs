@@ -70,6 +70,40 @@ namespace Posterr.Services
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }
 
+        public BaseResponse<int> CreateUser(CreateUserRequestModel request)
+        {
+            BaseResponse<int> userExist = _UserExists(request.Username);
+            if (userExist.Success)
+            {
+                return BaseResponse<int>.CreateError("User already exists");
+            }
+
+            /* Query:
+             * SET NOCOUNT ON;
+             * INSERT INTO [Users] ([CreatedAt], [Name], [Username])
+             * VALUES (@p0, @p1, @p2);
+             * SELECT [Id]
+             * FROM [Users]
+             * WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+             */
+            var user = new DB.Models.User()
+            {
+                Username = request.Username,
+                Name = String.IsNullOrEmpty(request.Name) ? request.Username : request.Name,
+                CreatedAt = DateTime.Now
+            };
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            BaseResponse<int> newUser = _UserExists(request.Username);
+            if (!newUser.Success)
+            {
+                return BaseResponse<int>.CreateError("User could not be created");
+            }
+
+            return newUser;
+        }
+
         public BaseResponse UserExists(int id)
         {
             /* Query:
@@ -92,32 +126,6 @@ namespace Posterr.Services
             return BaseResponse.CreateSuccess();
         }
 
-        public BaseResponse<int> CreateUser(CreateUserRequestModel request)
-        {
-            BaseResponse<int> userExist = _UserExists(request.Username);
-            if (userExist.Success)
-            {
-                return BaseResponse<int>.CreateError("User already exists");
-            }
-
-            var user = new DB.Models.User()
-            {
-                Username = request.Username,
-                Name = String.IsNullOrEmpty(request.Name) ? request.Username : request.Name,
-                CreatedAt = DateTime.Now
-            };
-            _context.Users.Add(user);
-            _context.SaveChanges();
-
-            BaseResponse<int> newUser = _UserExists(request.Username);
-            if (!newUser.Success)
-            {
-                return BaseResponse<int>.CreateError("User could not be created");
-            }
-
-            return newUser;
-        }
-
         /// <summary>
         /// Check if the user exist by the username and return the id case exist
         /// </summary>
@@ -125,14 +133,11 @@ namespace Posterr.Services
         /// <returns>The userid in case exists</returns>
         private BaseResponse<int> _UserExists(string username)
         {
+
             /* Query:
-             * SELECT CASE
-             *     WHEN EXISTS (
-             *         SELECT 1
-             *         FROM [Users] AS [u]
-             *         WHERE [u].[Username] = @__username_0) THEN CAST(1 AS bit)
-             *     ELSE CAST(0 AS bit)
-             * END
+             * SELECT TOP(1) [u].[Id]
+             * FROM [Users] AS [u]
+             * WHERE [u].[Username] = @__username_0
              */
             int response = _context.Users
                 .Where(u => u.Username == username)

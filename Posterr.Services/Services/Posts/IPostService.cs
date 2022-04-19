@@ -14,5 +14,13 @@ namespace Posterr.Services.User
         /// <param name="pageSize">How many register per page we want to should, default is 5</param>
         /// <returns>Posts from the user</returns>
         public Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5);
+
+        /// <summary>
+        /// Create a new basic post
+        /// </summary>
+        /// <param name="request">The new post content</param>
+        /// <param name="authenticatedUserId">The authenticated user id</param>
+        /// <returns>The new post so it can be appended to the page</returns>
+        Task<BaseResponse<PostResponseModel>> CreatePost(CreatePostRequestModel request, int authenticatedUserId);
     }
 }

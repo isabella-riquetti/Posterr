@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Posterr.API.Helper;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
@@ -33,6 +34,30 @@ namespace Posterr.Controllers
             }
 
             BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetUserPosts(userId, skipPages ?? 0);
+
+            if (!userPostsResponse.Success)
+            {
+                return BadRequest(userPostsResponse.Message);
+            }
+
+            return Ok(userPostsResponse.Data);
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> CreatePost([FromBody] CreatePostRequestModel request)
+        {
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (!ValidationHelper.IsValidPostContent(request?.Content, out string errorMessage))
+            {
+                return BadRequest(errorMessage);
+            }
+
+            BaseResponse<PostResponseModel> userPostsResponse = await _postService.CreatePost(request, AuthMockHelper.GetUserFromHeader(Request));
 
             if (!userPostsResponse.Success)
             {
