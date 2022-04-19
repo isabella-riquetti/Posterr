@@ -39,5 +39,41 @@ namespace Posterr.Controllers
 
             return Ok(response.Data);
         }
+
+        [HttpGet]
+        [Route("follow/{id}")]
+        public IActionResult Follow(int id)
+        {
+            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
+            {
+                return BadRequest(errorMessage);
+            }
+            
+            BaseResponse<string> response = _userService.FollowUser(id, AuthenticatedUserId);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok(response.Data);
+        }
+
+        [HttpGet]
+        [Route("unfollow/{id}")]
+        public IActionResult Unfollow(int id)
+        {
+            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
+            {
+                return BadRequest(errorMessage);
+            }
+            
+            BaseResponse<string> response = _userService.UnfollowUser(id, AuthenticatedUserId);
+            if (!response.Success)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok(response.Data);
+        }
     }
 }

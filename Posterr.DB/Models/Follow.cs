@@ -9,5 +9,6 @@
 
         public int FollowingId { get; set; }
         public User Following { get; set; }
+        public bool Unfollowed { get; set; }
     }
 }
