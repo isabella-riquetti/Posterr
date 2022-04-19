@@ -17,6 +17,10 @@
     /// </summary>
     public class PostResponseModel
     {
+        public PostResponseModel()
+        {
+            
+        }
         public PostResponseModel(PostModel postModel)
         {
             this.IsRequote = postModel.OriginalPost != null && postModel.Content != null;

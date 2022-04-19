@@ -3,6 +3,7 @@ using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Services.Model;
 using Posterr.Services.User;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -66,6 +67,11 @@ namespace Posterr.Services
             response.Followed = _followService.IsUserFollowedByAuthenticatedUser(autheticatedUserId, id);
 
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
+        }
+
+        public Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, object authenticatedUserId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

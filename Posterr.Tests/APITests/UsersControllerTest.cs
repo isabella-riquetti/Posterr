@@ -16,10 +16,11 @@ namespace Posterr.Tests
         public async void GetProfileTest(GetProfileTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
-            
+            var followServiceSubstitute = Substitute.For<IFollowService>();
+
             userServiceSubstitute.GetUserProfile(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UserProfileResponse);
 
-            var controller = new UsersController(userServiceSubstitute, null);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
             IActionResult response = await controller.Get(test.UserId);
 
             if(!test.ExpectSuccess)
@@ -92,10 +93,11 @@ namespace Posterr.Tests
         public void FollowTest(FollowTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
+            var followServiceSubstitute = Substitute.For<IFollowService>();
 
-            userServiceSubstitute.FollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.FollowResponse);
+            followServiceSubstitute.FollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.FollowResponse);
 
-            var controller = new UsersController(userServiceSubstitute, null);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
             IActionResult response = controller.Follow(test.UserId);
 
             if (!test.ExpectSuccess)
@@ -158,10 +160,11 @@ namespace Posterr.Tests
         public void UnfollowTest(UnfollowTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
+            var followServiceSubstitute = Substitute.For<IFollowService>();
+            
+            followServiceSubstitute.UnfollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UnfollowResponse);
 
-            userServiceSubstitute.UnfollowUser(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UnfollowResponse);
-
-            var controller = new UsersController(userServiceSubstitute, null);
+            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute, null);
             IActionResult response = controller.Unfollow(test.UserId);
 
             if (!test.ExpectSuccess)
