@@ -69,11 +69,6 @@ namespace Posterr.Services
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }
 
-        public Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, object authenticatedUserId)
-        {
-            throw new NotImplementedException();
-        }
-
         public BaseResponse UserExist(int id)
         {
             /* Query:
