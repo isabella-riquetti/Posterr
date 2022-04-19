@@ -17,7 +17,7 @@ namespace Posterr.Services
             _context = context;
             _postService = postService;
         }
-        
+
         public async Task<UserProfileModel> GetUserProfile(int id, int autheticatedUserId)
         {
             /* Query:
@@ -50,31 +50,26 @@ namespace Posterr.Services
                 })
                 .FirstOrDefaultAsync();
 
-            response.Followed = await IsUsedFollowedByAuthenticatedUser(id, autheticatedUserId);
+            response.Followed = await IsUserFollowedByAuthenticatedUser(id, autheticatedUserId);
             response.TopPosts = await _postService.GetUserPosts(id);
 
             return response;
         }
 
 
-        private async Task<bool> IsUsedFollowedByAuthenticatedUser(int id, int autheticatedUserId)
+        private async Task<bool> IsUserFollowedByAuthenticatedUser(int id, int autheticatedUserId)
         {
             /* Query:
-            * SELECT TOP(1) CASE
-            *     WHEN EXISTS (
-            *         SELECT 1
-            *         FROM [Follows] AS [f]
-            *         WHERE ([u].[Id] = [f].[FollowingId]) AND ([f].[Id] = @__id_1)) THEN CAST(1 AS bit)
-            *     ELSE CAST(0 AS bit)
-            * END
-            * FROM [Users] AS [u]
-            * WHERE [u].[Id] = @__autheticatedUserId_0
+             * SELECT CASE
+             *     WHEN EXISTS (
+             *         SELECT 1
+             *         FROM [Follows] AS [f]
+             *         WHERE ([f].[FollowerId] = @__id_0) AND ([f].[FollowingId] = @__autheticatedUserId_1)) THEN CAST(1 AS bit)
+             *     ELSE CAST(0 AS bit)
+             * END
              */
-            var response = await _context.Users
-                .Include(u => u.Following)
-                .Where(u => u.Id == autheticatedUserId)
-                .Select(u => u.Following.Any(f => f.Id == id))
-                .FirstOrDefaultAsync();
+            bool response = await _context.Follows
+                .AnyAsync(u => u.FollowerId == id && u.FollowingId == autheticatedUserId);
 
             return response;
         }
