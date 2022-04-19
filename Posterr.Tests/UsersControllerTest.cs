@@ -39,18 +39,21 @@ namespace Posterr.Tests
         {
             new GetProfileTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = -1,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new GetProfileTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = 0,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new GetProfileTestInput()
             {
+                TestName = "Fail at getting user",
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "User not found",
@@ -58,6 +61,7 @@ namespace Posterr.Tests
             },
             new GetProfileTestInput()
             {
+                TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
                 UserProfileResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
@@ -75,9 +79,10 @@ namespace Posterr.Tests
         };
         public class GetProfileTestInput
         {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
             public BaseResponse<UserProfileModel> UserProfileResponse { get; set; }
-            public bool ExpectSuccess { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion [Route("{id}")]
@@ -110,18 +115,21 @@ namespace Posterr.Tests
         {
             new FollowTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = -1,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new FollowTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = 0,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new FollowTestInput()
             {
+                TestName = "Fail at following",
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "User is already followed by you",
@@ -129,6 +137,7 @@ namespace Posterr.Tests
             },
             new FollowTestInput()
             {
+                TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
                 FollowResponse = BaseResponse<string>.CreateSuccess("You now follow this user")
@@ -136,9 +145,10 @@ namespace Posterr.Tests
         };
         public class FollowTestInput
         {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
             public BaseResponse<string> FollowResponse { get; set; }
-            public bool ExpectSuccess { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion [Route("follow/{id}")]
@@ -171,18 +181,21 @@ namespace Posterr.Tests
         {
             new UnfollowTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = -1,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new UnfollowTestInput()
             {
+                TestName = "Fail, invalid user ID",
                 ExpectSuccess = false,
                 UserId = 0,
                 ExpectedErrorMessage = "Invalid User Id, the ID should be between 1 and 2147483647"
             },
             new UnfollowTestInput()
             {
+                TestName = "Fail at unfollowing",
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "You don't follow this user",
@@ -190,6 +203,7 @@ namespace Posterr.Tests
             },
             new UnfollowTestInput()
             {
+                TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
                 UnfollowResponse = BaseResponse<string>.CreateSuccess("You unfollowed this user")
@@ -197,9 +211,10 @@ namespace Posterr.Tests
         };
         public class UnfollowTestInput
         {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
             public BaseResponse<string> UnfollowResponse { get; set; }
-            public bool ExpectSuccess { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion [Route("unfollow/{id}")]
