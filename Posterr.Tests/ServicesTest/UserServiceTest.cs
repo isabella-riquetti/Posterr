@@ -14,7 +14,7 @@ namespace Posterr.Tests.ServicesTest
 {
     public class UserServiceTest
     {
-        #region [Route("{id}")]
+        #region GetUserProfile
         [Theory, MemberData(nameof(GetUserProfileTests))]
         public async void GetUserProfileTest(GetUserProfileTestInput test)
         {
@@ -39,16 +39,16 @@ namespace Posterr.Tests.ServicesTest
                 TestName = "Fail, user not found",
                 UserId = 100,
                 AuthenticatedUserId = 1,
-                ExpectedResponse = BaseResponse<UserProfileModel>.CreateFailure("User not found"),
+                ExpectedResponse = BaseResponse<UserProfileModel>.CreateError("User not found"),
             },
             new GetUserProfileTestInput()
             {
                 TestName = "Fail to get posts",
-                ExpectedResponse = BaseResponse<UserProfileModel>.CreateFailure("Failed to get posts"),
+                ExpectedResponse = BaseResponse<UserProfileModel>.CreateError("Failed to get posts"),
                 UserId = 1,
                 AuthenticatedUserId = 1,
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
-                    .CreateFailure("Failed to get posts"),
+                    .CreateError("Failed to get posts"),
                 UsersToAdd = new List<User>() {
                     new User()
                     {
@@ -405,6 +405,52 @@ namespace Posterr.Tests.ServicesTest
             public BaseResponse<IList<PostResponseModel>> GetUserPostsResponse { get; set; }
             public bool IsUserFollowedByAuthenticatedUserResponse { get; set; }
         }
-        #endregion [Route("{id}")]
+        #endregion GetUserProfile
+
+        #region IsValidUser
+        [Theory, MemberData(nameof(IsValidUserTests))]
+        public void IsValidUserTest(IsValidUserTestInput test)
+        {
+            ApiContext apiContext = test.CreateNewInMemoryContext();
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var followServiceSubstitute = Substitute.For<IFollowService>();
+
+            var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
+            BaseResponse response = service.IsValidUser(test.UserId);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse);
+        }
+
+        public static TheoryData<IsValidUserTestInput> IsValidUserTests = new TheoryData<IsValidUserTestInput>()
+        {
+            new IsValidUserTestInput()
+            {
+                TestName = "Test user does not exist",
+                ExpectedResponse = BaseResponse.CreateError("User not found"),
+                UserId = 3
+            },
+            new IsValidUserTestInput()
+            {
+                TestName = "Test user exist",
+                ExpectedResponse = BaseResponse.CreateSuccess(),
+                UserId = 1,
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test1",
+                        Username = "Test1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                }
+            }
+        };
+        public class IsValidUserTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            public int UserId { get; set; }
+            public BaseResponse ExpectedResponse { get; set; }
+        }
+        #endregion IsValidUser
     }
 }

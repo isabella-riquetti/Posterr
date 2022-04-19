@@ -66,7 +66,7 @@ namespace Posterr.Tests
                 ExpectSuccess = false,
                 UserId = 1,
                 Skip = 0,
-                GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateFailure("Error"),
+                GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>.CreateError("Error"),
                 ExpectedErrorMessage = "Error"
             },
             new GetUserPostsTestInput()

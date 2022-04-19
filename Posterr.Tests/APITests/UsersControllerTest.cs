@@ -58,7 +58,7 @@ namespace Posterr.Tests
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "User not found",
-                UserProfileResponse = BaseResponse<UserProfileModel>.CreateFailure("User not found")
+                UserProfileResponse = BaseResponse<UserProfileModel>.CreateError("User not found")
             },
             new GetProfileTestInput()
             {
@@ -108,7 +108,7 @@ namespace Posterr.Tests
             else
             {
                 Assert.IsType<OkObjectResult>(response);
-                Assert.Equal(test.FollowResponse.Data, ((OkObjectResult)response).Value);
+                Assert.Equal(test.FollowResponse.Message, ((OkObjectResult)response).Value);
             }
         }
 
@@ -135,14 +135,14 @@ namespace Posterr.Tests
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "User is already followed by you",
-                FollowResponse = BaseResponse<string>.CreateFailure("User is already followed by you")
+                FollowResponse = BaseResponse.CreateError("User is already followed by you")
             },
             new FollowTestInput()
             {
                 TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
-                FollowResponse = BaseResponse<string>.CreateSuccess("You now follow this user")
+                FollowResponse = BaseResponse.CreateSuccess("You now follow this user")
             },
         };
         public class FollowTestInput
@@ -150,7 +150,7 @@ namespace Posterr.Tests
             public string TestName { get; set; }
             public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
-            public BaseResponse<string> FollowResponse { get; set; }
+            public BaseResponse FollowResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion [Route("follow/{id}")]
@@ -175,7 +175,7 @@ namespace Posterr.Tests
             else
             {
                 Assert.IsType<OkObjectResult>(response);
-                Assert.Equal(test.UnfollowResponse.Data, ((OkObjectResult)response).Value);
+                Assert.Equal(test.UnfollowResponse.Message, ((OkObjectResult)response).Value);
             }
         }
 
@@ -202,14 +202,14 @@ namespace Posterr.Tests
                 ExpectSuccess = false,
                 UserId = 1,
                 ExpectedErrorMessage = "You don't follow this user",
-                UnfollowResponse = BaseResponse<string>.CreateFailure("You don't follow this user")
+                UnfollowResponse = BaseResponse.CreateError("You don't follow this user")
             },
             new UnfollowTestInput()
             {
                 TestName = "Success",
                 ExpectSuccess = true,
                 UserId = 1,
-                UnfollowResponse = BaseResponse<string>.CreateSuccess("You unfollowed this user")
+                UnfollowResponse = BaseResponse.CreateSuccess("You unfollowed this user")
             },
         };
         public class UnfollowTestInput
@@ -217,7 +217,7 @@ namespace Posterr.Tests
             public string TestName { get; set; }
             public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
-            public BaseResponse<string> UnfollowResponse { get; set; }
+            public BaseResponse UnfollowResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
         #endregion [Route("unfollow/{id}")]

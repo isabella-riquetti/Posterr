@@ -54,13 +54,13 @@ namespace Posterr.Services
 
             if(response == null)
             {
-                return BaseResponse<UserProfileModel>.CreateFailure("User not found");
+                return BaseResponse<UserProfileModel>.CreateError("User not found");
             }
 
             BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(id);
             if (!postsResponse.Success)
             {
-                return BaseResponse<UserProfileModel>.CreateFailure(postsResponse.Message);
+                return BaseResponse<UserProfileModel>.CreateError(postsResponse.Message);
             }
             
             response.TopPosts = postsResponse.Data;
@@ -72,6 +72,21 @@ namespace Posterr.Services
         public Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, object authenticatedUserId)
         {
             throw new NotImplementedException();
+        }
+                
+        public BaseResponse IsValidUser(int id)
+        {
+            /* Query:
+             */
+            bool response = _context.Users
+                .Any(u => u.Id == id);
+
+            if(!response)
+            {
+                return BaseResponse.CreateError("User not found");
+            }
+
+            return BaseResponse.CreateSuccess();
         }
     }
 }
