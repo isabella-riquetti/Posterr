@@ -11,12 +11,12 @@ namespace Posterr.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/postS")]
-    public class PostController : BaseController
+    public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
         private readonly IUserService _userService;
 
-        public PostController(IPostService postService, IUserService userService)
+        public PostController(IPostService postService, IUserService userService) : base()
         {
             _postService = postService;
             _userService = userService;

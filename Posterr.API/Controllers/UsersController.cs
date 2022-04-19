@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Posterr.API.Helper;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
@@ -9,7 +10,7 @@ namespace Posterr.Controllers
     [ApiController]
     [Produces("application/json")]
     [Route("api/users")]
-    public class UsersController : BaseController
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IFollowService _followService;
@@ -29,7 +30,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<UserProfileModel> userProfileResponse = await _userService.GetUserProfile(userId, AuthenticatedUserId);
+            BaseResponse<UserProfileModel> userProfileResponse = await _userService.GetUserProfile(userId, AuthMockHelper.GetUserFromHeader(Request));
 
             if(!userProfileResponse.Success)
             {
@@ -48,7 +49,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse followUserResponse = _followService.FollowUser(userId, AuthenticatedUserId);
+            BaseResponse followUserResponse = _followService.FollowUser(userId, AuthMockHelper.GetUserFromHeader(Request));
             if (!followUserResponse.Success)
             {
                 return BadRequest(followUserResponse.Message);
@@ -66,7 +67,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse unfollowUserResponse = _followService.UnfollowUser(userId, AuthenticatedUserId);
+            BaseResponse unfollowUserResponse = _followService.UnfollowUser(userId, AuthMockHelper.GetUserFromHeader(Request));
             if (!unfollowUserResponse.Success)
             {
                 return BadRequest(unfollowUserResponse.Message);
