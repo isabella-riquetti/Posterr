@@ -17,8 +17,8 @@ namespace Posterr.Services
             _context = context;
         }
 
-        public async Task<IList<PostResponseModel>> GetUserPosts(int id, int skip = 0, int limit = 5)
-        {
+        public async Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int id, int skip = 0, int limit = 5)
+        {            
             /* Query:
              * SELECT [t].[Id]
 	         *     ,[t].[Content]
@@ -73,7 +73,7 @@ namespace Posterr.Services
 
             IList<PostResponseModel> formatedResponse = response.Select(r => new PostResponseModel(r)).ToList();
 
-            return formatedResponse;
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
         }
     }
 }

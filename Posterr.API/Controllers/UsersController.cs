@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Posterr.DB;
+using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Posterr.Controllers
@@ -26,22 +22,22 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("{requestId}")]
+        [Route("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            if (id <= 0)
+            if (!ValidationHelper.IsValidUserId(id, out string errorMessage))
             {
-                return BadRequest("The ID should be a number between 1 and 2147483647");
+                return BadRequest(errorMessage);
+            }
+            
+            BaseResponse<UserProfileModel> response = await _userService.GetUserProfile(id, AuthenticatedUserId);
+
+            if(!response.Success)
+            {
+                return BadRequest(response.Message);
             }
 
-            UserProfileModel userProfileModel = await _userService.GetUserProfile(id, AuthenticatedUserId);
-
-            if (userProfileModel == null)
-            {
-                return NotFound("User not found");
-            }
-
-            return Ok(userProfileModel);
+            return Ok(response.Data);
         }
     }
 }

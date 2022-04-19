@@ -6,6 +6,6 @@ namespace Posterr.Services.User
 {
     public interface IPostService
     {
-        public Task<IList<PostResponseModel>> GetUserPosts(int id, int skip = 0, int limit = 5);
+        public Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int id, int skip = 0, int limit = 5);
     }
 }

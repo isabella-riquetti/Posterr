@@ -2,6 +2,7 @@
 using Posterr.DB;
 using Posterr.Services.Model;
 using Posterr.Services.User;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,8 +19,8 @@ namespace Posterr.Services
             _postService = postService;
         }
 
-        public async Task<UserProfileModel> GetUserProfile(int id, int autheticatedUserId)
-        {
+        public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int id, int autheticatedUserId)
+        {            
             /* Query:
             * SELECT TOP(1) [u].[Id], CONVERT(VARCHAR(100), [u].[CreatedAt]) AS [CreatedAt], [u].[Username], (
             *     SELECT COUNT(*)
@@ -50,10 +51,21 @@ namespace Posterr.Services
                 })
                 .FirstOrDefaultAsync();
 
-            response.Followed = await IsUserFollowedByAuthenticatedUser(id, autheticatedUserId);
-            response.TopPosts = await _postService.GetUserPosts(id);
+            if(response == null)
+            {
+                return BaseResponse<UserProfileModel>.CreateFailure("User not found");
+            }
 
-            return response;
+            BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(id);
+            if (!postsResponse.Success)
+            {
+                return BaseResponse<UserProfileModel>.CreateFailure(postsResponse.Message);
+            }
+            
+            response.TopPosts = postsResponse.Data;
+            response.Followed = await IsUserFollowedByAuthenticatedUser(id, autheticatedUserId);
+
+            return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }
 
 
