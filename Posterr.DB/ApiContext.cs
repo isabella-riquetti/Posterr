@@ -21,6 +21,10 @@ namespace Posterr.DB
             modelBuilder.Entity<User>()
                 .HasMany(x => x.Following)
                 .WithOne(x => x.Following);
+            
+            modelBuilder.Entity<Post>()
+                .HasMany(x => x.Reposts)
+                .WithOne(x => x.OriginalPost);
 
             base.OnModelCreating(modelBuilder);
         }

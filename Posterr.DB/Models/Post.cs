@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Posterr.DB.Models
 {
@@ -11,7 +12,9 @@ namespace Posterr.DB.Models
         public int UserId { get; set; }
         public User User { get; set; }
 
-        public int OriginalPostId { get; set; }
+        public int? OriginalPostId { get; set; }
         public Post OriginalPost { get; set; }
+
+        public IList<Post> Reposts { get; set; }
     }
 }

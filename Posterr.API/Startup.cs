@@ -37,6 +37,7 @@ namespace Posterr
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Posterr", Version = "v1" });
             });
 
+            services.AddScoped<IPostService, PostService>();
             services.AddScoped<IUserService, UserService>();
         }
 
@@ -51,8 +52,8 @@ namespace Posterr
             }
 
             //In Memory or 1st local run
-            var context = serviceProvider.GetService<ApiContext>();
-            TestData(context);
+            //var context = serviceProvider.GetService<ApiContext>();
+            //TestData(context);
 
             app.UseHttpsRedirection();
 
@@ -117,8 +118,7 @@ namespace Posterr
             context.Follows.Add(follow2);
             context.Follows.Add(follow3);
 
-
-            context.SaveChanges();
+            // Basic post
             var testPost = new Post
             {
                 //Id = 1,
@@ -127,7 +127,29 @@ namespace Posterr
                 UserId = testUser.Id
             };
             context.Posts.Add(testPost);
+            context.SaveChanges();
             
+            // Quote post
+            var testPost2 = new Post
+            {
+                //Id = 2,
+                Content = "Everyone is joining Posterr",
+                CreatedAt = DateTime.Now,
+                UserId = testUser3.Id,
+                OriginalPostId = testPost.Id
+            };
+            context.Posts.Add(testPost2);
+            context.SaveChanges();
+
+            // Repost
+            var testPost3 = new Post
+            {
+                //Id = 3,
+                CreatedAt = DateTime.Now,
+                UserId = testUser2.Id,
+                OriginalPostId = testPost2.Id
+            };
+            context.Posts.Add(testPost3);
             context.SaveChanges();
         }
     }

@@ -1,6 +1,4 @@
-﻿using Posterr.DB.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Posterr.Services.Model
 {
@@ -13,5 +11,6 @@ namespace Posterr.Services.Model
         public int Followers { get; set; }
         public int Following { get; set; }
         public bool Followed { get; set; }
+        public IList<PostResponseModel> TopPosts { get; set; }
     }
 }

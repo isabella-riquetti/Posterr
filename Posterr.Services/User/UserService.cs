@@ -10,10 +10,12 @@ namespace Posterr.Services
     public class UserService : IUserService
     {
         private readonly ApiContext _context;
+        private readonly IPostService _postService;
 
-        public UserService(ApiContext context)
+        public UserService(ApiContext context, IPostService postService)
         {
             _context = context;
+            _postService = postService;
         }
         
         public async Task<UserProfileModel> GetUserProfile(int id, int autheticatedUserId)
@@ -40,7 +42,7 @@ namespace Posterr.Services
                 .Select(u => new UserProfileModel
                 {
                     Id = u.Id,
-                    CreatedAt = u.CreatedAt.ToString(),
+                    CreatedAt = u.CreatedAt.ToString("MMMM dd, yyyy"),
                     Username = u.Username,
                     Followers = u.Followers.Count(),
                     Following = u.Following.Count(),
@@ -49,6 +51,7 @@ namespace Posterr.Services
                 .FirstOrDefaultAsync();
 
             response.Followed = await IsUsedFollowedByAuthenticatedUser(id, autheticatedUserId);
+            response.TopPosts = await _postService.GetUserPosts(id, 0);
 
             return response;
         }
