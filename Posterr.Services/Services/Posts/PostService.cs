@@ -1,13 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Posterr.DB;
-using Posterr.DB.Models;
+﻿using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
 using Posterr.Services.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Posterr.Services
 {
@@ -45,11 +42,11 @@ namespace Posterr.Services
             var post = _postRepository.CreatePost(authenticatedUserId, request.Content, request.CreatedAt, request.OriginalPostId);
 
             IList<PostResponseModel> newPostFormatted = _CreatePostModel(_postRepository.GetPostsById(post.Id));
-            
+
             return BaseResponse<PostResponseModel>.CreateSuccess(newPostFormatted.FirstOrDefault());
         }
 
-        private IList<PostResponseModel> _CreatePostModel(IQueryable<Post> posts)
+        private static IList<PostResponseModel> _CreatePostModel(IQueryable<Post> posts)
         {
             var response = posts
                 .Select(p => new PostsModel
@@ -71,7 +68,7 @@ namespace Posterr.Services
             return response.Select(r => new PostResponseModel(r)).ToList();
         }
 
-        private IList<PostResponseModel> _CreateBasicPostModel(IQueryable<Post> posts)
+        private static IList<PostResponseModel> _CreateBasicPostModel(IQueryable<Post> posts)
         {
             var response = posts
                 .Select(p => new BasicPostModel
@@ -89,7 +86,7 @@ namespace Posterr.Services
 
             IList<PostsModel> postModels = response.Select(r => new PostsModel(r)).ToList();
             IList<PostResponseModel> formatedResponse = postModels.Select(r => new PostResponseModel(r)).ToList();
-            
+
             return formatedResponse;
         }
     }
@@ -100,7 +97,7 @@ namespace Posterr.Services
         public DateTime CreatedAt { get; set; }
         public string Content { get; internal set; }
         public string Username { get; internal set; }
-        
+
         public int? OriginalPostId { get; internal set; }
         public DateTime? OriginalPostCreatedAt { get; set; }
         public string OriginalPostContent { get; internal set; }

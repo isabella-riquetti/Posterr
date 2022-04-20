@@ -1,9 +1,7 @@
-﻿using Posterr.DB;
-using Posterr.DB.Models;
+﻿using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
 using Posterr.Services.User;
-using System.Linq;
 
 namespace Posterr.Services
 {

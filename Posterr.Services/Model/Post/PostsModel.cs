@@ -8,7 +8,7 @@
         public PostsModel()
         {
         }
-        
+
         public PostsModel(BasicPostModel model)
         {
             this.PostId = model.PostId;
@@ -45,7 +45,7 @@
     {
         public PostResponseModel()
         {
-            
+
         }
         public PostResponseModel(PostsModel postModel)
         {
@@ -81,9 +81,9 @@
                         CreatedAt = postModel.OriginalPost.CreatedAt
                     };
                 };
-            }            
+            }
         }
-        
+
         public int PostId { get; set; }
         public string Username { get; set; }
         public string CreatedAt { get; set; }

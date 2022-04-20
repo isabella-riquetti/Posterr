@@ -1,13 +1,10 @@
-﻿using Posterr.DB;
-using Posterr.Services;
-using Posterr.Services.Model;
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
+﻿using FluentAssertions;
+using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Infra.Repository;
+using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace Posterr.Tests.Repository
 {
@@ -25,7 +22,7 @@ namespace Posterr.Tests.Repository
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
 
-        public static TheoryData<GetUserTestInput> GetUserTests = new TheoryData<GetUserTestInput>()
+        public static readonly TheoryData<GetUserTestInput> GetUserTests = new()
         {
             new GetUserTestInput()
             {
@@ -40,7 +37,7 @@ namespace Posterr.Tests.Repository
                         Username = "user1"
                     }
                 },
-                ExpectedResponse = new List<User>().AsQueryable()                
+                ExpectedResponse = new List<User>().AsQueryable()
             },
             new GetUserTestInput()
             {
@@ -87,7 +84,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponse, response);
         }
 
-        public static TheoryData<UserExistsTestInput> UserExistsTests = new TheoryData<UserExistsTestInput>()
+        public static readonly TheoryData<UserExistsTestInput> UserExistsTests = new()
         {
             new UserExistsTestInput()
             {
@@ -142,7 +139,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedUserId, userId);
         }
 
-        public static TheoryData<UserExistsOutUserIdTestInput> UserExistsOutUserIdTests = new TheoryData<UserExistsOutUserIdTestInput>()
+        public static readonly TheoryData<UserExistsOutUserIdTestInput> UserExistsOutUserIdTests = new()
         {
             new UserExistsOutUserIdTestInput()
             {
@@ -199,7 +196,7 @@ namespace Posterr.Tests.Repository
             apiContext.Users.Should().ContainSingle(f => f.Username == test.Username);
         }
 
-        public static TheoryData<CreateUserTestInput> CreateUserTests = new TheoryData<CreateUserTestInput>()
+        public static readonly TheoryData<CreateUserTestInput> CreateUserTests = new()
         {
             new CreateUserTestInput()
             {

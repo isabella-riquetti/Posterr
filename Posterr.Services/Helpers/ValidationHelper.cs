@@ -4,7 +4,7 @@ using System;
 namespace Posterr.Services.Helpers
 {
     public class ValidationHelper
-    {        
+    {
         /// <summary>
         /// Validate whether the user id provided is within the allowed range
         /// </summary>
@@ -18,7 +18,7 @@ namespace Posterr.Services.Helpers
                 errorMessage = "Invalid User Id, the ID should be between 1 and 2147483647";
                 return false;
             }
-            
+
             errorMessage = null;
             return true;
         }
@@ -59,7 +59,7 @@ namespace Posterr.Services.Helpers
                 errorMessage = "Cannot skip negative number of records";
                 return false;
             }
-            
+
             errorMessage = null;
             return true;
         }
@@ -75,7 +75,7 @@ namespace Posterr.Services.Helpers
             {
                 errorMessage = "Username should be alphanumeric and under 14 characters";
                 return false;
-            }            
+            }
 
             errorMessage = null;
             return true;

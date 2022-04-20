@@ -11,6 +11,7 @@ namespace Posterr.DB
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            this.Configure(app, env);
         }
     }
 }

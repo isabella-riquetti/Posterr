@@ -5,16 +5,16 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Posterr.DB;
-using System;
 using Posterr.DB.Models;
-using Posterr.Services.User;
-using Posterr.Services;
 using Posterr.Infra.Interfaces;
 using Posterr.Infra.Repository;
-using System.IO;
-using Newtonsoft.Json;
+using Posterr.Services;
+using Posterr.Services.User;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Posterr
@@ -64,7 +64,7 @@ namespace Posterr
 
             //1st run
             var context = serviceProvider.GetService<ApiContext>();
-            InsertFirstRunTestData(context);
+            _InsertFirstRunTestData(context);
 
             app.UseHttpsRedirection();
 
@@ -78,7 +78,7 @@ namespace Posterr
             });
         }
 
-        private static void InsertFirstRunTestData(ApiContext context)
+        private static void _InsertFirstRunTestData(ApiContext context)
         {
             if (!context.Users.Any()) // First run
             {

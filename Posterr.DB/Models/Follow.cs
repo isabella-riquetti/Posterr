@@ -10,13 +10,13 @@ namespace Posterr.DB.Models
         [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         [DefaultValue("0")]
         public bool Unfollowed { get; set; }
 
         public int FollowerId { get; set; }
-        
+
         [ForeignKey("FollowerId")]
         public virtual User Follower { get; set; }
 

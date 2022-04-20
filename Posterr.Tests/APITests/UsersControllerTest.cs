@@ -25,7 +25,7 @@ namespace Posterr.Tests.Controllers
             var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
             IActionResult response = controller.GetUserProfile(test.UserId);
 
-            if(!test.ExpectSuccess)
+            if (!test.ExpectSuccess)
             {
                 Assert.IsType<BadRequestObjectResult>(response);
                 Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
@@ -38,7 +38,7 @@ namespace Posterr.Tests.Controllers
         }
 
 
-        public static TheoryData<GetProfileTestInput> GetProfileTests = new TheoryData<GetProfileTestInput>()
+        public static readonly TheoryData<GetProfileTestInput> GetProfileTests = new()
         {
             new GetProfileTestInput()
             {
@@ -126,7 +126,7 @@ namespace Posterr.Tests.Controllers
         }
 
 
-        public static TheoryData<FollowTestInput> FollowTests = new TheoryData<FollowTestInput>()
+        public static readonly TheoryData<FollowTestInput> FollowTests = new()
         {
             new FollowTestInput()
             {
@@ -157,7 +157,7 @@ namespace Posterr.Tests.Controllers
                 UserId = 1,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "You can't follow yourself"
-            }, 
+            },
             new FollowTestInput()
             {
                 TestName = "Fail at following",
@@ -166,7 +166,7 @@ namespace Posterr.Tests.Controllers
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "User is already followed by you",
                 FollowResponse = BaseResponse.CreateError("User is already followed by you")
-            }, 
+            },
             new FollowTestInput()
             {
                 TestName = "Success",
@@ -212,7 +212,7 @@ namespace Posterr.Tests.Controllers
         }
 
 
-        public static TheoryData<UnfollowTestInput> UnfollowTests = new TheoryData<UnfollowTestInput>()
+        public static readonly TheoryData<UnfollowTestInput> UnfollowTests = new()
         {
             new UnfollowTestInput()
             {
@@ -290,7 +290,7 @@ namespace Posterr.Tests.Controllers
         }
 
 
-        public static TheoryData<CreateUserTestInput> CreateUserTests = new TheoryData<CreateUserTestInput>()
+        public static readonly TheoryData<CreateUserTestInput> CreateUserTests = new()
         {
             new CreateUserTestInput()
             {

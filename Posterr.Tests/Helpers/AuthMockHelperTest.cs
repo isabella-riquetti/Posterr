@@ -11,17 +11,17 @@ namespace Posterr.Tests.Helpers
         public void GetUserFromHeaderTest(GetUserFromHeaderTestInput test)
         {
             var httpContext = new DefaultHttpContext();
-            if(test.AddHeader)
+            if (test.AddHeader)
             {
                 httpContext.Request.Headers.Add("AuthenticatedUserId", test.AuthenticatedUserId);
             }
-
+            
             int response = AuthMockHelper.GetUserFromHeader(httpContext.Request);
 
             Assert.Equal(test.ExpectedResponse, response);
         }
 
-        public static TheoryData<GetUserFromHeaderTestInput> GetUserFromHeaderTests = new TheoryData<GetUserFromHeaderTestInput>()
+        public static readonly TheoryData<GetUserFromHeaderTestInput> GetUserFromHeaderTests = new()
         {
             new GetUserFromHeaderTestInput()
             {

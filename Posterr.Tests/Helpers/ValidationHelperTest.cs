@@ -1,10 +1,6 @@
 ﻿using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Posterr.Tests.Helpers
@@ -21,7 +17,7 @@ namespace Posterr.Tests.Helpers
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
         }
 
-        public static TheoryData<IsSkipPossibleTestInput> IsSkipPossibleTests = new TheoryData<IsSkipPossibleTestInput>()
+        public static readonly TheoryData<IsSkipPossibleTestInput> IsSkipPossibleTests = new()
         {
             new IsSkipPossibleTestInput()
             {
@@ -68,7 +64,7 @@ namespace Posterr.Tests.Helpers
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
         }
 
-        public static TheoryData<IsValidUserIdTestInput> IsValidUserIdTests = new TheoryData<IsValidUserIdTestInput>()
+        public static readonly TheoryData<IsValidUserIdTestInput> IsValidUserIdTests = new()
         {
             new IsValidUserIdTestInput()
             {
@@ -110,7 +106,7 @@ namespace Posterr.Tests.Helpers
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
         }
 
-        public static TheoryData<IsValidUserTestInput> IsValidUserTests = new TheoryData<IsValidUserTestInput>()
+        public static readonly TheoryData<IsValidUserTestInput> IsValidUserTests = new()
         {
             new IsValidUserTestInput()
             {
@@ -162,7 +158,7 @@ namespace Posterr.Tests.Helpers
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
         }
 
-        public static TheoryData<IsValidUsernameTestInput> IsValidUsernameTests = new TheoryData<IsValidUsernameTestInput>()
+        public static readonly TheoryData<IsValidUsernameTestInput> IsValidUsernameTests = new()
         {
             new IsValidUsernameTestInput()
             {
@@ -218,7 +214,7 @@ namespace Posterr.Tests.Helpers
             Assert.Equal(test.ExpectedErrorMessage, errorMessage);
         }
 
-        public static TheoryData<IsValidContentTestInput> IsValidContentTests = new TheoryData<IsValidContentTestInput>()
+        public static readonly TheoryData<IsValidContentTestInput> IsValidContentTests = new()
         {
             new IsValidContentTestInput()
             {

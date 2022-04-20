@@ -1,6 +1,5 @@
 ﻿using Posterr.Services.Model;
 using Posterr.Services.Model.User;
-using System.Threading.Tasks;
 
 namespace Posterr.Services.User
 {

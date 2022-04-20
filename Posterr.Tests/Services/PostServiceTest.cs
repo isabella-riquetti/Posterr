@@ -1,16 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using NSubstitute;
-using Posterr.DB;
-using Posterr.Services;
-using Posterr.Services.Model;
-using Posterr.Services.User;
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
 using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
+using Posterr.Services;
+using Posterr.Services.Model;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace Posterr.Tests.Services
 {
@@ -29,7 +26,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
         }
 
-        public static TheoryData<GetUserPostsTestInput> GetUserPostsTests = new TheoryData<GetUserPostsTestInput>()
+        public static readonly TheoryData<GetUserPostsTestInput> GetUserPostsTests = new()
         {
             new GetUserPostsTestInput()
             {
@@ -179,7 +176,7 @@ namespace Posterr.Tests.Services
         public class GetUserPostsTestInput
         {
             public string TestName { get; set; }
-            public int CustomPageSize => 5;
+            public static int CustomPageSize => 5;
 
             public int UserId { get; set; }
             public int Skip { get; set; }
@@ -202,7 +199,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
         }
 
-        public static TheoryData<GetUserFollowingTimelineTestInput> GetUserFollowingTimelineTests = new TheoryData<GetUserFollowingTimelineTestInput>()
+        public static readonly TheoryData<GetUserFollowingTimelineTestInput> GetUserFollowingTimelineTests = new()
         {
             new GetUserFollowingTimelineTestInput()
             {
@@ -352,7 +349,7 @@ namespace Posterr.Tests.Services
         public class GetUserFollowingTimelineTestInput
         {
             public string TestName { get; set; }
-            public int CustomPageSize => 5;
+            public static int CustomPageSize => 5;
 
             public int UserId { get; set; }
             public int Skip { get; set; }
@@ -375,7 +372,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
         }
 
-        public static TheoryData<GetTimelineTestInput> GetTimelineTests = new TheoryData<GetTimelineTestInput>()
+        public static readonly TheoryData<GetTimelineTestInput> GetTimelineTests = new()
         {
             new GetTimelineTestInput()
             {
@@ -567,7 +564,7 @@ namespace Posterr.Tests.Services
         public class GetTimelineTestInput
         {
             public string TestName { get; set; }
-            public int CustomPageSize => 5;
+            public static int CustomPageSize => 5;
 
             public int UserId { get; set; }
             public int Skip { get; set; }
@@ -590,7 +587,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
         }
 
-        public static TheoryData<SearchByTextTestInput> SearchByTextTests = new TheoryData<SearchByTextTestInput>()
+        public static readonly TheoryData<SearchByTextTestInput> SearchByTextTests = new()
         {
             new SearchByTextTestInput()
             {
@@ -727,7 +724,7 @@ namespace Posterr.Tests.Services
         public class SearchByTextTestInput
         {
             public string TestName { get; set; }
-            public int CustomPageSize => 5;
+            public static int CustomPageSize => 5;
 
             public int UserId { get; set; }
             public int Skip { get; set; }
@@ -751,7 +748,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
         }
 
-        public static TheoryData<CreatePostTestInput> CreatePostTests = new TheoryData<CreatePostTestInput>()
+        public static readonly TheoryData<CreatePostTestInput> CreatePostTests = new()
         {
             new CreatePostTestInput()
             {
@@ -897,10 +894,11 @@ namespace Posterr.Tests.Services
                 }.AsQueryable()
             }
         };
+
         public class CreatePostTestInput
         {
             public string TestName { get; set; }
-            public int CustomPageSize => 5;
+            public static int CustomPageSize => 5;
 
             public int AuthenticatedUserId { get; set; }
             public CreatePostRequestModel Request { get; set; }

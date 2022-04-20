@@ -1,16 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using NSubstitute;
+﻿using FluentAssertions;
 using Posterr.DB;
-using Posterr.Services;
-using Posterr.Services.Model;
-using Posterr.Services.User;
+using Posterr.DB.Models;
+using Posterr.Infra.Repository;
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
-using Posterr.DB.Models;
 using System.Linq;
-using Posterr.Infra.Repository;
+using Xunit;
 
 namespace Posterr.Tests.Repository
 {
@@ -28,7 +23,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponseCount, response.Count());
         }
 
-        public static TheoryData<GetPostByIdTestInput> GetPostByIdTests = new TheoryData<GetPostByIdTestInput>()
+        public static readonly TheoryData<GetPostByIdTestInput> GetPostByIdTests = new()
         {
             new GetPostByIdTestInput()
             {
@@ -110,7 +105,7 @@ namespace Posterr.Tests.Repository
 
         }
         #endregion GetPostById
-        
+
         #region GetPostsByUserId
         [Theory, MemberData(nameof(GetPostsByUserIdTests))]
         public void GetPostsByUserIdTest(GetPostsByUserIdTestInput test)
@@ -123,7 +118,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponseCount, response.Count());
         }
 
-        public static TheoryData<GetPostsByUserIdTestInput> GetPostsByUserIdTests = new TheoryData<GetPostsByUserIdTestInput>()
+        public static readonly TheoryData<GetPostsByUserIdTestInput> GetPostsByUserIdTests = new()
         {
             new GetPostsByUserIdTestInput()
             {
@@ -461,7 +456,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponseCount, response.Count());
         }
 
-        public static TheoryData<GetFollowedPostsTestInput> GetFollowedPostsTests = new TheoryData<GetFollowedPostsTestInput>()
+        public static readonly TheoryData<GetFollowedPostsTestInput> GetFollowedPostsTests = new()
         {
             new GetFollowedPostsTestInput()
             {
@@ -933,7 +928,7 @@ namespace Posterr.Tests.Repository
             public int Skip { get; set; }
 
             public int ExpectedResponseCount { get; set; }
-            public int PageLimit => 5;
+            public int PageLimit = 5;
         }
         #endregion GetFollowedPosts
 
@@ -949,7 +944,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponseCount, response.Count());
         }
 
-        public static TheoryData<GetTimelinePostsTestInput> GetTimelinePostsTests = new TheoryData<GetTimelinePostsTestInput>()
+        public static readonly TheoryData<GetTimelinePostsTestInput> GetTimelinePostsTests = new()
         {
             new GetTimelinePostsTestInput()
             {
@@ -1217,7 +1212,7 @@ namespace Posterr.Tests.Repository
             public int Skip { get; set; }
 
             public int ExpectedResponseCount { get; set; }
-            public int PageLimit => 5;
+            public int PageLimit = 5;
         }
         #endregion GetTimelinePosts
 
@@ -1233,7 +1228,7 @@ namespace Posterr.Tests.Repository
             Assert.Equal(test.ExpectedResponseCount, response.Count());
         }
 
-        public static TheoryData<GetPostsByPartialTextSearchTestInput> GetPostsByPartialTextSearchTests = new TheoryData<GetPostsByPartialTextSearchTestInput>()
+        public static readonly TheoryData<GetPostsByPartialTextSearchTestInput> GetPostsByPartialTextSearchTests = new()
         {
             new GetPostsByPartialTextSearchTestInput()
             {
@@ -1350,8 +1345,7 @@ namespace Posterr.Tests.Repository
             public string SearchText { get; set; }
 
             public int ExpectedResponseCount { get; set; }
-            public int PageLimit => 5;
-
+            public int PageLimit = 5;
         }
         #endregion GetPostsByPartialTextSearch
 
@@ -1367,7 +1361,7 @@ namespace Posterr.Tests.Repository
             apiContext.Posts.Should().ContainSingle(f => f.UserId == test.AuthenticatedUserId && f.Content == test.Content && f.OriginalPostId == test.OriginalPostId);
         }
 
-        public static TheoryData<CreatePostTestInput> CreatePostTests = new TheoryData<CreatePostTestInput>()
+        public static readonly TheoryData<CreatePostTestInput> CreatePostTests = new()
         {
             new CreatePostTestInput()
             {

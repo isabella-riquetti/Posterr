@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Posterr.API.Helper;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Posterr.Controllers
 {
@@ -80,7 +78,7 @@ namespace Posterr.Controllers
 
             return Ok(userPostsResponse.Data);
         }
-        
+
         [HttpGet]
         [Route("search/{text}/{skipPages?}")]
         public IActionResult Search(string text, int skipPages = 0)
@@ -90,7 +88,7 @@ namespace Posterr.Controllers
             {
                 return BadRequest(errorMessage);
             }
-            
+
             BaseResponse<IList<PostResponseModel>> userPostsResponse = _postService.SearchByText(text, skipPages);
 
             if (!userPostsResponse.Success)
@@ -105,7 +103,7 @@ namespace Posterr.Controllers
         [Route("create")]
         public IActionResult CreatePost([FromBody] CreatePostRequestModel request)
         {
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }

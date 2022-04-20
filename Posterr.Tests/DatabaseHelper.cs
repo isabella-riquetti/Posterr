@@ -50,7 +50,7 @@ namespace Posterr.Tests
                     context.SaveChanges();
                 }
             }
-            if(FollowsToAdd != null)
+            if (FollowsToAdd != null)
             {
                 foreach (Follow follow in this.FollowsToAdd)
                 {

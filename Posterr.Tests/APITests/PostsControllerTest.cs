@@ -35,7 +35,7 @@ namespace Posterr.Tests.Controllers
             }
         }
 
-        public static TheoryData<GetUserTimelineTestInput> GetUserTimelineTests = new TheoryData<GetUserTimelineTestInput>()
+        public static readonly TheoryData<GetUserTimelineTestInput> GetUserTimelineTests = new()
         {
             new GetUserTimelineTestInput()
             {
@@ -103,7 +103,7 @@ namespace Posterr.Tests.Controllers
             }
         }
 
-        public static TheoryData<GetTimelineTestInput> GetTimelineTests = new TheoryData<GetTimelineTestInput>()
+        public static readonly TheoryData<GetTimelineTestInput> GetTimelineTests = new()
         {
             new GetTimelineTestInput()
             {
@@ -171,7 +171,7 @@ namespace Posterr.Tests.Controllers
             }
         }
 
-        public static TheoryData<SearchTestInput> SearchTests = new TheoryData<SearchTestInput>()
+        public static readonly TheoryData<SearchTestInput> SearchTests = new()
         {
             new SearchTestInput()
             {
@@ -240,7 +240,7 @@ namespace Posterr.Tests.Controllers
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
             IActionResult response = controller.GetUserPosts(test.UserId, test.Skip);
 
-            if(!test.ExpectSuccess)
+            if (!test.ExpectSuccess)
             {
                 Assert.IsType<BadRequestObjectResult>(response);
                 Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
@@ -252,7 +252,7 @@ namespace Posterr.Tests.Controllers
             }
         }
 
-        public static TheoryData<GetUserPostsTestInput> GetUserPostsTests = new TheoryData<GetUserPostsTestInput>()
+        public static readonly TheoryData<GetUserPostsTestInput> GetUserPostsTests = new()
         {
             new GetUserPostsTestInput()
             {
@@ -363,7 +363,7 @@ namespace Posterr.Tests.Controllers
             }
         }
 
-        public static TheoryData<CreatePostTestInput> CreatePostTests = new TheoryData<CreatePostTestInput>()
+        public static readonly TheoryData<CreatePostTestInput> CreatePostTests = new()
         {
             new CreatePostTestInput()
             {

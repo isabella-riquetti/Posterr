@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Posterr.DB;
+﻿using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
 using System;

@@ -11,12 +11,12 @@
         {
             if (request?.Headers?.ContainsKey("AuthenticatedUserId") == true)
             {
-                if(int.TryParse(request.Headers["AuthenticatedUserId"], out int userId))
+                if (int.TryParse(request.Headers["AuthenticatedUserId"], out int userId))
                 {
                     return userId;
                 }
             }
-            
+
             return 1;
         }
     }

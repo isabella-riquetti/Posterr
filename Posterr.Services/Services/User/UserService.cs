@@ -1,14 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Posterr.DB;
-using Posterr.DB.Models;
-using Posterr.Infra.Interfaces;
+﻿using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
 using Posterr.Services.Model.User;
 using Posterr.Services.User;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Posterr.Services
 {
@@ -37,11 +32,11 @@ namespace Posterr.Services
                     Username = u.Username,
                     Followers = u.Following.Count(f => f.Unfollowed == false),
                     Following = u.Followers.Count(f => f.Unfollowed == false),
-                    Posts = u.Posts.Count()
+                    Posts = u.Posts.Count
                 })
                 .FirstOrDefault();
 
-            if(response == null)
+            if (response == null)
             {
                 return BaseResponse<UserProfileModel>.CreateError("User not found");
             }
@@ -51,7 +46,7 @@ namespace Posterr.Services
             {
                 return BaseResponse<UserProfileModel>.CreateError(postsResponse.Message);
             }
-            
+
             response.TopPosts = postsResponse.Data;
             response.Followed = _followRepository.IsUserFollowedBy(autheticatedUserId, userId);
 
@@ -60,14 +55,14 @@ namespace Posterr.Services
 
         public BaseResponse<int> CreateUser(CreateUserRequestModel request)
         {
-            if (_userRepository.UserExists(request.Username, out int? userId))
+            if (_userRepository.UserExists(request.Username, out int? _))
             {
                 return BaseResponse<int>.CreateError("User already exists");
             }
 
             _userRepository.CreateUser(request.Username);
 
-            if (!_userRepository.UserExists(request.Username, out userId))
+            if (!_userRepository.UserExists(request.Username, out int? userId))
             {
                 return BaseResponse<int>.CreateError("User could not be created");
             }
@@ -77,11 +72,11 @@ namespace Posterr.Services
 
         public BaseResponse UserExists(int id)
         {
-            if(!_userRepository.UserExists(id))
+            if (!_userRepository.UserExists(id))
             {
                 return BaseResponse.CreateError("User not found");
             }
-            
+
             return BaseResponse.CreateSuccess();
         }
     }

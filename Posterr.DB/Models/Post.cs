@@ -22,12 +22,12 @@ namespace Posterr.DB.Models
 
         [Required]
         public int UserId { get; set; }
-        
+
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
 
         public int? OriginalPostId { get; set; }
-        
+
         [ForeignKey("OriginalPostId")]
         public virtual Post OriginalPost { get; set; }
 

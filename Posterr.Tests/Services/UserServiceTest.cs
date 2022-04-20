@@ -1,18 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
 using NSubstitute;
-using Posterr.DB;
+using Posterr.DB.Models;
+using Posterr.Infra.Interfaces;
 using Posterr.Services;
 using Posterr.Services.Model;
+using Posterr.Services.Model.User;
 using Posterr.Services.User;
 using System;
 using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
-using Posterr.DB.Models;
-using Posterr.Services.Model.User;
-using Posterr.Infra.Interfaces;
 using System.Linq;
-using NSubstitute.Core;
+using Xunit;
 
 namespace Posterr.Tests.Services
 {
@@ -35,7 +32,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
 
-        public static TheoryData<GetUserProfileTestInput> GetUserProfileTests = new TheoryData<GetUserProfileTestInput>()
+        public static readonly TheoryData<GetUserProfileTestInput> GetUserProfileTests = new()
         {
             new GetUserProfileTestInput()
             {
@@ -91,7 +88,7 @@ namespace Posterr.Tests.Services
                             new Follow()
                         },
                         Posts = new List<Post>()
-                    }                    
+                    }
                 }.AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
@@ -338,7 +335,7 @@ namespace Posterr.Tests.Services
         {
             public string TestName { get; set; }
             public BaseResponse<UserProfileModel> ExpectedResponse { get; set; }
-            
+
             public int UserId { get; set; }
             public int AuthenticatedUserId { get; set; }
 
@@ -358,10 +355,12 @@ namespace Posterr.Tests.Services
             var userRepositorySubstitute = Substitute.For<IUserRepository>();
             userRepositorySubstitute.CreateUser(Arg.Any<string>());
             userRepositorySubstitute.UserExists(Arg.Any<string>(), out Arg.Any<int?>())
-                .Returns(x => {
+                .Returns(x =>
+                {
                     x[1] = test.UserExistsOutUserId1;
                     return test.UserExistsResponse1;
-                }, x => {
+                }, x =>
+                {
                     x[1] = test.UserExistsOutUserId2;
                     return test.UserExistsResponse2;
                 });
@@ -372,7 +371,7 @@ namespace Posterr.Tests.Services
             Assert.Equal(test.ExpectedResponse, response.Success);
         }
 
-        public static TheoryData<CreateUserTestInput> CreateUserTests = new TheoryData<CreateUserTestInput>()
+        public static readonly TheoryData<CreateUserTestInput> CreateUserTests = new()
         {
             new CreateUserTestInput()
             {
@@ -429,7 +428,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
 
-        public static TheoryData<UserExistsTestInput> UserExistsTests = new TheoryData<UserExistsTestInput>()
+        public static readonly TheoryData<UserExistsTestInput> UserExistsTests = new()
         {
             new UserExistsTestInput()
             {

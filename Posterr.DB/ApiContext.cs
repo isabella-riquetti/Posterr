@@ -16,13 +16,13 @@ namespace Posterr.DB
         public DbSet<Post> Posts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {   
+        {
             modelBuilder.Entity<Post>()
                 .HasOne(x => x.User)
                 .WithMany(x => x.Posts)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
-            
+
             modelBuilder.Entity<Follow>()
                 .HasOne(x => x.Following)
                 .WithMany(x => x.Following)

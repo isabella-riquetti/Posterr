@@ -1,10 +1,10 @@
-﻿using Posterr.DB;
-using System.Collections.Generic;
-using FluentAssertions;
-using Xunit;
+﻿using FluentAssertions;
+using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Infra.Repository;
+using System.Collections.Generic;
 using System.Linq;
+using Xunit;
 
 namespace Posterr.Tests.Repository
 {
@@ -23,7 +23,7 @@ namespace Posterr.Tests.Repository
             apiContext.Follows.First().Unfollowed.Should().Be(test.Unfollow);
         }
 
-        public static TheoryData<UpdateUnfollowedStatusTestInput> UpdateUnfollowedStatusTests = new TheoryData<UpdateUnfollowedStatusTestInput>()
+        public static readonly TheoryData<UpdateUnfollowedStatusTestInput> UpdateUnfollowedStatusTests = new()
         {
             new UpdateUnfollowedStatusTestInput()
             {
@@ -59,7 +59,7 @@ namespace Posterr.Tests.Repository
         public class UpdateUnfollowedStatusTestInput : DatatbaseTestInput
         {
             public string TestName { get; set; }
-            
+
             public Follow Follow { get; set; }
             public bool Unfollow { get; set; }
         }
@@ -77,7 +77,7 @@ namespace Posterr.Tests.Repository
             apiContext.Follows.Should().ContainSingle(f => f.FollowerId == test.FollowerId && f.FollowingId == test.FollowingId);
         }
 
-        public static TheoryData<CreateFollowTestInput> CreateFollowTests = new TheoryData<CreateFollowTestInput>()
+        public static readonly TheoryData<CreateFollowTestInput> CreateFollowTests = new()
         {
             new CreateFollowTestInput()
             {
@@ -114,7 +114,7 @@ namespace Posterr.Tests.Repository
             }
         }
 
-        public static TheoryData<IsUserFollowedByTestInput> IsUserFollowedByTests = new TheoryData<IsUserFollowedByTestInput>()
+        public static readonly TheoryData<IsUserFollowedByTestInput> IsUserFollowedByTests = new()
         {
             new IsUserFollowedByTestInput()
             {
@@ -189,7 +189,7 @@ namespace Posterr.Tests.Repository
             }
         }
 
-        public static TheoryData<IsUserFollowedByOutFollowTestInput> IsUserFollowedByOutFollowTests = new TheoryData<IsUserFollowedByOutFollowTestInput>()
+        public static readonly TheoryData<IsUserFollowedByOutFollowTestInput> IsUserFollowedByOutFollowTests = new()
         {
             new IsUserFollowedByOutFollowTestInput()
             {

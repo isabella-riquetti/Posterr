@@ -4,7 +4,6 @@ using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.Model.User;
 using Posterr.Services.User;
-using System.Threading.Tasks;
 
 namespace Posterr.Controllers
 {
@@ -33,7 +32,7 @@ namespace Posterr.Controllers
 
             BaseResponse<UserProfileModel> userProfileResponse = _userService.GetUserProfile(userId, AuthMockHelper.GetUserFromHeader(Request));
 
-            if(!userProfileResponse.Success)
+            if (!userProfileResponse.Success)
             {
                 return BadRequest(userProfileResponse.Message);
             }
@@ -84,7 +83,7 @@ namespace Posterr.Controllers
         // Just to make easier to test new users
         [HttpPost]
         [Route("create")]
-        public IActionResult CreateUser([FromBody]CreateUserRequestModel request)
+        public IActionResult CreateUser([FromBody] CreateUserRequestModel request)
         {
             if (!ModelState.IsValid)
             {
@@ -102,7 +101,7 @@ namespace Posterr.Controllers
                 return BadRequest(createUserResponse.Message);
             }
 
-            return Ok($"New user created with the id: {createUserResponse.Data}"); 
+            return Ok($"New user created with the id: {createUserResponse.Data}");
         }
     }
 }

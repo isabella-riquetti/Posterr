@@ -1,14 +1,10 @@
-﻿using Posterr.DB;
+﻿using FluentAssertions;
+using NSubstitute;
+using Posterr.DB.Models;
+using Posterr.Infra.Interfaces;
 using Posterr.Services;
 using Posterr.Services.Model;
-using System;
-using System.Collections.Generic;
-using FluentAssertions;
 using Xunit;
-using Posterr.DB.Models;
-using NSubstitute;
-using Posterr.Infra.Interfaces;
-using NSubstitute.Core;
 
 namespace Posterr.Tests.Services
 {
@@ -29,7 +25,7 @@ namespace Posterr.Tests.Services
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
 
-        public static TheoryData<FollowUserTestInput> FollowUserTests = new TheoryData<FollowUserTestInput>()
+        public static readonly TheoryData<FollowUserTestInput> FollowUserTests = new()
         {
             new FollowUserTestInput()
             {
@@ -57,7 +53,7 @@ namespace Posterr.Tests.Services
         public class FollowUserTestInput
         {
             public string TestName { get; set; }
-            
+
             public int AuthenticatedUserId { get; set; }
             public int FollowUserId { get; set; }
             public bool IsFollowed { get; set; }
@@ -74,14 +70,14 @@ namespace Posterr.Tests.Services
             followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>(), out Arg.Any<Follow>()).Returns(test.IsFollowed);
             followRepositorySubstitute.UpdateUnfollowedStatus(Arg.Any<Follow>(), Arg.Any<bool>());
             followRepositorySubstitute.CreateFollow(Arg.Any<int>(), Arg.Any<int>());
-            
+
             var service = new FollowService(followRepositorySubstitute);
             BaseResponse response = service.UnfollowUser(test.UnfollowUserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
 
-        public static TheoryData<UnfollowUserTestInput> UnfollowUserTests = new TheoryData<UnfollowUserTestInput>()
+        public static readonly TheoryData<UnfollowUserTestInput> UnfollowUserTests = new()
         {
             new UnfollowUserTestInput()
             {

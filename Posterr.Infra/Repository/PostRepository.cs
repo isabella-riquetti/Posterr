@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Posterr.DB;
+﻿using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
 using System;
@@ -64,7 +63,7 @@ namespace Posterr.Infra.Repository
             return post;
         }
 
-        private IQueryable<Post> _OrderByAndTake(IQueryable<Post> posts, int skipPages = 0, int pageSize = 10)
+        private static IQueryable<Post> _OrderByAndTake(IQueryable<Post> posts, int skipPages = 0, int pageSize = 10)
         {
             return posts
                 .OrderByDescending(s => s.CreatedAt)

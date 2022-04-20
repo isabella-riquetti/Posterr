@@ -23,7 +23,7 @@ namespace Posterr.Infra.Repository
 
         public void CreateFollow(int followerUserId, int followingUserId)
         {
-            Follow newFollow = new Follow()
+            Follow newFollow = new()
             {
                 FollowerId = followerUserId,
                 FollowingId = followingUserId,
