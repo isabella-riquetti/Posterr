@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+
 
 namespace Posterr.DB.Models
 {
@@ -9,9 +11,11 @@ namespace Posterr.DB.Models
     {
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Required]
+        [DefaultValue("getdate()")]
         public DateTime CreatedAt { get; set; }
 
         public string Content { get; set; }

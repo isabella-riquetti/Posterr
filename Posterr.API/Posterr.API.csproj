@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Posterr.Services\Posterr.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+
 </Project>

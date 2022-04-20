@@ -10,7 +10,7 @@ using Posterr.DB;
 namespace Posterr.DB.Migrations
 {
     [DbContext(typeof(ApiContext))]
-    [Migration("20220420140443_PosterrMigrations")]
+    [Migration("20220420140931_PosterrMigrations")]
     partial class PosterrMigrations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -9,6 +10,7 @@ namespace Posterr.DB.Models
     {
         [Key]
         [Required]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         
         public string Name { get; set; }
@@ -17,6 +19,7 @@ namespace Posterr.DB.Models
         public string Username { get; set; }
 
         [Required]
+        [DefaultValue("getdate()")]
         public DateTime CreatedAt { get; set; }
 
         public virtual ICollection<Follow> Following { get; set; }

@@ -15,7 +15,7 @@ namespace Posterr.DB.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -28,7 +28,7 @@ namespace Posterr.DB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Unfollowed = table.Column<bool>(type: "bit", nullable: false),
+                    Unfollowed = table.Column<bool>(type: "bit", nullable: false, defaultValue: "0"),
                     FollowerId = table.Column<int>(type: "int", nullable: false),
                     FollowingId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -55,7 +55,7 @@ namespace Posterr.DB.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: "GETDATE()"),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     OriginalPostId = table.Column<int>(type: "int", nullable: true)
