@@ -152,18 +152,26 @@ namespace Posterr.Tests.Controllers
             },
             new FollowTestInput()
             {
-                TestName = "Fail at following",
+                TestName = "Fail, userId is the same as the authenticated",
                 ExpectSuccess = false,
                 UserId = 1,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
+                ExpectedErrorMessage = "You can't follow yourself"
+            }, 
+            new FollowTestInput()
+            {
+                TestName = "Fail at following",
+                ExpectSuccess = false,
+                UserId = 2,
+                UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 ExpectedErrorMessage = "User is already followed by you",
                 FollowResponse = BaseResponse.CreateError("User is already followed by you")
-            },
+            }, 
             new FollowTestInput()
             {
                 TestName = "Success",
                 ExpectSuccess = true,
-                UserId = 1,
+                UserId = 3,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
                 FollowResponse = BaseResponse.CreateSuccess()
             },

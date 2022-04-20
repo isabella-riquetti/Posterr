@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Services", "Posterr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Posterr.Tests", "Posterr.Tests\Posterr.Tests.csproj", "{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Posterr.Infra", "Posterr.Infra\Posterr.Infra.csproj", "{CDCC0F51-DADD-4681-898B-19054129646C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7D3F874-20C0-42D1-8F9C-FAB408E5EEEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CDCC0F51-DADD-4681-898B-19054129646C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CDCC0F51-DADD-4681-898B-19054129646C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CDCC0F51-DADD-4681-898B-19054129646C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CDCC0F51-DADD-4681-898B-19054129646C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

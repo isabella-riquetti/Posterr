@@ -49,6 +49,10 @@ namespace Posterr.Controllers
             {
                 return BadRequest(errorMessage);
             }
+            if (AuthMockHelper.GetUserFromHeader(Request) == userId)
+            {
+                return BadRequest("You can't follow yourself");
+            }
 
             BaseResponse followUserResponse = _followService.FollowUser(userId, AuthMockHelper.GetUserFromHeader(Request));
             if (!followUserResponse.Success)
@@ -77,7 +81,7 @@ namespace Posterr.Controllers
             return Ok();
         }
 
-
+        // Just to make easier to test new users
         [HttpPost]
         [Route("create")]
         public IActionResult CreateUser([FromBody]CreateUserRequestModel request)
