@@ -1,7 +1,6 @@
 ﻿using Posterr.DB;
 using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
-using System;
 using System.Linq;
 
 namespace Posterr.Infra.Repository

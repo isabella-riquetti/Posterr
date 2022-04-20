@@ -44,6 +44,7 @@ namespace Posterr
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<IFollowRepository, FollowRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

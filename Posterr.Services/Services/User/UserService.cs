@@ -14,22 +14,22 @@ namespace Posterr.Services
 {
     public class UserService : IUserService
     {
-        private readonly ApiContext _context;
         private readonly IPostService _postService;
         private readonly IFollowRepository _followRepository;
+        private readonly IUserRepository _userRepository;
 
 
-        public UserService(ApiContext context, IPostService postService, IFollowRepository followRepository)
+        public UserService(IPostService postService, IFollowRepository followRepository, IUserRepository userRepository)
         {
-            _context = context;
             _postService = postService;
             _followRepository = followRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId)
         {
-            var response = await _context.Users
-                .Where(u => u.Id == userId)
+            var userQuery = _userRepository.GetUser(userId);
+            var response = userQuery
                 .Select(u => new UserProfileModel
                 {
                     UserId = u.Id,
@@ -39,7 +39,7 @@ namespace Posterr.Services
                     Following = u.Followers.Count(f => f.Unfollowed == false),
                     Posts = u.Posts.Count()
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefault();
 
             if(response == null)
             {
@@ -60,61 +60,29 @@ namespace Posterr.Services
 
         public BaseResponse<int> CreateUser(CreateUserRequestModel request)
         {
-            BaseResponse<int> userExist = _UserExists(request.Username);
-            if (userExist.Success)
+            if (_userRepository.UserExists(request.Username, out int? userId))
             {
                 return BaseResponse<int>.CreateError("User already exists");
             }
 
-            var user = new DB.Models.User()
-            {
-                Username = request.Username,
-                Name = String.IsNullOrEmpty(request.Name) ? request.Username : request.Name,
-                CreatedAt = DateTime.Now
-            };
-            _context.Users.Add(user);
-            _context.SaveChanges();
+            _userRepository.CreateUser(request.Username);
 
-            BaseResponse<int> newUser = _UserExists(request.Username);
-            if (!newUser.Success)
+            if (!_userRepository.UserExists(request.Username, out userId))
             {
                 return BaseResponse<int>.CreateError("User could not be created");
             }
 
-            return newUser;
+            return BaseResponse<int>.CreateSuccess((int)userId);
         }
 
         public BaseResponse UserExists(int id)
         {
-            bool response = _context.Users
-                .Any(u => u.Id == id);
-
-            if(!response)
+            if(!_userRepository.UserExists(id))
             {
                 return BaseResponse.CreateError("User not found");
             }
             
             return BaseResponse.CreateSuccess();
-        }
-
-        /// <summary>
-        /// Check if the user exist by the username and return the id case exist
-        /// </summary>
-        /// <param name="username">Expected username</param>
-        /// <returns>The userid in case exists</returns>
-        private BaseResponse<int> _UserExists(string username)
-        {
-            int response = _context.Users
-                .Where(u => u.Username == username)
-                .Select(u => u.Id)
-                .FirstOrDefault();
-
-            if (response == 0)
-            {
-                return BaseResponse<int>.CreateError("User not found");
-            }
-
-            return BaseResponse<int>.CreateSuccess(response);
         }
     }
 }

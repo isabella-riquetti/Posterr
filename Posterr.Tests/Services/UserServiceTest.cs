@@ -11,6 +11,8 @@ using Xunit;
 using Posterr.DB.Models;
 using Posterr.Services.Model.User;
 using Posterr.Infra.Interfaces;
+using System.Linq;
+using NSubstitute.Core;
 
 namespace Posterr.Tests.Services
 {
@@ -20,14 +22,14 @@ namespace Posterr.Tests.Services
         [Theory, MemberData(nameof(GetUserProfileTests))]
         public async void GetUserProfileTest(GetUserProfileTestInput test)
         {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
             var postServiceSubstitute = Substitute.For<IPostService>();
             var followRepositorySubstitute = Substitute.For<IFollowRepository>();
-
+            var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            userRepositorySubstitute.GetUser(Arg.Any<int>()).Returns(test.GetUserResponse);
             postServiceSubstitute.GetUserPosts(Arg.Any<int>()).Returns(test.GetUserPostsResponse);
             followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
 
-            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
+            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
             BaseResponse<UserProfileModel> response = await service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
@@ -40,44 +42,57 @@ namespace Posterr.Tests.Services
                 TestName = "Fail, user not found",
                 UserId = 100,
                 AuthenticatedUserId = 1,
+                GetUserResponse = new List<User>().AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateError("User not found"),
             },
             new GetUserProfileTestInput()
             {
                 TestName = "Fail to get posts",
-                ExpectedResponse = BaseResponse<UserProfileModel>.CreateError("Failed to get posts"),
-                UserId = 1,
-                AuthenticatedUserId = 1,
-                GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
-                    .CreateError("Failed to get posts"),
-                UsersToAdd = new List<User>() {
+                GetUserResponse = new List<User>()
+                {
                     new User()
                     {
                         Id = 1,
                         Name = "Test1",
                         Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
+                        CreatedAt = new DateTime(2022,4,19),
+                        Following = new List<Follow>()
+                        {
+                            new Follow()
+                            {
+                                Id = 1,
+                                FollowerId = 1
+                            }
+                        },
+                        Followers = new List<Follow>(),
+                        Posts = new List<Post>()
                     }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1
-                    }
-                }
+                }.AsQueryable(),
+                ExpectedResponse = BaseResponse<UserProfileModel>.CreateError("Failed to get posts"),
+                UserId = 1,
+                AuthenticatedUserId = 1,
+                GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateError("Failed to get posts")
             },
             new GetUserProfileTestInput()
             {
                 TestName = "Success, follow someone",
+                GetUserResponse = new List<User>()
+                {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test1",
+                        Username = "Test1",
+                        CreatedAt = new DateTime(2022,4,19),
+                        Following = new List<Follow>(),
+                        Followers = new List<Follow>()
+                        {
+                            new Follow()
+                        },
+                        Posts = new List<Post>()
+                    }                    
+                }.AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
                     UserId = 1,
@@ -92,36 +107,27 @@ namespace Posterr.Tests.Services
                 UserId = 1,
                 AuthenticatedUserId = 1,
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
-                    .CreateSuccess(new List<PostResponseModel>()),
-                UsersToAdd = new List<User>() {
+                    .CreateSuccess(new List<PostResponseModel>())
+            },
+            new GetUserProfileTestInput()
+            {
+                TestName = "Success, is followed by someone",
+                GetUserResponse = new List<User>()
+                {
                     new User()
                     {
                         Id = 1,
                         Name = "Test1",
                         Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
+                        CreatedAt = new DateTime(2022,4,19),
+                        Following = new List<Follow>()
+                        {
+                            new Follow()
+                        },
+                        Followers = new List<Follow>(),
+                        Posts = new List<Post>()
                     }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1,
-                        FollowingId = 2
-                    }
-                }
-            },
-            new GetUserProfileTestInput()
-            {
-                TestName = "Success, is followed by someone",
+                }.AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
                     UserId = 1,
@@ -136,36 +142,27 @@ namespace Posterr.Tests.Services
                 UserId = 1,
                 AuthenticatedUserId = 1,
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
-                    .CreateSuccess(new List<PostResponseModel>()),
-                UsersToAdd = new List<User>() {
+                    .CreateSuccess(new List<PostResponseModel>())
+            },
+            new GetUserProfileTestInput()
+            {
+                TestName = "Success, is followed by the authenticated user",
+                GetUserResponse = new List<User>()
+                {
                     new User()
                     {
                         Id = 1,
                         Name = "Test1",
                         Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
+                        CreatedAt = new DateTime(2022,4,19),
+                        Following = new List<Follow>()
+                        {
+                            new Follow()
+                        },
+                        Followers = new List<Follow>(),
+                        Posts = new List<Post>()
                     }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 2,
-                        FollowingId = 1
-                    }
-                }
-            },
-            new GetUserProfileTestInput()
-            {
-                TestName = "Success, is followed by the authenticated user",
+                }.AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
                     UserId = 1,
@@ -181,36 +178,32 @@ namespace Posterr.Tests.Services
                 AuthenticatedUserId = 2,
                 GetUserPostsResponse = BaseResponse<IList<PostResponseModel>>
                     .CreateSuccess(new List<PostResponseModel>()),
-                IsUserFollowedByAuthenticatedUserResponse = true,
-                UsersToAdd = new List<User>() {
+                IsUserFollowedByAuthenticatedUserResponse = true
+            },
+            new GetUserProfileTestInput()
+            {
+                TestName = "Success, has post, repost and quote post and over 5 posts",
+                GetUserResponse = new List<User>()
+                {
                     new User()
                     {
                         Id = 1,
                         Name = "Test1",
                         Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
+                        CreatedAt = new DateTime(2022,4,19),
+                        Following = new List<Follow>(),
+                        Followers = new List<Follow>(),
+                        Posts = new List<Post>()
+                        {
+                            new Post(),
+                            new Post(),
+                            new Post(),
+                            new Post(),
+                            new Post(),
+                            new Post()
+                        }
                     }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 2,
-                        FollowingId = 1
-                    }
-                }
-            },
-            new GetUserProfileTestInput()
-            {
-                TestName = "Success, has post, repost and quote post and over 5 posts",
+                }.AsQueryable(),
                 ExpectedResponse = BaseResponse<UserProfileModel>.CreateSuccess(new UserProfileModel()
                 {
                     UserId = 1,
@@ -338,61 +331,7 @@ namespace Posterr.Tests.Services
                             CreatedAt = new DateTime(2022,4,19, 0, 1, 0).ToString(),
                             OriginalPost = null
                         })
-                    }),
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
-                PostsToAdd = new List<Post>()
-                {
-                    new Post()
-                    {
-                        Id = 1,
-                        UserId = 2,
-                    },
-                    new Post()
-                    {
-                        Id = 2,
-                        UserId = 1,
-                    },
-                    new Post()
-                    {
-                        Id = 3,
-                        UserId = 1,
-                    },
-                    new Post()
-                    {
-                        Id = 4,
-                        UserId = 1,
-                    },
-                    new Post()
-                    {
-                        Id = 5,
-                        UserId = 1,
-                    },
-                    new Post()
-                    {
-                        Id = 6,
-                        UserId = 1,
-                    },
-                    new Post()
-                    {
-                        Id = 7,
-                        UserId = 1,
-                    },
-                }
+                    })
             },
         };
         public class GetUserProfileTestInput : DatatbaseTestInput
@@ -405,67 +344,32 @@ namespace Posterr.Tests.Services
 
             public BaseResponse<IList<PostResponseModel>> GetUserPostsResponse { get; set; }
             public bool IsUserFollowedByAuthenticatedUserResponse { get; set; }
+
+            public IQueryable<User> GetUserResponse { get; set; }
         }
         #endregion GetUserProfile
-
-        #region IsValidUser
-        [Theory, MemberData(nameof(IsValidUserTests))]
-        public void IsValidUserTest(IsValidUserTestInput test)
-        {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
-            var postServiceSubstitute = Substitute.For<IPostService>();
-            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
-
-            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
-            BaseResponse response = service.UserExists(test.UserId);
-
-            response.Should().BeEquivalentTo(test.ExpectedResponse);
-        }
-
-        public static TheoryData<IsValidUserTestInput> IsValidUserTests = new TheoryData<IsValidUserTestInput>()
-        {
-            new IsValidUserTestInput()
-            {
-                TestName = "Test user does not exist",
-                ExpectedResponse = BaseResponse.CreateError("User not found"),
-                UserId = 3
-            },
-            new IsValidUserTestInput()
-            {
-                TestName = "Test user exist",
-                ExpectedResponse = BaseResponse.CreateSuccess(),
-                UserId = 1,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    }
-                }
-            }
-        };
-        public class IsValidUserTestInput : DatatbaseTestInput
-        {
-            public string TestName { get; set; }
-            public int UserId { get; set; }
-            public BaseResponse ExpectedResponse { get; set; }
-        }
-        #endregion IsValidUser
 
         #region CreateUser
         [Theory, MemberData(nameof(CreateUserTests))]
         public void CreateUserTest(CreateUserTestInput test)
         {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
             var postServiceSubstitute = Substitute.For<IPostService>();
             var followRepositorySubstitute = Substitute.For<IFollowRepository>();
+            var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            userRepositorySubstitute.CreateUser(Arg.Any<string>());
+            userRepositorySubstitute.UserExists(Arg.Any<string>(), out Arg.Any<int?>())
+                .Returns(x => {
+                    x[1] = test.UserExistsOutUserId1;
+                    return test.UserExistsResponse1;
+                }, x => {
+                    x[1] = test.UserExistsOutUserId2;
+                    return test.UserExistsResponse2;
+                });
 
-            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
+            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
             BaseResponse<int> response = service.CreateUser(test.Request);
 
-            response.Should().BeEquivalentTo(test.ExpectedResponse);
+            Assert.Equal(test.ExpectedResponse, response.Success);
         }
 
         public static TheoryData<CreateUserTestInput> CreateUserTests = new TheoryData<CreateUserTestInput>()
@@ -486,11 +390,15 @@ namespace Posterr.Tests.Services
                         CreatedAt = new DateTime(2022,4,19)
                     }
                 },
-                ExpectedResponse = BaseResponse<int>.CreateError("User already exists"),
+                UserExistsResponse1 = true,
+                UserExistsOutUserId1 = 1,
+                UserExistsResponse2 = true,
+                UserExistsOutUserId2 = 1,
+                ExpectedResponse = false
             },
             new CreateUserTestInput()
             {
-                TestName = "Create the user successfully without a name",
+                TestName = "Create the user successfully",
                 Request = new CreateUserRequestModel()
                 {
                     Username = "Test1"
@@ -504,25 +412,74 @@ namespace Posterr.Tests.Services
                         CreatedAt = new DateTime(2022,4,19)
                     }
                 },
-                ExpectedResponse = BaseResponse<int>.CreateSuccess(2),
+                UserExistsResponse1 = false,
+                UserExistsOutUserId1 = null,
+                UserExistsResponse2 = true,
+                UserExistsOutUserId2 = 1,
+                ExpectedResponse = true,
             },
-            new CreateUserTestInput()
-            {
-                TestName = "Create the user successfully",
-                Request = new CreateUserRequestModel()
-                {
-                    Name = "TestName1",
-                    Username = "TestUsername1"
-                },
-                ExpectedResponse = BaseResponse<int>.CreateSuccess(1),
-            }
         };
         public class CreateUserTestInput : DatatbaseTestInput
         {
             public string TestName { get; set; }
             public CreateUserRequestModel Request { get; set; }
-            public BaseResponse<int> ExpectedResponse { get; set; }
+            public bool ExpectedResponse { get; set; }
+            public int? UserExistsOutUserId1 { get; set; }
+            public bool UserExistsResponse1 { get; set; }
+            public int? UserExistsOutUserId2 { get; set; }
+            public bool UserExistsResponse2 { get; set; }
         }
         #endregion IsValidUser
+
+
+        #region UserExists
+        [Theory, MemberData(nameof(UserExistsTests))]
+        public void UserExistsTest(UserExistsTestInput test)
+        {
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
+            var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            userRepositorySubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistsResponse);
+
+            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
+            BaseResponse response = service.UserExists(test.UserId);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse);
+        }
+
+        public static TheoryData<UserExistsTestInput> UserExistsTests = new TheoryData<UserExistsTestInput>()
+        {
+            new UserExistsTestInput()
+            {
+                TestName = "Test user does not exist",
+                UserExistsResponse = false,
+                ExpectedResponse = BaseResponse.CreateError("User not found"),
+                UserId = 3
+            },
+            new UserExistsTestInput()
+            {
+                TestName = "Test user exist",
+                ExpectedResponse = BaseResponse.CreateSuccess(),
+                UserId = 1,
+                UserExistsResponse = true,
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test1",
+                        Username = "Test1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                }
+            }
+        };
+        public class UserExistsTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            public int UserId { get; set; }
+            public BaseResponse ExpectedResponse { get; set; }
+            public bool UserExistsResponse { get; internal set; }
+        }
+        #endregion UserExists
     }
 }
