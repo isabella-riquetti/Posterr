@@ -49,14 +49,14 @@ namespace Posterr.Services.Helpers
 
         /// <summary>
         /// Validate whether the skip number is within the allowed range, it should be null or postivie
-        /// <param name="skip">The skip number</param>
+        /// <param name="value">The number that should be greater than 0</param>
         /// <param name="errorMessage">Error message, case any</param>
         /// <returns>The skip is valid or not</returns>
-        public static bool IsSkipPagePossible(int? skip, out string errorMessage)
+        public static bool IsValuePositiveOrNeutral(int? value, out string errorMessage)
         {
-            if (skip < 0)
+            if (value < 0)
             {
-                errorMessage = "Cannot skip negative number of records";
+                errorMessage = "The value cannot be negative";
                 return false;
             }
 
@@ -86,11 +86,47 @@ namespace Posterr.Services.Helpers
         /// <param name="content">The content to be validates</param>
         /// <param name="errorMessage">Error message, case any</param>
         /// <returns>The skip is valid or not</returns>
-        public static bool IsValidPostContent(string content, out string errorMessage)
+        public static bool IsValidPostRequest(CreatePostRequestModel request, out string errorMessage)
         {
-            if (string.IsNullOrEmpty(content) || content.Length > 777)
+            if (request == null)
             {
-                errorMessage = "Post content cannot be empty and should be under 777 characters";
+                errorMessage = "Request cannot be null";
+                return false;
+            }
+            if (request.OriginalPostId == null && String.IsNullOrEmpty(request.Content))
+            {
+                errorMessage = "Post must have a content or be a repost";
+                return false;
+            }
+            if (request.OriginalPostId != null && request.OriginalPostId <= 0)
+            {
+                errorMessage = "OriginalPostId must be positive";
+                return false;
+            }
+            if (!IsValidContentLength(request.Content, out errorMessage,min: 0))
+            {
+                return false;
+            }
+
+            errorMessage = null;
+            return true;
+        }
+
+        /// <summary>
+        /// Validate if the post content is not empty and under 777 charactes
+        /// <param name="content">The content to be validates</param>
+        /// <param name="errorMessage">Error message, case any</param>
+        /// <returns>The skip is valid or not</returns>
+        public static bool IsValidContentLength(string content, out string errorMessage, int min = 1, int max = 777)
+        {
+            if(content == null && min > 0)
+            {
+                errorMessage = "Text cannot be null";
+                return false;
+            }
+            if (content?.Length < min || content?.Length > max)
+            {
+                errorMessage = $"Text should have between {min} and {max} characters";
                 return false;
             }
 

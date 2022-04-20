@@ -8,13 +8,17 @@ namespace Posterr.Services.Model
     /// </summary>
     public class CreatePostRequestModel
     {
+        public CreatePostRequestModel() : this(DateTime.Now)
+        {
+        }
+        
         public CreatePostRequestModel(DateTime? dateTime = null)
         {
             this.CreatedAt = dateTime ?? DateTime.Now;
         }
 
         public string Content { get; set; }
-        public int? OriginalPostId { get; set; }
+        public int? OriginalPostId { get; set; }        
         internal DateTime CreatedAt { get; private set; }
     }
 }

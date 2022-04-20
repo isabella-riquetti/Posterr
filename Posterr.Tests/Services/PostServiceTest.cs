@@ -740,6 +740,7 @@ namespace Posterr.Tests.Services
         {
             var postRepositorySubstitute = Substitute.For<IPostRepository>();
             postRepositorySubstitute.CreatePost(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<int?>()).Returns(test.CreatePostResponse);
+            postRepositorySubstitute.GetPostsById(test?.Request?.OriginalPostId ?? 0).Returns(test.GetPostsByIdResponseForOriginal);
             postRepositorySubstitute.GetPostsById(test.CreatePostResponse.Id).Returns(test.GetPostsByIdResponse);
 
             var service = new PostService(postRepositorySubstitute);
@@ -750,6 +751,45 @@ namespace Posterr.Tests.Services
 
         public static readonly TheoryData<CreatePostTestInput> CreatePostTests = new()
         {
+            new CreatePostTestInput()
+            {
+                TestName = "Fail, no original post",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 13, 19, 15))
+                {
+                    Content = "Hello",
+                    OriginalPostId = 1
+                },
+                CreatePostResponse = new Post()
+                {
+                    Id = 1
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>.CreateSuccess(
+                    new PostResponseModel()
+                    {
+                        PostId = 1,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15).ToString(),
+                        Username = "TestUsername2",
+                        IsRepost = false,
+                        IsRequote = false
+                    }),
+                GetPostsByIdResponseForOriginal = new List<Post>().AsQueryable(),
+                GetPostsByIdResponse = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null,
+                        User = new User()
+                        {
+                            Username = "TestUsername2"
+                        }
+                    }
+                }.AsQueryable()
+            },
             new CreatePostTestInput()
             {
                 TestName = "Success, one basic post",
@@ -815,6 +855,12 @@ namespace Posterr.Tests.Services
                         },
                         IsRequote = false
                     }),
+                GetPostsByIdResponseForOriginal = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1
+                    }
+                }.AsQueryable(),
                 GetPostsByIdResponse = new List<Post>() {
                     new Post()
                     {
@@ -868,6 +914,12 @@ namespace Posterr.Tests.Services
                             Username = "TestUsername1"
                         }
                     }),
+                GetPostsByIdResponseForOriginal = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1
+                    }
+                }.AsQueryable(),
                 GetPostsByIdResponse = new List<Post>() {
                     new Post()
                     {
@@ -903,6 +955,7 @@ namespace Posterr.Tests.Services
             public int AuthenticatedUserId { get; set; }
             public CreatePostRequestModel Request { get; set; }
             public IQueryable<Post> GetPostsByIdResponse { get; set; }
+            public IQueryable<Post> GetPostsByIdResponseForOriginal { get; internal set; }
             public BaseResponse<PostResponseModel> ExpectedResponse { get; set; }
             public Post CreatePostResponse { get; internal set; }
         }

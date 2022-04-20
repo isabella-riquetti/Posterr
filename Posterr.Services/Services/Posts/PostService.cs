@@ -39,6 +39,11 @@ namespace Posterr.Services
 
         public BaseResponse<PostResponseModel> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
         {
+            if (request.OriginalPostId != null && !_postRepository.GetPostsById((int)request.OriginalPostId).Any())
+            {
+                return BaseResponse<PostResponseModel>.CreateError("Original Post not found");
+            }
+
             var post = _postRepository.CreatePost(authenticatedUserId, request.Content, request.CreatedAt, request.OriginalPostId);
 
             IList<PostResponseModel> newPostFormatted = _CreatePostModel(_postRepository.GetPostsById(post.Id));

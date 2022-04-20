@@ -42,7 +42,7 @@ namespace Posterr.Tests.Controllers
                 TestName = "Fail, invalid skip",
                 ExpectSuccess = false,
                 Skip = -5,
-                ExpectedErrorMessage = "Cannot skip negative number of records"
+                ExpectedErrorMessage = "The value cannot be negative"
             },
             new GetUserTimelineTestInput()
             {
@@ -110,7 +110,7 @@ namespace Posterr.Tests.Controllers
                 TestName = "Fail, invalid skip",
                 ExpectSuccess = false,
                 Skip = -5,
-                ExpectedErrorMessage = "Cannot skip negative number of records"
+                ExpectedErrorMessage = "The value cannot be negative"
             },
             new GetTimelineTestInput()
             {
@@ -178,7 +178,7 @@ namespace Posterr.Tests.Controllers
                 TestName = "Fail, invalid skip",
                 ExpectSuccess = false,
                 Skip = -5,
-                ExpectedErrorMessage = "Cannot skip negative number of records"
+                ExpectedErrorMessage = "The value cannot be negative"
             },
             new SearchTestInput()
             {
@@ -186,7 +186,7 @@ namespace Posterr.Tests.Controllers
                 ExpectSuccess = false,
                 Skip = -5,
                 SearchText = "",
-                ExpectedErrorMessage = "Cannot skip negative number of records"
+                ExpectedErrorMessage = "The value cannot be negative"
             },
             new SearchTestInput()
             {
@@ -286,7 +286,7 @@ namespace Posterr.Tests.Controllers
                 UserId = 1,
                 Skip = -5,
                 UserExistExpectedResponse = BaseResponse.CreateSuccess(),
-                ExpectedErrorMessage = "Cannot skip negative number of records"
+                ExpectedErrorMessage = "The value cannot be negative"
             },
             new GetUserPostsTestInput()
             {
@@ -373,7 +373,7 @@ namespace Posterr.Tests.Controllers
                 {
                     Content = ""
                 },
-                ExpectedErrorMessage = "Post content cannot be empty and should be under 777 characters"
+                ExpectedErrorMessage = "Post must have a content or be a repost"
             },
             new CreatePostTestInput()
             {

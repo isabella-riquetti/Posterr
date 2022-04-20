@@ -9,7 +9,7 @@ namespace Posterr.Controllers
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/postS")]
+    [Route("api/posts")]
     public class PostController : ControllerBase
     {
         private readonly IPostService _postService;
@@ -22,11 +22,11 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("byUser/{userId}/{skipPages?}")]
+        [Route("user/{userId}/")]
         public IActionResult GetUserPosts(int userId, int skipPages = 0)
         {
             if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage)
-                || !ValidationHelper.IsSkipPagePossible(skipPages, out errorMessage))
+                || !ValidationHelper.IsValuePositiveOrNeutral(skipPages, out errorMessage))
             {
                 return BadRequest(errorMessage);
             }
@@ -42,10 +42,10 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("timeline/following/{skipPages?}")]
+        [Route("timeline/following/")]
         public IActionResult GetUserTimeline(int skipPages = 0)
         {
-            if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
+            if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
@@ -61,10 +61,10 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("timeline/{skipPages?}")]
+        [Route("timeline/")]
         public IActionResult GetTimeline(int skipPages = 0)
         {
-            if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
+            if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
@@ -80,11 +80,11 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("search/{text}/{skipPages?}")]
+        [Route("search/{text}/")]
         public IActionResult Search(string text, int skipPages = 0)
         {
-            if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage)
-                || !ValidationHelper.IsValidPostContent(text, out errorMessage))
+            if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage)
+                || !ValidationHelper.IsValidContentLength(text, out errorMessage))
             {
                 return BadRequest(errorMessage);
             }
@@ -108,7 +108,7 @@ namespace Posterr.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!ValidationHelper.IsValidPostContent(request?.Content, out string errorMessage))
+            if (!ValidationHelper.IsValidPostRequest(request, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
