@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Posterr.DB.Models;
+using System.IO;
+using System.Linq;
 
 namespace Posterr.DB
 {
@@ -14,19 +17,47 @@ namespace Posterr.DB
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-                .HasMany(x => x.Followers)
-                .WithOne(x => x.Follower);
-            
-            modelBuilder.Entity<User>()
-                .HasMany(x => x.Following)
-                .WithOne(x => x.Following);
-            
             modelBuilder.Entity<Post>()
-                .HasMany(x => x.Reposts)
-                .WithOne(x => x.OriginalPost);
+                .HasOne(x => x.User)
+                .WithMany(x => x.Posts)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            modelBuilder.Entity<Follow>()
+                .HasOne(x => x.Following)
+                .WithMany(x => x.Following)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
 
+            modelBuilder.Entity<Follow>()
+                .HasOne(x => x.Follower)
+                .WithMany(x => x.Followers)
+                .IsRequired()
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Post>()
+                .HasOne(x => x.OriginalPost)
+                .WithMany(x => x.Reposts)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                   .SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json")
+                   .Build();
+                var connectionString = configuration.GetConnectionString("ApiContext");
+                optionsBuilder.UseSqlServer(connectionString);
+            }
         }
     }
 }
