@@ -107,26 +107,28 @@ Does not apply for the assessment
 ### First that thing would fail
 Probably the first thing that would fail once the number of users and posts increased, would be the timeline of followed users posts.
 This is an extremely consuming query that needs to go in the `Follows` table, join with the `Users` table to grab the username, and of course, join with the `Posts` table. And since we have quote posts and reposts, we may need to go to the `Posts` table again to grab the original post content and go to the `Users` table again to grab the original post username.
-**Possible solution**
+
+**Possible solution:**
+
 One good solution for this problem would be to use an in-memory data storage such as `Redis`, so the timeline of followed users would be precompiled.
 Every time a user posts something, this post would be saved in the timeline of every user that follows him. The posts can even be saved in a UI-friendly format, so would just grab them from Redis and send them back to the UI.
 
 ### Database changes I wish to make
-**Repost and Quote post flags**
+##### Repost and Quote post flags
 Small issue, the posts are not flagged by type, so we need to check if the post is basic, a repost, or a quote post by checking which properties that have value. This not only increases by a small amount the API workload but also is hard to read in the DB and not easily extended for future functionalities.
 
-**Change the IDs type**
+##### Change the IDs type
 The IDs were created as `int` in the distant future this could be an issue if the platform reaches more than 2 billion posts, so I would change it to at least a `bigint`.
 
-**Sorting by**
+##### Sorting by
 I would change the sorting from the Posts to sort by the `ID` instead of by the `CreatedAt` since it's more efficient to sort by number and the post are saved in order and always with the present time.
 
 ### API changes I wish to make
-**Unit of work**
+##### Unit of work
 At first, I implemented a basic Context, without Unit Work, so currently is not possible to make changes in more than one repository and save the changes in a single transaction.
 
-**More interfaces**
+##### More interfaces
 For some classes that had just one interface, I would make with multiple interfaces. For example, the `UserService` needs the `IPostService`, but just to use `GetUserPosts`, but the interface contains 4 more methods that are not used in the UserService, I should've segregated the interfaces more based on when they are going to be used and where this way they would be more specific.
 
-**Mediator**
+##### Mediator
 I wish I had used a Mediator in the Controllers to avoid having many services there, so I would refactor the code to use a Mediator to call the functionalities.
