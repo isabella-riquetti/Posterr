@@ -13,6 +13,7 @@ using Posterr.Services;
 
 namespace Posterr
 {
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
     public class Startup
     {
         public Startup(IConfiguration configuration)
