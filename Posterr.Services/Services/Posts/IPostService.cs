@@ -28,8 +28,17 @@ namespace Posterr.Services.User
         /// </summary>
         /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
         /// <param name="pageSize">How many register per page we want to should, default is 10</param>
-        /// <returns></returns>
+        /// <returns>Posts from all users</returns>
         Task<BaseResponse<IList<PostResponseModel>>> GetTimeline(int skipPages = 0, int pageSize = 10);
+
+        /// <summary>
+        /// Search posts by partial text
+        /// </summary>
+        /// <param name="text">Text to be searched</param>
+        /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
+        /// <param name="pageSize">How many register per page we want to should, default is 10</param>
+        /// <returns>Posts that match the text</returns>
+        Task<BaseResponse<IList<PostResponseModel>>> SearchByText(string text, int skipPages, int pageSize = 10);
 
         /// <summary>
         /// Create a new basic post

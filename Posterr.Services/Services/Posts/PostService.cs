@@ -100,6 +100,34 @@ namespace Posterr.Services
             return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
         }
 
+        public async Task<BaseResponse<IList<PostResponseModel>>> SearchByText(string text, int skipPages, int pageSize = 10)
+        {
+            var response = await _context.Posts
+                .Where(p => p.Content.Contains(text))
+                .OrderByDescending(s => s.CreatedAt)
+                .Skip(skipPages * pageSize)
+                .Take(pageSize)
+                .Select(p => new PostsModel
+                {
+                    PostId = p.Id,
+                    Content = p.Content,
+                    CreatedAt = p.CreatedAt.ToString(),
+                    Username = p.User.Username,
+                    OriginalPost = p.OriginalPost != null ? new PostsModel
+                    {
+                        PostId = p.OriginalPost.Id,
+                        Username = p.OriginalPost.User.Username,
+                        Content = p.OriginalPost.Content,
+                        CreatedAt = p.OriginalPost.CreatedAt.ToString()
+                    } : null
+                })
+                .ToListAsync();
+
+            IList<PostResponseModel> formatedResponse = response.Select(r => new PostResponseModel(r)).ToList();
+
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
+        }
+
         public async Task<BaseResponse<PostResponseModel>> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
         {
             var post = new Post()

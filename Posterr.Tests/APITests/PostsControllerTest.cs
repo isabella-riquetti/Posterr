@@ -73,12 +73,12 @@ namespace Posterr.Tests.Controllers
         {
             public string TestName { get; set; }
             public bool ExpectSuccess { get; set; }
-            public int? Skip { get; set; }
+            public int Skip { get; set; }
             public BaseResponse<IList<PostResponseModel>> GetUserFollowingTimelineResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
-        #endregion [Route("byUser/{userId}/{skipPages?}")]
-        
+        #endregion [Route("timeline/following/{skipPages?}")]
+
         #region [Route("timeline/{skipPages?}")]
         [Theory, MemberData(nameof(GetTimelineTests))]
         public async void GetTimelineTest(GetTimelineTestInput test)
@@ -141,11 +141,91 @@ namespace Posterr.Tests.Controllers
         {
             public string TestName { get; set; }
             public bool ExpectSuccess { get; set; }
-            public int? Skip { get; set; }
+            public int Skip { get; set; }
             public BaseResponse<IList<PostResponseModel>> GetTimelineResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
-        #endregion [Route("byUser/{userId}/{skipPages?}")]
+        #endregion [Route("timeline/{skipPages?}")]
+
+        #region [Route("search/{text}/{skipPages?}")]
+        [Theory, MemberData(nameof(SearchTests))]
+        public async void SearchTest(SearchTestInput test)
+        {
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var userServiceSubstitute = Substitute.For<IUserService>();
+
+            postServiceSubstitute.SearchByText(Arg.Is(test.SearchText), Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetTimelineResponse);
+
+            var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
+            IActionResult response = await controller.Search(test.SearchText, test.Skip);
+
+            if (!test.ExpectSuccess)
+            {
+                Assert.IsType<BadRequestObjectResult>(response);
+                Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
+            }
+            else
+            {
+                Assert.IsType<OkObjectResult>(response);
+                Assert.Equal(test.GetTimelineResponse.Data, ((OkObjectResult)response).Value);
+            }
+        }
+
+        public static TheoryData<SearchTestInput> SearchTests = new TheoryData<SearchTestInput>()
+        {
+            new SearchTestInput()
+            {
+                TestName = "Fail, invalid skip",
+                ExpectSuccess = false,
+                Skip = -5,
+                ExpectedErrorMessage = "Cannot skip negative number of records"
+            },
+            new SearchTestInput()
+            {
+                TestName = "Fail, empty search",
+                ExpectSuccess = false,
+                Skip = -5,
+                SearchText = "",
+                ExpectedErrorMessage = "Cannot skip negative number of records"
+            },
+            new SearchTestInput()
+            {
+                TestName = "Fail, at getting posts",
+                ExpectSuccess = false,
+                Skip = 0,
+                SearchText = "Test",
+                GetTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateError("Error"),
+                ExpectedErrorMessage = "Error"
+            },
+            new SearchTestInput()
+            {
+                TestName = "Success, with posts",
+                ExpectSuccess = true,
+                Skip = 0,
+                SearchText = "test",
+                GetTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()
+                {
+                    new PostResponseModel(new PostsModel()
+                    {
+                        PostId = 1,
+                        Username = "test2",
+                        Content = "test",
+                        CreatedAt = DateTime.Now.ToString(),
+                        OriginalPost = null
+                    })
+                }),
+            },
+        };
+        public class SearchTestInput
+        {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
+            public int Skip { get; set; }
+            public string SearchText { get; set; }
+            public BaseResponse<IList<PostResponseModel>> GetTimelineResponse { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+        }
+        #endregion [Route("search/{text}/{skipPages?}")]
 
         #region [Route("byUser/{userId}/{skipPages?}")]
         [Theory, MemberData(nameof(GetUserPostsTests))]
@@ -252,7 +332,7 @@ namespace Posterr.Tests.Controllers
             public string TestName { get; set; }
             public bool ExpectSuccess { get; set; }
             public int UserId { get; set; }
-            public int? Skip { get; set; }
+            public int Skip { get; set; }
             public BaseResponse<IList<PostResponseModel>> GetUserPostsResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
