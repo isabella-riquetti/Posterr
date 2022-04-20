@@ -20,15 +20,13 @@ In order to use a localdb you need to first create the server and database.
 The expected server: **(localdb)\Strider**
 The expected database name: **Posterr**
 * Run on command line: `cd {YOUR_PROJECT_LOCATION}\Posterr\Posterr.DB`
-* Then run to run migrations and create the tables: `dotnet ef database update`
+* Run update database and create the tables using migrations: `dotnet ef database update`
 * Comment line 35 `services.AddDbContext<ApiContext>(opt => opt.UseInMemoryDatabase("Posterr"));` in `Posterr.API/Startup.cs`
 * Uncomment lines 38 and 39 in `Posterr.API/Startup.cs`
-* Run the Posterr.API
-
 
  ### Testing the API
-* Run the Posterr.API project
-* Use Swagger at [https://localhost:44338/swagger/] on the API first page or import the following Postman collection to test the endpoints
+* Run `Posterr.API` project
+* Use Swagger at [https://localhost:44338/swagger/] on the API first page or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783]
 
 # Planning
     Phase 2, planning
@@ -43,11 +41,11 @@ The expected database name: **Posterr**
 
     This should be added as a section called "Planning" in the README.
     
-#### Questions to the PM:
+#### Questions for the PM:
 * Will the user be able to reply to a reply, thus creating a cascade conversation?
 * Will the user be able to reply to users that they don't follow, nor are followed by?
-* Users will be able to edit or delete replies?
-* Users will be able to reply with a repost or quote post?
+* Will users be able to edit or delete replies?
+* Will users be able to reply with a repost or quote post?
 * Can users reply to a quote post?
 * Can users reply to a repost? If they can, the reply would be associated with the repost or the original post?
 * Users can mention more than one user in a reply?
@@ -58,9 +56,10 @@ The expected database name: **Posterr**
 * The posts are going to be stored in the table `Posts` same table as the normal posts, reposts, and quote posts. This way any future features associated with the Post, such as adding images, and emoticons, could be easily applied to the reply.
 * The new column `IsReply` would be added to the `Posts` table. This column would be a nullable `bit` with 0 as the default value.
 * New replies would be saved with the text in the `Content`, the `OriginalPostId` with the ID of the post that is being replied to, and `IsReply` with 1 for true.
+* If users are going to be able to delete, a `Deleted` flag would need to be implemeneted, and if they are going to be able to edit a new `UpdatedAt` property would need to be created.
 
 **API**
-* New endpoint to grab the replies. This endpoint can be similar to any timeline but would need to return the main post and a list of replies.
+* Need to create a new endpoint to grab the replies. This endpoint can be similar to the timelines, but would need to return the main post and a list of replies.
 * The filter for the replies would be Posts with `IsReply = true` and `OriginalPostId = {The main post ID}`
 * The reply should be handled in a separate service and controller since they are going to be loaded on a different page
 * The return format would be somewhat like this:
@@ -113,8 +112,6 @@ One good solution for this problem would be to use an in-memory data storage suc
 Every time a user posts something, this post would be saved in the timeline of every user that follows him. The posts can even be saved in a UI-friendly format, so would just grab them from Redis and send them back to the UI.
 
 ### Database changes I wish to make
-*Not going to mention obvious changes to make the DB ready, such as adding a password in the user*
-
 **Repost and Quote post flags**
 Small issue, the posts are not flagged by type, so we need to check if the post is basic, a repost, or a quote post by checking which properties that have value. This not only increases by a small amount the API workload but also is hard to read in the DB and not easily extended for future functionalities.
 
@@ -124,13 +121,12 @@ The IDs were created as `int` in the distant future this could be an issue if th
 **Sorting by**
 I would change the sorting from the Posts to sort by the `ID` instead of by the `CreatedAt` since it's more efficient to sort by number and the post are saved in order and always with the present time.
 
-
 ### API changes I wish to make
 **Unit of work**
 At first, I implemented a basic Context, without Unit Work, so currently is not possible to make changes in more than one repository and save the changes in a single transaction.
 
-**Mediator**
-I wish I had used a Mediator in the Controllers to avoid having many services there, so I would refactor the code to use a Mediator to call the functionalities.
-
 **More interfaces**
 For some classes that had just one interface, I would make with multiple interfaces. For example, the `UserService` needs the `IPostService`, but just to use `GetUserPosts`, but the interface contains 4 more methods that are not used in the UserService, I should've segregated the interfaces more based on when they are going to be used and where this way they would be more specific.
+
+**Mediator**
+I wish I had used a Mediator in the Controllers to avoid having many services there, so I would refactor the code to use a Mediator to call the functionalities.
