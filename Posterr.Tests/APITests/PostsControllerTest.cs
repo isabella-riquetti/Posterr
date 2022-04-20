@@ -13,7 +13,7 @@ namespace Posterr.Tests.Controllers
     {
         #region [Route("timeline/following/{skipPages?}")]
         [Theory, MemberData(nameof(GetUserTimelineTests))]
-        public async void GetUserTimelineTest(GetUserTimelineTestInput test)
+        public void GetUserTimelineTest(GetUserTimelineTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
@@ -21,7 +21,7 @@ namespace Posterr.Tests.Controllers
             postServiceSubstitute.GetUserFollowingTimeline(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetUserFollowingTimelineResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.GetUserTimeline(test.Skip);
+            IActionResult response = controller.GetUserTimeline(test.Skip);
 
             if (!test.ExpectSuccess)
             {
@@ -81,7 +81,7 @@ namespace Posterr.Tests.Controllers
 
         #region [Route("timeline/{skipPages?}")]
         [Theory, MemberData(nameof(GetTimelineTests))]
-        public async void GetTimelineTest(GetTimelineTestInput test)
+        public void GetTimelineTest(GetTimelineTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
@@ -89,7 +89,7 @@ namespace Posterr.Tests.Controllers
             postServiceSubstitute.GetTimeline(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetTimelineResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.GetTimeline(test.Skip);
+            IActionResult response = controller.GetTimeline(test.Skip);
 
             if (!test.ExpectSuccess)
             {
@@ -149,7 +149,7 @@ namespace Posterr.Tests.Controllers
 
         #region [Route("search/{text}/{skipPages?}")]
         [Theory, MemberData(nameof(SearchTests))]
-        public async void SearchTest(SearchTestInput test)
+        public void SearchTest(SearchTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
@@ -157,7 +157,7 @@ namespace Posterr.Tests.Controllers
             postServiceSubstitute.SearchByText(Arg.Is(test.SearchText), Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetTimelineResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.Search(test.SearchText, test.Skip);
+            IActionResult response = controller.Search(test.SearchText, test.Skip);
 
             if (!test.ExpectSuccess)
             {
@@ -229,7 +229,7 @@ namespace Posterr.Tests.Controllers
 
         #region [Route("byUser/{userId}/{skipPages?}")]
         [Theory, MemberData(nameof(GetUserPostsTests))]
-        public async void GetUserPostsTest(GetUserPostsTestInput test)
+        public void GetUserPostsTest(GetUserPostsTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
@@ -238,7 +238,7 @@ namespace Posterr.Tests.Controllers
             postServiceSubstitute.GetUserPosts(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetUserPostsResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.GetUserPosts(test.UserId, test.Skip);
+            IActionResult response = controller.GetUserPosts(test.UserId, test.Skip);
 
             if(!test.ExpectSuccess)
             {
@@ -341,7 +341,7 @@ namespace Posterr.Tests.Controllers
 
         #region POST [Route("create")]
         [Theory, MemberData(nameof(CreatePostTests))]
-        public async void CreatePostTest(CreatePostTestInput test)
+        public void CreatePostTest(CreatePostTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var userServiceSubstitute = Substitute.For<IUserService>();
@@ -349,7 +349,7 @@ namespace Posterr.Tests.Controllers
             postServiceSubstitute.CreatePost(test.Request, Arg.Any<int>()).Returns(test.CreatePostResponse);
 
             var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
-            IActionResult response = await controller.CreatePost(test.Request);
+            IActionResult response = controller.CreatePost(test.Request);
 
             if (!test.ExpectSuccess)
             {

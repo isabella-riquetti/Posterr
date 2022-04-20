@@ -24,14 +24,14 @@ namespace Posterr.Controllers
 
         [HttpGet]
         [Route("{userId}")]
-        public async Task<IActionResult> GetUserProfile(int userId)
+        public IActionResult GetUserProfile(int userId)
         {
             if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<UserProfileModel> userProfileResponse = await _userService.GetUserProfile(userId, AuthMockHelper.GetUserFromHeader(Request));
+            BaseResponse<UserProfileModel> userProfileResponse = _userService.GetUserProfile(userId, AuthMockHelper.GetUserFromHeader(Request));
 
             if(!userProfileResponse.Success)
             {

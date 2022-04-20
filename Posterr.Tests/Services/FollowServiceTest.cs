@@ -37,31 +37,6 @@ namespace Posterr.Tests.Services
                 AuthenticatedUserId = 1,
                 FollowUserId = 2,
                 IsFollowed = true,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1,
-                        FollowingId = 2
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateError("User is already followed by you"),
             },
             new FollowUserTestInput()
@@ -69,22 +44,6 @@ namespace Posterr.Tests.Services
                 TestName = "Success, create the follow",
                 AuthenticatedUserId = 1,
                 FollowUserId = 3,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateSuccess()
             },
             new FollowUserTestInput()
@@ -92,36 +51,10 @@ namespace Posterr.Tests.Services
                 TestName = "Success, update to follow again",
                 AuthenticatedUserId = 1,
                 FollowUserId = 3,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1,
-                        FollowingId = 2,
-                        Unfollowed = true
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateSuccess()
             }
         };
-        public class FollowUserTestInput : DatatbaseTestInput
+        public class FollowUserTestInput
         {
             public string TestName { get; set; }
             
@@ -155,22 +88,6 @@ namespace Posterr.Tests.Services
                 TestName = "Fail, the follow does not exist",
                 AuthenticatedUserId = 1,
                 UnfollowUserId = 2,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateError("You don't follow this user")
             },
             new UnfollowUserTestInput()
@@ -179,32 +96,6 @@ namespace Posterr.Tests.Services
                 AuthenticatedUserId = 1,
                 UnfollowUserId = 2,
                 IsFollowed = false,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1,
-                        FollowingId = 2,
-                        Unfollowed = true
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateError("You don't follow this user")
             },
             new UnfollowUserTestInput()
@@ -213,36 +104,10 @@ namespace Posterr.Tests.Services
                 AuthenticatedUserId = 1,
                 UnfollowUserId = 2,
                 IsFollowed = true,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    },
-                    new User()
-                    {
-                        Id = 2,
-                        Name = "Test2",
-                        Username = "Test2",
-                        CreatedAt = DateTime.Now
-                    }
-                },
-                FollowsToAdd = new List<Follow>()
-                {
-                    new Follow()
-                    {
-                        Id = 1,
-                        FollowerId = 1,
-                        FollowingId = 2,
-                        Unfollowed = false
-                    }
-                },
                 ExpectedResponse = BaseResponse.CreateSuccess()
             },
         };
-        public class UnfollowUserTestInput : DatatbaseTestInput
+        public class UnfollowUserTestInput
         {
             public string TestName { get; set; }
 

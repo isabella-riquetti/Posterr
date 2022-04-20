@@ -12,7 +12,7 @@ namespace Posterr.Services.User
         /// <param name="userId">User that should be unfollowed</param>
         /// <param name="authenticatedUserId">The current authenticated, is used to check to check whether the user is followed by it</param>
         /// <returns>The profile ingo and last 5 posts</returns>
-        public Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId);
+        BaseResponse<UserProfileModel> GetUserProfile(int userId, int autheticatedUserId);
 
         /// <summary>
         /// Check if the user id exist in the database

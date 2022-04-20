@@ -193,8 +193,8 @@ namespace Posterr.Tests.Repository
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
 
-            var service = new UserRepository(apiContext);
-            service.CreateUser(test.Username);
+            var repository = new UserRepository(apiContext);
+            repository.CreateUser(test.Username);
 
             apiContext.Users.Should().ContainSingle(f => f.Username == test.Username);
         }

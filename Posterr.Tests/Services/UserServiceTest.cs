@@ -20,7 +20,7 @@ namespace Posterr.Tests.Services
     {
         #region GetUserProfile
         [Theory, MemberData(nameof(GetUserProfileTests))]
-        public async void GetUserProfileTest(GetUserProfileTestInput test)
+        public void GetUserProfileTest(GetUserProfileTestInput test)
         {
             var postServiceSubstitute = Substitute.For<IPostService>();
             var followRepositorySubstitute = Substitute.For<IFollowRepository>();
@@ -30,7 +30,7 @@ namespace Posterr.Tests.Services
             followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
 
             var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
-            BaseResponse<UserProfileModel> response = await service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
+            BaseResponse<UserProfileModel> response = service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
         }
@@ -334,7 +334,7 @@ namespace Posterr.Tests.Services
                     })
             },
         };
-        public class GetUserProfileTestInput : DatatbaseTestInput
+        public class GetUserProfileTestInput
         {
             public string TestName { get; set; }
             public BaseResponse<UserProfileModel> ExpectedResponse { get; set; }
@@ -381,15 +381,6 @@ namespace Posterr.Tests.Services
                 {
                     Username = "TestUsername1"
                 },
-                UsersToAdd = new List<User>()
-                {
-                    new User()
-                    {
-                        Name = "TestName1",
-                        Username = "TestUsername1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    }
-                },
                 UserExistsResponse1 = true,
                 UserExistsOutUserId1 = 1,
                 UserExistsResponse2 = true,
@@ -403,15 +394,6 @@ namespace Posterr.Tests.Services
                 {
                     Username = "Test1"
                 },
-                UsersToAdd = new List<User>()
-                {
-                    new User()
-                    {
-                        Name = "OtherName",
-                        Username = "OtherUsername",
-                        CreatedAt = new DateTime(2022,4,19)
-                    }
-                },
                 UserExistsResponse1 = false,
                 UserExistsOutUserId1 = null,
                 UserExistsResponse2 = true,
@@ -419,7 +401,7 @@ namespace Posterr.Tests.Services
                 ExpectedResponse = true,
             },
         };
-        public class CreateUserTestInput : DatatbaseTestInput
+        public class CreateUserTestInput
         {
             public string TestName { get; set; }
             public CreateUserRequestModel Request { get; set; }
@@ -461,19 +443,10 @@ namespace Posterr.Tests.Services
                 TestName = "Test user exist",
                 ExpectedResponse = BaseResponse.CreateSuccess(),
                 UserId = 1,
-                UserExistsResponse = true,
-                UsersToAdd = new List<User>() {
-                    new User()
-                    {
-                        Id = 1,
-                        Name = "Test1",
-                        Username = "Test1",
-                        CreatedAt = new DateTime(2022,4,19)
-                    }
-                }
+                UserExistsResponse = true
             }
         };
-        public class UserExistsTestInput : DatatbaseTestInput
+        public class UserExistsTestInput
         {
             public string TestName { get; set; }
             public int UserId { get; set; }

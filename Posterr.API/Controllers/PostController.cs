@@ -25,7 +25,7 @@ namespace Posterr.Controllers
 
         [HttpGet]
         [Route("byUser/{userId}/{skipPages?}")]
-        public async Task<IActionResult> GetUserPosts(int userId, int skipPages = 0)
+        public IActionResult GetUserPosts(int userId, int skipPages = 0)
         {
             if (!ValidationHelper.IsValidUser(userId, _userService.UserExists, out string errorMessage)
                 || !ValidationHelper.IsSkipPagePossible(skipPages, out errorMessage))
@@ -33,7 +33,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetUserPosts(userId, skipPages);
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = _postService.GetUserPosts(userId, skipPages);
 
             if (!userPostsResponse.Success)
             {
@@ -45,14 +45,14 @@ namespace Posterr.Controllers
 
         [HttpGet]
         [Route("timeline/following/{skipPages?}")]
-        public async Task<IActionResult> GetUserTimeline(int skipPages = 0)
+        public IActionResult GetUserTimeline(int skipPages = 0)
         {
             if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetUserFollowingTimeline(AuthMockHelper.GetUserFromHeader(Request), skipPages);
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = _postService.GetUserFollowingTimeline(AuthMockHelper.GetUserFromHeader(Request), skipPages);
 
             if (!userPostsResponse.Success)
             {
@@ -64,14 +64,14 @@ namespace Posterr.Controllers
 
         [HttpGet]
         [Route("timeline/{skipPages?}")]
-        public async Task<IActionResult> GetTimeline(int skipPages = 0)
+        public IActionResult GetTimeline(int skipPages = 0)
         {
             if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
             {
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetTimeline(skipPages);
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = _postService.GetTimeline(skipPages);
 
             if (!userPostsResponse.Success)
             {
@@ -83,7 +83,7 @@ namespace Posterr.Controllers
         
         [HttpGet]
         [Route("search/{text}/{skipPages?}")]
-        public async Task<IActionResult> Search(string text, int skipPages = 0)
+        public IActionResult Search(string text, int skipPages = 0)
         {
             if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage)
                 || !ValidationHelper.IsValidPostContent(text, out errorMessage))
@@ -91,7 +91,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
             
-            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.SearchByText(text, skipPages);
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = _postService.SearchByText(text, skipPages);
 
             if (!userPostsResponse.Success)
             {
@@ -103,7 +103,7 @@ namespace Posterr.Controllers
 
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePostRequestModel request)
+        public IActionResult CreatePost([FromBody] CreatePostRequestModel request)
         {
             if(!ModelState.IsValid)
             {
@@ -115,7 +115,7 @@ namespace Posterr.Controllers
                 return BadRequest(errorMessage);
             }
 
-            BaseResponse<PostResponseModel> userPostsResponse = await _postService.CreatePost(request, AuthMockHelper.GetUserFromHeader(Request));
+            BaseResponse<PostResponseModel> userPostsResponse = _postService.CreatePost(request, AuthMockHelper.GetUserFromHeader(Request));
 
             if (!userPostsResponse.Success)
             {

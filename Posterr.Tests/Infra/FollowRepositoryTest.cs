@@ -1,7 +1,4 @@
 ﻿using Posterr.DB;
-using Posterr.Services;
-using Posterr.Services.Model;
-using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
@@ -19,9 +16,9 @@ namespace Posterr.Tests.Repository
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
 
-            var service = new FollowRepository(apiContext);
+            var repository = new FollowRepository(apiContext);
             Follow follow = apiContext.Follows.First();
-            service.UpdateUnfollowedStatus(follow, test.Unfollow);
+            repository.UpdateUnfollowedStatus(follow, test.Unfollow);
 
             apiContext.Follows.First().Unfollowed.Should().Be(test.Unfollow);
         }
@@ -74,8 +71,8 @@ namespace Posterr.Tests.Repository
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
 
-            var service = new FollowRepository(apiContext);
-            service.CreateFollow(test.FollowerId, test.FollowingId);
+            var repository = new FollowRepository(apiContext);
+            repository.CreateFollow(test.FollowerId, test.FollowingId);
 
             apiContext.Follows.Should().ContainSingle(f => f.FollowerId == test.FollowerId && f.FollowingId == test.FollowingId);
         }
@@ -104,8 +101,8 @@ namespace Posterr.Tests.Repository
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
 
-            var service = new FollowRepository(apiContext);
-            service.IsUserFollowedBy(test.FollowerId, test.FollowingId);
+            var repository = new FollowRepository(apiContext);
+            repository.IsUserFollowedBy(test.FollowerId, test.FollowingId);
 
             if (test.ExpectedResponse)
             {
@@ -177,8 +174,8 @@ namespace Posterr.Tests.Repository
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
 
-            var service = new FollowRepository(apiContext);
-            service.IsUserFollowedBy(test.FollowerId, test.FollowingId, out Follow follow);
+            var repository = new FollowRepository(apiContext);
+            repository.IsUserFollowedBy(test.FollowerId, test.FollowingId, out Follow follow);
 
             if (test.ExpectedResponse)
             {

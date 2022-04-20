@@ -14,7 +14,7 @@ namespace Posterr.Tests.Controllers
     {
         #region [Route("{userId}")]
         [Theory, MemberData(nameof(GetProfileTests))]
-        public async void GetProfileTest(GetProfileTestInput test)
+        public void GetProfileTest(GetProfileTestInput test)
         {
             var userServiceSubstitute = Substitute.For<IUserService>();
             var followServiceSubstitute = Substitute.For<IFollowService>();
@@ -23,7 +23,7 @@ namespace Posterr.Tests.Controllers
             userServiceSubstitute.GetUserProfile(Arg.Any<int>(), Arg.Any<int>()).Returns(test.UserProfileResponse);
 
             var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
-            IActionResult response = await controller.GetUserProfile(test.UserId);
+            IActionResult response = controller.GetUserProfile(test.UserId);
 
             if(!test.ExpectSuccess)
             {

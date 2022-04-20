@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Posterr.DB;
 using Posterr.DB.Models;
+using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
 using Posterr.Services.User;
 using System;
@@ -12,20 +13,45 @@ namespace Posterr.Services
 {
     public class PostService : IPostService
     {
-        private readonly ApiContext _context;
+        private readonly IPostRepository _postRepository;
 
-        public PostService(ApiContext context)
+        public PostService(IPostRepository postRepository)
         {
-            _context = context;
+            _postRepository = postRepository;
         }
 
-        public async Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5)
+        public BaseResponse<IList<PostResponseModel>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5)
         {
-            var response = await _context.Posts
-                .Where(p => p.UserId == userId)
-                .OrderByDescending(p => p.CreatedAt)
-                .Skip(skipPages * pageSize)
-                .Take(pageSize)
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(_CreatePostModel(_postRepository.GetPostsByUserId(userId, skipPages, pageSize)));
+        }
+
+        public BaseResponse<IList<PostResponseModel>> GetUserFollowingTimeline(int userId, int skipPages = 0, int pageSize = 10)
+        {
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(_CreateBasicPostModel(_postRepository.GetFollowedPosts(userId, skipPages, pageSize)));
+        }
+
+        public BaseResponse<IList<PostResponseModel>> GetTimeline(int skipPages = 0, int pageSize = 10)
+        {
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(_CreatePostModel(_postRepository.GetTimelinePosts(skipPages, pageSize)));
+        }
+
+        public BaseResponse<IList<PostResponseModel>> SearchByText(string text, int skipPages, int pageSize = 10)
+        {
+            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(_CreatePostModel(_postRepository.GetPostsByPartialTextSearch(text, skipPages, pageSize)));
+        }
+
+        public BaseResponse<PostResponseModel> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
+        {
+            var post = _postRepository.CreatePost(authenticatedUserId, request.Content, request.CreatedAt, request.OriginalPostId);
+
+            IList<PostResponseModel> newPostFormatted = _CreatePostModel(_postRepository.GetPostsById(post.Id));
+            
+            return BaseResponse<PostResponseModel>.CreateSuccess(newPostFormatted.FirstOrDefault());
+        }
+
+        private IList<PostResponseModel> _CreatePostModel(IQueryable<Post> posts)
+        {
+            var response = posts
                 .Select(p => new PostsModel
                 {
                     PostId = p.Id,
@@ -40,18 +66,15 @@ namespace Posterr.Services
                         CreatedAt = p.OriginalPost.CreatedAt.ToString()
                     } : null
                 })
-                .ToListAsync();
+                .ToList();
 
-            IList<PostResponseModel> formatedResponse = response.Select(r => new PostResponseModel(r)).ToList();
-
-            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
+            return response.Select(r => new PostResponseModel(r)).ToList();
         }
 
-        public async Task<BaseResponse<IList<PostResponseModel>>> GetUserFollowingTimeline(int userId, int skipPages = 0, int pageSize = 10)
+        private IList<PostResponseModel> _CreateBasicPostModel(IQueryable<Post> posts)
         {
-            var response = await _context.Follows
-                .Where(f => f.FollowerId == userId && !f.Unfollowed)
-                .SelectMany(f => f.Following.Posts.Select(p => new BasicPostModel
+            var response = posts
+                .Select(p => new BasicPostModel
                 {
                     PostId = p.Id,
                     Content = p.Content,
@@ -61,105 +84,13 @@ namespace Posterr.Services
                     OriginalPostCreatedAt = p.OriginalPost != null ? p.OriginalPost.CreatedAt : null,
                     OriginalPostContent = p.OriginalPost != null ? p.OriginalPost.Content : null,
                     OriginalPostUsername = p.OriginalPost != null ? p.OriginalPost.User.Username : null
-                }))
-                .OrderByDescending(s => s.CreatedAt)
-                .Skip(skipPages * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                })
+                .ToList();
 
-            IList<PostsModel> postModels = response.Select(r => new PostsModel(r)).ToList();  
+            IList<PostsModel> postModels = response.Select(r => new PostsModel(r)).ToList();
             IList<PostResponseModel> formatedResponse = postModels.Select(r => new PostResponseModel(r)).ToList();
-
-            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
-        }
-
-        public async Task<BaseResponse<IList<PostResponseModel>>> GetTimeline(int skipPages = 0, int pageSize = 10)
-        {
-            var response = await _context.Posts
-                .OrderByDescending(s => s.CreatedAt)
-                .Skip(skipPages * pageSize)
-                .Take(pageSize)
-                .Select(p => new PostsModel
-                {
-                    PostId = p.Id,
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt.ToString(),
-                    Username = p.User.Username,
-                    OriginalPost = p.OriginalPost != null ? new PostsModel
-                    {
-                        PostId = p.OriginalPost.Id,
-                        Username = p.OriginalPost.User.Username,
-                        Content = p.OriginalPost.Content,
-                        CreatedAt = p.OriginalPost.CreatedAt.ToString()
-                    } : null
-                })
-                .ToListAsync();
             
-            IList<PostResponseModel> formatedResponse = response.Select(r => new PostResponseModel(r)).ToList();
-
-            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
-        }
-
-        public async Task<BaseResponse<IList<PostResponseModel>>> SearchByText(string text, int skipPages, int pageSize = 10)
-        {
-            var response = await _context.Posts
-                .Where(p => p.Content.Contains(text))
-                .OrderByDescending(s => s.CreatedAt)
-                .Skip(skipPages * pageSize)
-                .Take(pageSize)
-                .Select(p => new PostsModel
-                {
-                    PostId = p.Id,
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt.ToString(),
-                    Username = p.User.Username,
-                    OriginalPost = p.OriginalPost != null ? new PostsModel
-                    {
-                        PostId = p.OriginalPost.Id,
-                        Username = p.OriginalPost.User.Username,
-                        Content = p.OriginalPost.Content,
-                        CreatedAt = p.OriginalPost.CreatedAt.ToString()
-                    } : null
-                })
-                .ToListAsync();
-
-            IList<PostResponseModel> formatedResponse = response.Select(r => new PostResponseModel(r)).ToList();
-
-            return BaseResponse<IList<PostResponseModel>>.CreateSuccess(formatedResponse);
-        }
-
-        public async Task<BaseResponse<PostResponseModel>> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
-        {
-            var post = new Post()
-            {
-                CreatedAt = request.CreatedAt,
-                Content = request.Content,
-                OriginalPostId = request.OriginalPostId,
-                UserId = authenticatedUserId
-            };
-            _context.Posts.Add(post);
-            _context.SaveChanges();
-            
-            var response = await _context.Posts
-                .Include(p => p.OriginalPost)
-                .Where(p => p.Id == post.Id)
-                .OrderByDescending(p => p.CreatedAt)
-                .Select(p => new PostsModel
-                {
-                    PostId = p.Id,
-                    Content = p.Content,
-                    CreatedAt = p.CreatedAt.ToString(),
-                    Username = p.User.Username,
-                    OriginalPost = p.OriginalPost != null ? new PostsModel
-                    {
-                        PostId = p.OriginalPost.Id,
-                        Username = p.OriginalPost.User.Username,
-                        Content = p.OriginalPost.Content,
-                        CreatedAt = p.OriginalPost.CreatedAt.ToString()
-                    } : null
-                })
-                .FirstOrDefaultAsync();
-            return BaseResponse<PostResponseModel>.CreateSuccess(new PostResponseModel(response));
+            return formatedResponse;
         }
     }
 

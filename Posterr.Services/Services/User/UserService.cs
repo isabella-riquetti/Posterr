@@ -26,7 +26,7 @@ namespace Posterr.Services
             _userRepository = userRepository;
         }
 
-        public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId)
+        public BaseResponse<UserProfileModel> GetUserProfile(int userId, int autheticatedUserId)
         {
             var userQuery = _userRepository.GetUser(userId);
             var response = userQuery
@@ -46,7 +46,7 @@ namespace Posterr.Services
                 return BaseResponse<UserProfileModel>.CreateError("User not found");
             }
 
-            BaseResponse<IList<PostResponseModel>> postsResponse = await _postService.GetUserPosts(userId);
+            BaseResponse<IList<PostResponseModel>> postsResponse = _postService.GetUserPosts(userId);
             if (!postsResponse.Success)
             {
                 return BaseResponse<UserProfileModel>.CreateError(postsResponse.Message);

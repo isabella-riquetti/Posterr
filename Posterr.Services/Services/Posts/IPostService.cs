@@ -13,7 +13,7 @@ namespace Posterr.Services.User
         /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
         /// <param name="pageSize">How many register per page we want to should, default is 5</param>
         /// <returns>Posts from the user</returns>
-        public Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5);
+        BaseResponse<IList<PostResponseModel>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5);
 
         /// <summary>
         /// Get 'pageLimit' posts, skiping 'skipPages' from the user that the 'userId' follows
@@ -21,7 +21,7 @@ namespace Posterr.Services.User
         /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
         /// <param name="pageSize">How many register per page we want to should, default is 10</param>
         /// <returns>Posts from the user</returns>
-        Task<BaseResponse<IList<PostResponseModel>>> GetUserFollowingTimeline(int userId, int skipPages = 0, int pageSize = 10);
+        BaseResponse<IList<PostResponseModel>> GetUserFollowingTimeline(int userId, int skipPages = 0, int pageSize = 10);
 
         /// <summary>
         /// Get the general timeline for all users
@@ -29,7 +29,7 @@ namespace Posterr.Services.User
         /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
         /// <param name="pageSize">How many register per page we want to should, default is 10</param>
         /// <returns>Posts from all users</returns>
-        Task<BaseResponse<IList<PostResponseModel>>> GetTimeline(int skipPages = 0, int pageSize = 10);
+        BaseResponse<IList<PostResponseModel>> GetTimeline(int skipPages = 0, int pageSize = 10);
 
         /// <summary>
         /// Search posts by partial text
@@ -38,7 +38,7 @@ namespace Posterr.Services.User
         /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
         /// <param name="pageSize">How many register per page we want to should, default is 10</param>
         /// <returns>Posts that match the text</returns>
-        Task<BaseResponse<IList<PostResponseModel>>> SearchByText(string text, int skipPages, int pageSize = 10);
+        BaseResponse<IList<PostResponseModel>> SearchByText(string text, int skipPages, int pageSize = 10);
 
         /// <summary>
         /// Create a new basic post
@@ -46,6 +46,6 @@ namespace Posterr.Services.User
         /// <param name="request">The new post content</param>
         /// <param name="authenticatedUserId">The authenticated user id</param>
         /// <returns>The new post so it can be appended to the page</returns>
-        Task<BaseResponse<PostResponseModel>> CreatePost(CreatePostRequestModel request, int authenticatedUserId);
+        BaseResponse<PostResponseModel> CreatePost(CreatePostRequestModel request, int authenticatedUserId);
     }
 }
