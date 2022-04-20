@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Posterr.DB;
 using Posterr.DB.Models;
+using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
 using Posterr.Services.Model.User;
 using Posterr.Services.User;
@@ -15,13 +16,14 @@ namespace Posterr.Services
     {
         private readonly ApiContext _context;
         private readonly IPostService _postService;
-        private readonly IFollowService _followService;
+        private readonly IFollowRepository _followRepository;
 
-        public UserService(ApiContext context, IPostService postService, IFollowService followService)
+
+        public UserService(ApiContext context, IPostService postService, IFollowRepository followRepository)
         {
             _context = context;
             _postService = postService;
-            _followService = followService;
+            _followRepository = followRepository;
         }
 
         public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId)
@@ -51,7 +53,7 @@ namespace Posterr.Services
             }
             
             response.TopPosts = postsResponse.Data;
-            response.Followed = _followService.IsUserFollowedBy(autheticatedUserId, userId);
+            response.Followed = _followRepository.IsUserFollowedBy(autheticatedUserId, userId);
 
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }

@@ -10,6 +10,8 @@ using System;
 using Posterr.DB.Models;
 using Posterr.Services.User;
 using Posterr.Services;
+using Posterr.Infra.Interfaces;
+using Posterr.Infra.Repository;
 
 namespace Posterr
 {
@@ -41,6 +43,7 @@ namespace Posterr
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IFollowService, FollowService>();
+            services.AddScoped<IFollowRepository, FollowRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
+using NSubstitute;
+using Posterr.Infra.Interfaces;
+using NSubstitute.Core;
 
 namespace Posterr.Tests.Services
 {
@@ -15,21 +18,15 @@ namespace Posterr.Tests.Services
         [Theory, MemberData(nameof(FollowUserTests))]
         public void FollowUserTest(FollowUserTestInput test)
         {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
+            followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>(), out Arg.Any<Follow>()).Returns(test.IsFollowed);
+            followRepositorySubstitute.UpdateUnfollowedStatus(Arg.Any<Follow>(), Arg.Any<bool>());
+            followRepositorySubstitute.CreateFollow(Arg.Any<int>(), Arg.Any<int>());
 
-            var service = new FollowService(apiContext);
+            var service = new FollowService(followRepositorySubstitute);
             BaseResponse response = service.FollowUser(test.FollowUserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
-
-            if (test.ExpectedResponse.Success)
-            {
-                apiContext.Follows.Should().ContainSingle(f => f.FollowerId == test.AuthenticatedUserId && f.FollowingId == test.FollowUserId && f.Unfollowed == false);
-            }
-            else
-            {
-                apiContext.Follows.Should().NotContain(f => f.FollowerId == test.AuthenticatedUserId && f.FollowingId == test.FollowUserId && f.Unfollowed == true);
-            }
         }
 
         public static TheoryData<FollowUserTestInput> FollowUserTests = new TheoryData<FollowUserTestInput>()
@@ -39,6 +36,7 @@ namespace Posterr.Tests.Services
                 TestName = "Fail, user already followed",
                 AuthenticatedUserId = 1,
                 FollowUserId = 2,
+                IsFollowed = true,
                 UsersToAdd = new List<User>() {
                     new User()
                     {
@@ -129,30 +127,25 @@ namespace Posterr.Tests.Services
             
             public int AuthenticatedUserId { get; set; }
             public int FollowUserId { get; set; }
-            
+            public bool IsFollowed { get; set; }
+
             public BaseResponse ExpectedResponse { get; set; }
         }
         #endregion FollowUser
 
-        #region FollowUser
+        #region UnfollowUser
         [Theory, MemberData(nameof(UnfollowUserTests))]
         public void UnfollowUserTest(UnfollowUserTestInput test)
         {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
-
-            var service = new FollowService(apiContext);
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
+            followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>(), out Arg.Any<Follow>()).Returns(test.IsFollowed);
+            followRepositorySubstitute.UpdateUnfollowedStatus(Arg.Any<Follow>(), Arg.Any<bool>());
+            followRepositorySubstitute.CreateFollow(Arg.Any<int>(), Arg.Any<int>());
+            
+            var service = new FollowService(followRepositorySubstitute);
             BaseResponse response = service.UnfollowUser(test.UnfollowUserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
-
-            if (test.ExpectedResponse.Success)
-            {
-                apiContext.Follows.Should().ContainSingle(f => f.FollowerId == test.AuthenticatedUserId && f.FollowingId == test.UnfollowUserId && f.Unfollowed == true);
-            }
-            else
-            {
-                apiContext.Follows.Should().NotContain(f => f.FollowerId == test.AuthenticatedUserId && f.FollowingId == test.UnfollowUserId && f.Unfollowed == false);
-            }
         }
 
         public static TheoryData<UnfollowUserTestInput> UnfollowUserTests = new TheoryData<UnfollowUserTestInput>()
@@ -185,6 +178,7 @@ namespace Posterr.Tests.Services
                 TestName = "Fail, user already unfollowed",
                 AuthenticatedUserId = 1,
                 UnfollowUserId = 2,
+                IsFollowed = false,
                 UsersToAdd = new List<User>() {
                     new User()
                     {
@@ -218,6 +212,7 @@ namespace Posterr.Tests.Services
                 TestName = "Success, unfollow the user",
                 AuthenticatedUserId = 1,
                 UnfollowUserId = 2,
+                IsFollowed = true,
                 UsersToAdd = new List<User>() {
                     new User()
                     {
@@ -253,9 +248,10 @@ namespace Posterr.Tests.Services
 
             public int AuthenticatedUserId { get; set; }
             public int UnfollowUserId { get; set; }
+            public bool IsFollowed { get; set; }
 
             public BaseResponse ExpectedResponse { get; set; }
         }
-        #endregion FollowUser
+        #endregion UnfollowUser
     }
 }

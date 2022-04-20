@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Posterr.DB\Posterr.DB.csproj" />
-    <ProjectReference Include="..\Posterr.Infra\Posterr.Infra.csproj" />
   </ItemGroup>
 
 </Project>

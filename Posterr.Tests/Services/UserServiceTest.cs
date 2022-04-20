@@ -10,6 +10,7 @@ using FluentAssertions;
 using Xunit;
 using Posterr.DB.Models;
 using Posterr.Services.Model.User;
+using Posterr.Infra.Interfaces;
 
 namespace Posterr.Tests.Services
 {
@@ -21,12 +22,12 @@ namespace Posterr.Tests.Services
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
             var postServiceSubstitute = Substitute.For<IPostService>();
-            var followServiceSubstitute = Substitute.For<IFollowService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
 
             postServiceSubstitute.GetUserPosts(Arg.Any<int>()).Returns(test.GetUserPostsResponse);
-            followServiceSubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
+            followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
 
-            var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
+            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
             BaseResponse<UserProfileModel> response = await service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
@@ -413,9 +414,9 @@ namespace Posterr.Tests.Services
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
             var postServiceSubstitute = Substitute.For<IPostService>();
-            var followServiceSubstitute = Substitute.For<IFollowService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
 
-            var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
+            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
             BaseResponse response = service.UserExists(test.UserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
@@ -459,9 +460,9 @@ namespace Posterr.Tests.Services
         {
             ApiContext apiContext = test.CreateNewInMemoryContext();
             var postServiceSubstitute = Substitute.For<IPostService>();
-            var followServiceSubstitute = Substitute.For<IFollowService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
 
-            var service = new UserService(apiContext, postServiceSubstitute, followServiceSubstitute);
+            var service = new UserService(apiContext, postServiceSubstitute, followRepositorySubstitute);
             BaseResponse<int> response = service.CreateUser(test.Request);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
