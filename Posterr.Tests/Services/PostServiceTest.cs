@@ -14,6 +14,1197 @@ namespace Posterr.Tests.Services
 {
     public class PostServiceTest
     {
+        #region GetUserFollowingTimeline
+        [Theory, MemberData(nameof(GetUserFollowingTimelineTests))]
+        public async void GetUserFollowingTimelineTest(GetUserFollowingTimelineTestInput test)
+        {
+            ApiContext apiContext = test.CreateNewInMemoryContext();
+
+            var service = new PostService(apiContext);
+            BaseResponse<IList<PostResponseModel>> response = await service.GetUserFollowingTimeline(test.AuthenticatedUserId, test.Skip, test.CustomPageSize);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
+        }
+
+
+        public static TheoryData<GetUserFollowingTimelineTestInput> GetUserFollowingTimelineTests = new TheoryData<GetUserFollowingTimelineTestInput>()
+        {
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, no posts",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test1",
+                        Username = "Test1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, one basic post",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, one repost from other user",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello Posterr",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = true,
+                            Repost = new RepostedModel()
+                            {
+                                PostId = 2,
+                                CreatedAt = new DateTime(2022,4,19,13,24,15).ToString(),
+                                Username = "TestUsername2"
+                            },
+                            IsRequote = false
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Hello Posterr",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        CreatedAt = new DateTime(2022,4,19,13,24,15),
+                        OriginalPostId = 1
+                    }
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, quoted post from other user",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "I'm new too!",
+                            CreatedAt = new DateTime(2022,4,19,13,27,40).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = true,
+                            Quoted = new QuotedModel()
+                            {
+                                PostId = 1,
+                                Content = "Hello, I'm new here",
+                                CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                                Username = "TestUsername1"
+                            }
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Hello, I'm new here",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "I'm new too!",
+                        CreatedAt = new DateTime(2022,4,19,13,27,40),
+                        OriginalPostId = 1
+                    }
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, page 1 of 1",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 5,
+                            Content = "Post 5",
+                            CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 4,
+                            Content = "Post 4",
+                            CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 3,
+                            Content = "Post 3",
+                            CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Post 2",
+                            CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Post 1",
+                            CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 2,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 10,
+                        UserId = 1,
+                        Content = "Post 0",
+                        CreatedAt = new DateTime(2022,4,19,13,10,0),
+                        OriginalPostId = null
+                    },
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, page 1 of 2",
+                AuthenticatedUserId = 1,
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 7,
+                            Content = "Post 7",
+                            CreatedAt = new DateTime(2022,4,19,13,7,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 6,
+                            Content = "Post 6",
+                            CreatedAt = new DateTime(2022,4,19,13,6,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 5,
+                            Content = "Post 5",
+                            CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 4,
+                            Content = "Post 4",
+                            CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 3,
+                            Content = "Post 3",
+                            CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 2,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 6,
+                        UserId = 2,
+                        Content = "Post 6",
+                        CreatedAt = new DateTime(2022,4,19,13,6,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 7,
+                        UserId = 2,
+                        Content = "Post 7",
+                        CreatedAt = new DateTime(2022,4,19,13,7,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 10,
+                        UserId = 1,
+                        Content = "Post 0",
+                        CreatedAt = new DateTime(2022,4,19,13,10,0),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new GetUserFollowingTimelineTestInput()
+            {
+                TestName = "Success, page 2 of 2",
+                AuthenticatedUserId = 1,
+                Skip = 1,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Post 2",
+                            CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Post 1",
+                            CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                FollowsToAdd = new List<Follow>() {
+                    new Follow()
+                    {
+                        Id = 1,
+                        FollowerId = 1,
+                        FollowingId = 2
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 2,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 6,
+                        UserId = 2,
+                        Content = "Post 6",
+                        CreatedAt = new DateTime(2022,4,19,13,6,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 7,
+                        UserId = 2,
+                        Content = "Post 7",
+                        CreatedAt = new DateTime(2022,4,19,13,7,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 10,
+                        UserId = 1,
+                        Content = "Post 0",
+                        CreatedAt = new DateTime(2022,4,19,13,10,0),
+                        OriginalPostId = null
+                    }
+                }
+            }
+        };
+        public class GetUserFollowingTimelineTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            public int CustomPageSize => 5;
+
+            public int AuthenticatedUserId { get; set; }
+            public int Skip { get; set; }
+
+            public BaseResponse<IList<PostResponseModel>> ExpectedResponse { get; set; }
+
+        }
+        #endregion GetUserFollowingTimeline
+
+
+        #region GetUserFollowingTimeline
+        [Theory, MemberData(nameof(GetTimelineTests))]
+        public async void GetTimelineTest(GetTimelineTestInput test)
+        {
+            ApiContext apiContext = test.CreateNewInMemoryContext();
+
+            var service = new PostService(apiContext);
+            BaseResponse<IList<PostResponseModel>> response = await service.GetTimeline(test.Skip, test.CustomPageSize);
+
+            response.Should().BeEquivalentTo(test.ExpectedResponse, options => options.WithStrictOrdering());
+        }
+
+
+        public static TheoryData<GetTimelineTestInput> GetTimelineTests = new TheoryData<GetTimelineTestInput>()
+        {
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, no posts",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test1",
+                        Username = "Test1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, one basic post",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, one repost from other user",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello Posterr",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = true,
+                            Repost = new RepostedModel()
+                            {
+                                PostId = 2,
+                                CreatedAt = new DateTime(2022,4,19,13,24,15).ToString(),
+                                Username = "TestUsername2"
+                            },
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello Posterr",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Hello Posterr",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        CreatedAt = new DateTime(2022,4,19,13,24,15),
+                        OriginalPostId = 1
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, quoted post from other user",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "I'm new too!",
+                            CreatedAt = new DateTime(2022,4,19,13,27,40).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = true,
+                            Quoted = new QuotedModel()
+                            {
+                                PostId = 1,
+                                Content = "Hello, I'm new here",
+                                CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                                Username = "TestUsername1"
+                            }
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Hello, I'm new here",
+                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Hello, I'm new here",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "I'm new too!",
+                        CreatedAt = new DateTime(2022,4,19,13,27,40),
+                        OriginalPostId = 1
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, page 1 of 1",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 5,
+                            Content = "Post 5",
+                            CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 4,
+                            Content = "Post 4",
+                            CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 3,
+                            Content = "Post 3",
+                            CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Post 2",
+                            CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Post 1",
+                            CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        }
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 2,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, page 1 of 2",
+                Skip = 0,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 7,
+                            Content = "Post 7",
+                            CreatedAt = new DateTime(2022,4,19,13,7,0).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 6,
+                            Content = "Post 6",
+                            CreatedAt = new DateTime(2022,4,19,13,6,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 5,
+                            Content = "Post 5",
+                            CreatedAt = new DateTime(2022,4,19,13,5,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 4,
+                            Content = "Post 4",
+                            CreatedAt = new DateTime(2022,4,19,13,4,0).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 3,
+                            Content = "Post 3",
+                            CreatedAt = new DateTime(2022,4,19,13,3,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 1,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 6,
+                        UserId = 2,
+                        Content = "Post 6",
+                        CreatedAt = new DateTime(2022,4,19,13,6,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 7,
+                        UserId = 1,
+                        Content = "Post 7",
+                        CreatedAt = new DateTime(2022,4,19,13,7,0),
+                        OriginalPostId = null
+                    }
+                }
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, page 2 of 2",
+                Skip = 1,
+                ExpectedResponse = BaseResponse<IList<PostResponseModel>>
+                    .CreateSuccess(new List<PostResponseModel>()
+                    {
+                        new PostResponseModel()
+                        {
+                            PostId = 2,
+                            Content = "Post 2",
+                            CreatedAt = new DateTime(2022,4,19,13,2,0).ToString(),
+                            Username = "TestUsername2",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                        new PostResponseModel()
+                        {
+                            PostId = 1,
+                            Content = "Post 1",
+                            CreatedAt = new DateTime(2022,4,19,13,1,0).ToString(),
+                            Username = "TestUsername1",
+                            IsRepost = false,
+                            IsRequote = false
+                        },
+                    }),
+                UsersToAdd = new List<User>() {
+                    new User()
+                    {
+                        Id = 1,
+                        Name = "Test Name",
+                        Username = "TestUsername1",
+                        CreatedAt = new DateTime(2022,4,19)
+                    },
+                    new User()
+                    {
+                        Id = 2,
+                        Name = "Test Name 2",
+                        Username = "TestUsername2",
+                        CreatedAt = new DateTime(2022,4,19)
+                    }
+                },
+                PostsToAdd = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 1,
+                        Content = "Post 1",
+                        CreatedAt = new DateTime(2022,4,19,13,1,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 2,
+                        UserId = 2,
+                        Content = "Post 2",
+                        CreatedAt = new DateTime(2022,4,19,13,2,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 3,
+                        UserId = 2,
+                        Content = "Post 3",
+                        CreatedAt = new DateTime(2022,4,19,13,3,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 4,
+                        UserId = 1,
+                        Content = "Post 4",
+                        CreatedAt = new DateTime(2022,4,19,13,4,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 5,
+                        UserId = 2,
+                        Content = "Post 5",
+                        CreatedAt = new DateTime(2022,4,19,13,5,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 6,
+                        UserId = 2,
+                        Content = "Post 6",
+                        CreatedAt = new DateTime(2022,4,19,13,6,0),
+                        OriginalPostId = null
+                    },
+                    new Post()
+                    {
+                        Id = 7,
+                        UserId = 1,
+                        Content = "Post 7",
+                        CreatedAt = new DateTime(2022,4,19,13,7,0),
+                        OriginalPostId = null
+                    }
+                }
+            }
+        };
+        public class GetTimelineTestInput : DatatbaseTestInput
+        {
+            public string TestName { get; set; }
+            public int CustomPageSize => 5;
+
+            public int Skip { get; set; }
+
+            public BaseResponse<IList<PostResponseModel>> ExpectedResponse { get; set; }
+
+        }
+        #endregion GetTimeline
+
         #region GetUserPosts
         [Theory, MemberData(nameof(GetUserPostsTests))]
         public async void GetUserPostsTest(GetUserPostsTestInput test)
@@ -661,7 +1852,7 @@ namespace Posterr.Tests.Services
         }
         #endregion GetUserProfile
 
-        #region GetUserPosts
+        #region CreatePost
         [Theory, MemberData(nameof(CreatePostTests))]
         public async void CreatePostTest(CreatePostTestInput test)
         {
@@ -825,13 +2016,13 @@ namespace Posterr.Tests.Services
         public class CreatePostTestInput : DatatbaseTestInput
         {
             public string TestName { get; set; }
-            
+
             public int AuthenticatedUserId { get; set; }
             public CreatePostRequestModel Request { get; set; }
 
             public BaseResponse<PostResponseModel> ExpectedResponse { get; set; }
 
         }
-        #endregion GetUserProfile
+        #endregion CreatePost
     }
 }

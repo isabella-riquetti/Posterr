@@ -25,26 +25,12 @@ namespace Posterr.Services
             // Case we don't have a follow yet, we should create one
             if (follow != null)
             {
-                /* Query:
-                 * SET NOCOUNT ON;
-                 * UPDATE [Follows] SET [FollowerId] = @p0, [FollowingId] = @p1, [Unfollowed] = @p2
-                 * WHERE [Id] = @p3;
-                 * SELECT @@ROWCOUNT;
-                 */
                 follow.Unfollowed = false;
                 _context.Follows.Update(follow);
             }
             // Case we already have a followed with the Unfollowed true, we should change it to false
             else
             {
-                /* Query:
-                 * SET NOCOUNT ON;
-                 * INSERT INTO [Follows] ([FollowerId], [FollowingId], [Unfollowed])
-                 * VALUES (@p0, @p1, @p2);
-                 * SELECT [Id]
-                 * FROM [Follows]
-                 * WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
-                 */
                 Follow newFollow = new Follow()
                 {
                     FollowerId = authenticatedUserId,
@@ -64,12 +50,7 @@ namespace Posterr.Services
             {
                 return BaseResponse.CreateError("You don't follow this user");
             }
-
-            /*
-             * UPDATE [Follows] SET [FollowerId] = @p0, [FollowingId] = @p1, [Unfollowed] = @p2
-             * WHERE [Id] = @p3;
-             * SELECT @@ROWCOUNT;
-             */            
+           
             follow.Unfollowed = true;
             _context.Follows.Update(follow);
             _context.SaveChanges();
@@ -79,8 +60,6 @@ namespace Posterr.Services
 
         public bool IsUserFollowedBy(int followerUserId, int followingUserId)
         {
-            /* Query:
-             */
             bool response = _context.Follows
                 .Any(u => u.FollowerId == followerUserId && u.FollowingId == followingUserId && u.Unfollowed == false);
 
@@ -96,11 +75,6 @@ namespace Posterr.Services
         /// <returns>If the FollowerUserId follows the FollowingUserId</returns>
         private bool IsUserFollowedBy(int followerUserId, int followingUserId, out Follow follow)
         {
-            /* Query:
-             * SELECT TOP(1) [f].[Id], [f].[FollowerId], [f].[FollowingId], [f].[Unfollowed]
-             * FROM [Follows] AS [f]
-             * WHERE ([f].[FollowerId] = @__follower_0) AND ([f].[FollowingId] = @__following_
-             */
             follow = _context.Follows
                 .FirstOrDefault(u => u.FollowerId == followerUserId && u.FollowingId == followingUserId);
 

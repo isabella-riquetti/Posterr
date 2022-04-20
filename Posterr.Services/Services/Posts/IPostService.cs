@@ -16,6 +16,22 @@ namespace Posterr.Services.User
         public Task<BaseResponse<IList<PostResponseModel>>> GetUserPosts(int userId, int skipPages = 0, int pageSize = 5);
 
         /// <summary>
+        /// Get 'pageLimit' posts, skiping 'skipPages' from the user that the 'userId' follows
+        /// <param name="userId">The userId that we want to grab the posts</param>
+        /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
+        /// <param name="pageSize">How many register per page we want to should, default is 10</param>
+        /// <returns>Posts from the user</returns>
+        Task<BaseResponse<IList<PostResponseModel>>> GetUserFollowingTimeline(int userId, int skipPages = 0, int pageSize = 10);
+
+        /// <summary>
+        /// Get the general timeline for all users
+        /// </summary>
+        /// <param name="skipPages">How many pages we should skip, default is 0, so it would load the first page</param>
+        /// <param name="pageSize">How many register per page we want to should, default is 10</param>
+        /// <returns></returns>
+        Task<BaseResponse<IList<PostResponseModel>>> GetTimeline(int skipPages = 0, int pageSize = 10);
+
+        /// <summary>
         /// Create a new basic post
         /// </summary>
         /// <param name="request">The new post content</param>

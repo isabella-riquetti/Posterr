@@ -18,7 +18,7 @@ namespace Posterr.Services.Model
         }
         
         public string Content { get; set; }
-        public int OriginalPostId { get; set; }
+        public int? OriginalPostId { get; set; }
         internal DateTime CreatedAt { get; private set; }
     }
 }

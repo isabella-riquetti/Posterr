@@ -5,6 +5,29 @@
     /// </summary>
     public class PostsModel
     {
+        public PostsModel()
+        {
+        }
+        
+        public PostsModel(BasicPostModel model)
+        {
+            this.PostId = model.PostId;
+            this.Username = model.Username;
+            this.Content = model.Content;
+            this.CreatedAt = model.CreatedAt.ToString();
+
+            if (model.OriginalPostId != null)
+            {
+                this.OriginalPost = new PostsModel()
+                {
+                    PostId = (int)model.OriginalPostId,
+                    Username = model.OriginalPostUsername,
+                    Content = model.OriginalPostContent,
+                    CreatedAt = model.OriginalPostCreatedAt.ToString()
+                };
+            }
+        }
+
         public int PostId { get; set; }
         public string Username { get; set; }
         public string Content { get; set; }

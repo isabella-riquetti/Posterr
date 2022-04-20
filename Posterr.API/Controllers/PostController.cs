@@ -43,6 +43,44 @@ namespace Posterr.Controllers
             return Ok(userPostsResponse.Data);
         }
 
+        [HttpGet]
+        [Route("timeline/following/{skipPages?}")]
+        public async Task<IActionResult> GetUserTimeline(int? skipPages)
+        {
+            if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
+            {
+                return BadRequest(errorMessage);
+            }
+
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetUserFollowingTimeline(AuthMockHelper.GetUserFromHeader(Request), skipPages ?? 0);
+
+            if (!userPostsResponse.Success)
+            {
+                return BadRequest(userPostsResponse.Message);
+            }
+
+            return Ok(userPostsResponse.Data);
+        }
+
+        [HttpGet]
+        [Route("timeline/{skipPages?}")]
+        public async Task<IActionResult> GetTimeline(int? skipPages)
+        {
+            if (!ValidationHelper.IsSkipPagePossible(skipPages, out string errorMessage))
+            {
+                return BadRequest(errorMessage);
+            }
+
+            BaseResponse<IList<PostResponseModel>> userPostsResponse = await _postService.GetTimeline(skipPages ?? 0);
+
+            if (!userPostsResponse.Success)
+            {
+                return BadRequest(userPostsResponse.Message);
+            }
+
+            return Ok(userPostsResponse.Data);
+        }
+
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostRequestModel request)

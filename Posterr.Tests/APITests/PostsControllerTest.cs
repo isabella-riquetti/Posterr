@@ -11,6 +11,142 @@ namespace Posterr.Tests.Controllers
 {
     public class PostsControllerTest
     {
+        #region [Route("timeline/following/{skipPages?}")]
+        [Theory, MemberData(nameof(GetUserTimelineTests))]
+        public async void GetUserTimelineTest(GetUserTimelineTestInput test)
+        {
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var userServiceSubstitute = Substitute.For<IUserService>();
+
+            postServiceSubstitute.GetUserFollowingTimeline(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetUserFollowingTimelineResponse);
+
+            var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
+            IActionResult response = await controller.GetUserTimeline(test.Skip);
+
+            if (!test.ExpectSuccess)
+            {
+                Assert.IsType<BadRequestObjectResult>(response);
+                Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
+            }
+            else
+            {
+                Assert.IsType<OkObjectResult>(response);
+                Assert.Equal(test.GetUserFollowingTimelineResponse.Data, ((OkObjectResult)response).Value);
+            }
+        }
+
+        public static TheoryData<GetUserTimelineTestInput> GetUserTimelineTests = new TheoryData<GetUserTimelineTestInput>()
+        {
+            new GetUserTimelineTestInput()
+            {
+                TestName = "Fail, invalid skip",
+                ExpectSuccess = false,
+                Skip = -5,
+                ExpectedErrorMessage = "Cannot skip negative number of records"
+            },
+            new GetUserTimelineTestInput()
+            {
+                TestName = "Fail, at getting",
+                ExpectSuccess = false,
+                Skip = 0,
+                GetUserFollowingTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateError("Error"),
+                ExpectedErrorMessage = "Error"
+            },
+            new GetUserTimelineTestInput()
+            {
+                TestName = "Success, with posts",
+                ExpectSuccess = true,
+                GetUserFollowingTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()
+                {
+                    new PostResponseModel(new PostsModel()
+                    {
+                        PostId = 1,
+                        Username = "test",
+                        Content = "test",
+                        CreatedAt = DateTime.Now.ToString(),
+                        OriginalPost = null
+                    })
+                }),
+            },
+        };
+        public class GetUserTimelineTestInput
+        {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
+            public int? Skip { get; set; }
+            public BaseResponse<IList<PostResponseModel>> GetUserFollowingTimelineResponse { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+        }
+        #endregion [Route("byUser/{userId}/{skipPages?}")]
+        
+        #region [Route("timeline/{skipPages?}")]
+        [Theory, MemberData(nameof(GetTimelineTests))]
+        public async void GetTimelineTest(GetTimelineTestInput test)
+        {
+            var postServiceSubstitute = Substitute.For<IPostService>();
+            var userServiceSubstitute = Substitute.For<IUserService>();
+
+            postServiceSubstitute.GetTimeline(Arg.Any<int>(), Arg.Any<int>()).Returns(test.GetTimelineResponse);
+
+            var controller = new PostController(postServiceSubstitute, userServiceSubstitute);
+            IActionResult response = await controller.GetTimeline(test.Skip);
+
+            if (!test.ExpectSuccess)
+            {
+                Assert.IsType<BadRequestObjectResult>(response);
+                Assert.Equal(test.ExpectedErrorMessage, ((BadRequestObjectResult)response).Value);
+            }
+            else
+            {
+                Assert.IsType<OkObjectResult>(response);
+                Assert.Equal(test.GetTimelineResponse.Data, ((OkObjectResult)response).Value);
+            }
+        }
+
+        public static TheoryData<GetTimelineTestInput> GetTimelineTests = new TheoryData<GetTimelineTestInput>()
+        {
+            new GetTimelineTestInput()
+            {
+                TestName = "Fail, invalid skip",
+                ExpectSuccess = false,
+                Skip = -5,
+                ExpectedErrorMessage = "Cannot skip negative number of records"
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Fail, at getting",
+                ExpectSuccess = false,
+                Skip = 0,
+                GetTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateError("Error"),
+                ExpectedErrorMessage = "Error"
+            },
+            new GetTimelineTestInput()
+            {
+                TestName = "Success, with posts",
+                ExpectSuccess = true,
+                GetTimelineResponse = BaseResponse<IList<PostResponseModel>>.CreateSuccess(new List<PostResponseModel>()
+                {
+                    new PostResponseModel(new PostsModel()
+                    {
+                        PostId = 1,
+                        Username = "test2",
+                        Content = "test",
+                        CreatedAt = DateTime.Now.ToString(),
+                        OriginalPost = null
+                    })
+                }),
+            },
+        };
+        public class GetTimelineTestInput
+        {
+            public string TestName { get; set; }
+            public bool ExpectSuccess { get; set; }
+            public int? Skip { get; set; }
+            public BaseResponse<IList<PostResponseModel>> GetTimelineResponse { get; set; }
+            public string ExpectedErrorMessage { get; set; }
+        }
+        #endregion [Route("byUser/{userId}/{skipPages?}")]
+
         #region [Route("byUser/{userId}/{skipPages?}")]
         [Theory, MemberData(nameof(GetUserPostsTests))]
         public async void GetUserPostsTest(GetUserPostsTestInput test)

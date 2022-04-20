@@ -26,20 +26,6 @@ namespace Posterr.Services
 
         public async Task<BaseResponse<UserProfileModel>> GetUserProfile(int userId, int autheticatedUserId)
         {
-            /* Query:
-             * SELECT TOP(1) [u].[Id], [u].[CreatedAt], [u].[Username], (
-             *     SELECT COUNT(*)
-             *     FROM [Follows] AS [f]
-             *     WHERE ([u].[Id] = [f].[FollowingId]) AND ([f].[Unfollowed] <> CAST(1 AS bit))), (
-             *     SELECT COUNT(*)
-             *     FROM [Follows] AS [f0]
-             *     WHERE ([u].[Id] = [f0].[FollowerId]) AND ([f0].[Unfollowed] <> CAST(1 AS bit))), (
-             *     SELECT COUNT(*)
-             *     FROM [Posts] AS [p]
-             *     WHERE [u].[Id] = [p].[UserId])
-             * FROM [Users] AS [u]
-             * WHERE [u].[Id] = @__id_0
-            */
             var response = await _context.Users
                 .Where(u => u.Id == userId)
                 .Select(u => new UserProfileModel
@@ -78,14 +64,6 @@ namespace Posterr.Services
                 return BaseResponse<int>.CreateError("User already exists");
             }
 
-            /* Query:
-             * SET NOCOUNT ON;
-             * INSERT INTO [Users] ([CreatedAt], [Name], [Username])
-             * VALUES (@p0, @p1, @p2);
-             * SELECT [Id]
-             * FROM [Users]
-             * WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
-             */
             var user = new DB.Models.User()
             {
                 Username = request.Username,
@@ -106,15 +84,6 @@ namespace Posterr.Services
 
         public BaseResponse UserExists(int id)
         {
-            /* Query:
-             * SELECT CASE
-             *     WHEN EXISTS (
-             *         SELECT 1
-             *         FROM [Users] AS [u]
-             *         WHERE [u].[Id] = @__id_0) THEN CAST(1 AS bit)
-             *     ELSE CAST(0 AS bit)
-             * END
-             */
             bool response = _context.Users
                 .Any(u => u.Id == id);
 
@@ -133,12 +102,6 @@ namespace Posterr.Services
         /// <returns>The userid in case exists</returns>
         private BaseResponse<int> _UserExists(string username)
         {
-
-            /* Query:
-             * SELECT TOP(1) [u].[Id]
-             * FROM [Users] AS [u]
-             * WHERE [u].[Username] = @__username_0
-             */
             int response = _context.Users
                 .Where(u => u.Username == username)
                 .Select(u => u.Id)

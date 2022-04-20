@@ -1,14 +1,16 @@
-﻿namespace Posterr.DB.Models
+﻿using System.Collections.Generic;
+
+namespace Posterr.DB.Models
 {
     public class Follow
     {
         public int Id { get; set; }
+        public bool Unfollowed { get; set; }
 
         public int FollowerId { get; set; }
         public User Follower { get; set; }
 
         public int FollowingId { get; set; }
         public User Following { get; set; }
-        public bool Unfollowed { get; set; }
     }
 }
