@@ -3,7 +3,6 @@ using Posterr.API.Helper;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
 using Posterr.Services.User;
-using System.Collections.Generic;
 
 namespace Posterr.Controllers
 {

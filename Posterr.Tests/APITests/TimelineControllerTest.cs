@@ -11,7 +11,7 @@ namespace Posterr.Tests.Controllers
 {
     public class TimelineControllerTest
     {
-        #region [Route("timeline/following/{skipPages?}")]
+        #region timeline/following?{skipPages?}
         [Theory, MemberData(nameof(GetUserTimelineTests))]
         public void GetUserTimelineTest(GetUserTimelineTestInput test)
         {
@@ -78,9 +78,9 @@ namespace Posterr.Tests.Controllers
             public BaseResponse<IList<PostResponseModel>> GetUserFollowingTimelineResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
-        #endregion [Route("timeline/following/{skipPages?}")]
+        #endregion timeline/following?{skipPages?}
 
-        #region [Route("timeline/{skipPages?}")]
+        #region timeline?{skipPages?}
         [Theory, MemberData(nameof(GetTimelineTests))]
         public void GetTimelineTest(GetTimelineTestInput test)
         {
@@ -147,9 +147,9 @@ namespace Posterr.Tests.Controllers
             public BaseResponse<IList<PostResponseModel>> GetTimelineResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
-        #endregion [Route("timeline/{skipPages?}")]
+        #endregion timeline?{skipPages?}
 
-        #region [Route("search/{text}/{skipPages?}")]
+        #region timeline/search?{text}&{skipPages?}
         [Theory, MemberData(nameof(SearchTests))]
         public void SearchTest(SearchTestInput test)
         {
@@ -228,9 +228,9 @@ namespace Posterr.Tests.Controllers
             public BaseResponse<IList<PostResponseModel>> GetTimelineResponse { get; set; }
             public string ExpectedErrorMessage { get; set; }
         }
-        #endregion [Route("search/{text}/{skipPages?}")]
+        #endregion timeline/search?{text}&{skipPages?}
 
-        #region [Route("byUser/{userId}/{skipPages?}")]
+        #region timeline/user/{userId}?{skipPages?}
         [Theory, MemberData(nameof(GetUserPostsTests))]
         public void GetUserPostsTest(GetUserPostsTestInput test)
         {
@@ -341,6 +341,6 @@ namespace Posterr.Tests.Controllers
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("byUser/{userId}/{skipPages?}")]
+        #endregion timeline/user/{userId}?{skipPages?}
     }
 }

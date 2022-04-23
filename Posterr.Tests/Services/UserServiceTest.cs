@@ -4,7 +4,6 @@ using Posterr.DB.Models;
 using Posterr.Infra.Interfaces;
 using Posterr.Services;
 using Posterr.Services.Model;
-using Posterr.Services.Model.User;
 using Posterr.Services.User;
 using System;
 using System.Collections.Generic;

@@ -11,7 +11,7 @@ namespace Posterr.Tests.Controllers
 {
     public class UsersControllerTest
     {
-        #region [Route("{userId}")]
+        #region {userId}
         [Theory, MemberData(nameof(GetProfileTests))]
         public void GetProfileTest(GetProfileTestInput test)
         {
@@ -98,9 +98,9 @@ namespace Posterr.Tests.Controllers
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; internal set; }
         }
-        #endregion [Route("{userId}")]
+        #endregion {userId}
 
-        #region [Route("follow/{userId}")]
+        #region follow/{userId}
         [Theory, MemberData(nameof(FollowTests))]
         public void FollowTest(FollowTestInput test)
         {
@@ -184,9 +184,9 @@ namespace Posterr.Tests.Controllers
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("follow/{userId}")]
+        #endregion follow/{userId}
 
-        #region [Route("unfollow/{userId}")]
+        #region unfollow/{userId}
         [Theory, MemberData(nameof(UnfollowTests))]
         public void UnfollowTest(UnfollowTestInput test)
         {
@@ -262,6 +262,6 @@ namespace Posterr.Tests.Controllers
             public string ExpectedErrorMessage { get; set; }
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
-        #endregion [Route("unfollow/{userId}")]
+        #endregion unfollow/{userId}
     }
 }

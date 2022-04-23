@@ -1,6 +1,5 @@
 ﻿using Posterr.Infra.Interfaces;
 using Posterr.Services.Model;
-using Posterr.Services.Model.User;
 using Posterr.Services.User;
 using System.Collections.Generic;
 using System.Linq;

@@ -236,7 +236,7 @@ namespace Posterr.Tests.Repository
                     Id = 1,
                     FollowerId = 1,
                     FollowingId = 2,
-                    Unfollowed =  false
+                    Unfollowed = false
                 }
             }
         };

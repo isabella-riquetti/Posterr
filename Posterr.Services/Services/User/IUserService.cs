@@ -1,5 +1,4 @@
 ﻿using Posterr.Services.Model;
-using Posterr.Services.Model.User;
 
 namespace Posterr.Services.User
 {

@@ -1368,13 +1368,13 @@ namespace Posterr.Tests.Repository
                 TestName = "Create post basic",
                 AuthenticatedUserId = 1,
                 Content = "Hello",
-                CreatedAt = new DateTime(2022,4,19,13,19,15)
+                CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15)
             },
             new CreatePostTestInput()
             {
                 TestName = "Create repost",
                 AuthenticatedUserId = 1,
-                CreatedAt = new DateTime(2022,4,19,13,19,15),
+                CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15),
                 OriginalPostId = 1
             },
             new CreatePostTestInput()
@@ -1382,7 +1382,7 @@ namespace Posterr.Tests.Repository
                 TestName = "Create post quote",
                 AuthenticatedUserId = 1,
                 Content = "Hello",
-                CreatedAt = new DateTime(2022,4,19,13,19,15),
+                CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15),
                 OriginalPostId = 1
             }
         };

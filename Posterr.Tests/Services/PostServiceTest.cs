@@ -794,7 +794,7 @@ namespace Posterr.Tests.Services
             {
                 TestName = "Success, one basic post",
                 AuthenticatedUserId = 1,
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,13,19,15))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 13, 19, 15))
                 {
                     Content = "Hello"
                 },
@@ -807,7 +807,7 @@ namespace Posterr.Tests.Services
                     {
                         PostId = 1,
                         Content = "Hello",
-                        CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                        CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15).ToString(),
                         Username = "TestUsername2",
                         IsRepost = false,
                         IsRequote = false
@@ -877,7 +877,7 @@ namespace Posterr.Tests.Services
                 {
                     Id = 2
                 },
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,13,19,15))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 13, 19, 15))
                 {
                     OriginalPostId = 1
                 },
@@ -886,7 +886,7 @@ namespace Posterr.Tests.Services
                     {
                         PostId = 2,
                         Content = "Hiii",
-                        CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                        CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15).ToString(),
                         Username = "TestUsername2",
                         IsRepost = false,
                         IsRequote = true,
@@ -894,7 +894,7 @@ namespace Posterr.Tests.Services
                         {
                             PostId = 1,
                             Content = "Hello Posterr",
-                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                            CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15).ToString(),
                             Username = "TestUsername1"
                         }
                     }),

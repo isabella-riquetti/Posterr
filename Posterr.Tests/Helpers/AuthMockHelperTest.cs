@@ -15,7 +15,7 @@ namespace Posterr.Tests.Helpers
             {
                 httpContext.Request.Headers.Add("AuthenticatedUserId", test.AuthenticatedUserId);
             }
-            
+
             int response = AuthMockHelper.GetUserFromHeader(httpContext.Request);
 
             Assert.Equal(test.ExpectedResponse, response);

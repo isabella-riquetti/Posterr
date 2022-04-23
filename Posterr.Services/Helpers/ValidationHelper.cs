@@ -104,9 +104,9 @@ namespace Posterr.Services.Helpers
                 errorMessage = "OriginalPostId must be positive";
                 return false;
             }
-            if(request.OriginalPostId != null && request.Content != null) //Is Quote Post
+            if (request.OriginalPostId != null && request.Content != null) //Is Quote Post
             {
-                minContent = 1;                
+                minContent = 1;
             }
             if (!IsValidContentLength(request.Content, out errorMessage, min: minContent))
             {
@@ -124,7 +124,7 @@ namespace Posterr.Services.Helpers
         /// <returns>The skip is valid or not</returns>
         public static bool IsValidContentLength(string content, out string errorMessage, int min = 1, int max = 777)
         {
-            if(content == null && min > 0)
+            if (content == null && min > 0)
             {
                 errorMessage = "Text cannot be null";
                 return false;

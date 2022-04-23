@@ -10,7 +10,7 @@ namespace Posterr.Tests.Controllers
 {
     public class PostsControllerTest
     {
-        #region POST [Route("create")]
+        #region create
         [Theory, MemberData(nameof(CreatePostTests))]
         public void CreatePostTest(CreatePostTestInput test)
         {
@@ -39,7 +39,7 @@ namespace Posterr.Tests.Controllers
             {
                 TestName = "Fail, invalid content",
                 ExpectSuccess = false,
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 19, 00, 00))
                 {
                     Content = ""
                 },
@@ -49,7 +49,7 @@ namespace Posterr.Tests.Controllers
             {
                 TestName = "Success, create post",
                 ExpectSuccess = true,
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 19, 00, 00))
                 {
                     Content = "Test Content"
                 },
@@ -59,7 +59,7 @@ namespace Posterr.Tests.Controllers
                         {
                             PostId = 1,
                             Content = "Test Content",
-                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            CreatedAt = new DateTime(2022, 4, 19, 19, 00, 00).ToString(),
                             Username = "TestUsername1",
                             IsRepost = false,
                             IsRequote = false
@@ -69,7 +69,7 @@ namespace Posterr.Tests.Controllers
             {
                 TestName = "Success, create quotepost",
                 ExpectSuccess = true,
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,19,00,00))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 19, 00, 00))
                 {
                     OriginalPostId = 1,
                     Content = "Test Content"
@@ -80,7 +80,7 @@ namespace Posterr.Tests.Controllers
                         {
                             PostId = 2,
                             Content = "Test Content 2",
-                            CreatedAt = new DateTime(2022,4,19,19,00,00).ToString(),
+                            CreatedAt = new DateTime(2022, 4, 19, 19, 00, 00).ToString(),
                             Username = "TestUsername1",
                             IsRepost = false,
                             IsRequote = true,
@@ -88,7 +88,7 @@ namespace Posterr.Tests.Controllers
                             {
                                 PostId = 1,
                                 Content = "Hello",
-                                CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
+                                CreatedAt = new DateTime(2022, 4, 19, 13, 19, 15).ToString(),
                                 Username = "TestUsername2"
                             }
                         }),
@@ -102,6 +102,6 @@ namespace Posterr.Tests.Controllers
             public CreatePostRequestModel Request { get; set; }
             public BaseResponse<PostResponseModel> CreatePostResponse { get; set; }
         }
-        #endregion POST [Route("create")]
+        #endregion create
     }
 }
