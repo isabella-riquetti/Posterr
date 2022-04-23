@@ -26,7 +26,10 @@ The expected database name: **Posterr**
 
  ### Testing the API
 * Run `Posterr.API` project
-* Use Swagger at [https://localhost:44338/swagger/] on the API first page or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783]
+* Use Swagger at [https://localhost:44338/swagger/] on the API first page or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783].
+
+**I strongly recommend using Postman since a few test responses examples are there.**
+
 
 # Planning
     Phase 2, planning
@@ -56,10 +59,10 @@ The expected database name: **Posterr**
 * The posts are going to be stored in the table `Posts` same table as the normal posts, reposts, and quote posts. This way any future features associated with the Post, such as adding images, and emoticons, could be easily applied to the reply.
 * The new column `IsReply` would be added to the `Posts` table. This column would be a nullable `bit` with 0 as the default value.
 * New replies would be saved with the text in the `Content`, the `OriginalPostId` with the ID of the post that is being replied to, and `IsReply` with 1 for true.
-* If users are going to be able to delete, a `Deleted` flag would need to be implemeneted, and if they are going to be able to edit a new `UpdatedAt` property would need to be created.
+* If users are going to be able to delete, a `Deleted` flag would need to be implemented, and if they are going to be able to edit a new `UpdatedAt` property would need to be created.
 
 **API**
-* Need to create a new endpoint to grab the replies. This endpoint can be similar to the timelines, but would need to return the main post and a list of replies.
+* Need to create a new endpoint to grab the replies. This endpoint can be similar to the timelines but would need to return the main post and a list of replies.
 * The filter for the replies would be Posts with `IsReply = true` and `OriginalPostId = {The main post ID}`
 * The reply should be handled in a separate service and controller since they are going to be loaded on a different page
 * The return format would be somewhat like this:
@@ -104,7 +107,7 @@ Does not apply for the assessment
     
     This should be added as a section called "Critique" in the README.
 
-### First that thing would fail
+### First thing that would fail
 Probably the first thing that would fail once the number of users and posts increased, would be the timeline of followed users posts.
 This is an extremely consuming query that needs to go in the `Follows` table, join with the `Users` table to grab the username, and of course, join with the `Posts` table. And since we have quote posts and reposts, we may need to go to the `Posts` table again to grab the original post content and go to the `Users` table again to grab the original post username.
 
@@ -113,22 +116,29 @@ This is an extremely consuming query that needs to go in the `Follows` table, jo
 One good solution for this problem would be to use an in-memory data storage such as `Redis`, so the timeline of followed users would be precompiled.
 Every time a user posts something, this post would be saved in the timeline of every user that follows him. The posts can even be saved in a UI-friendly format, so would just grab them from Redis and send them back to the UI.
 
-### Database changes I wish to make
+### Database changes I would make
 ##### Repost and Quote post flags
 Small issue, the posts are not flagged by type, so we need to check if the post is basic, a repost, or a quote post by checking which properties that have value. This not only increases by a small amount the API workload but also is hard to read in the DB and not easily extended for future functionalities.
 
-##### Change the IDs type
+##### IDs type
 The IDs were created as `int` in the distant future this could be an issue if the platform reaches more than 2 billion posts, so I would change it to at least a `bigint`.
 
 ##### Sorting by
 I would change the sorting from the Posts to sort by the `ID` instead of by the `CreatedAt` since it's more efficient to sort by number and the post are saved in order and always with the present time.
 
-### API changes I wish to make
+### API changes I would make
 ##### Unit of work
 At first, I implemented a basic Context, without Unit Work, so currently is not possible to make changes in more than one repository and save the changes in a single transaction.
 
 ##### More interfaces
 For some classes that had just one interface, I would make with multiple interfaces. For example, the `UserService` needs the `IPostService`, but just to use `GetUserPosts`, but the interface contains 4 more methods that are not used in the UserService, I should've segregated the interfaces more based on when they are going to be used and where this way they would be more specific.
 
+#### New API
+I create a new API just for the timeline endpoints, since these endpoints would require a lot more processing, this could be in a different more potent server. Even using some In-Memory Cache DB I would still place it in a different server.
+
 ##### Mediator
 I wish I had used a Mediator in the Controllers to avoid having many services there, so I would refactor the code to use a Mediator to call the functionalities.
+
+### Tests changes I would make
+#### Split into more projects
+I think one test project for each project would be better for an app that can grow a lot. Everything into one project could make it hard to keep organized and harder to run just what's required.
