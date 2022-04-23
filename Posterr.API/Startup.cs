@@ -46,6 +46,8 @@ namespace Posterr
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IUserTimelineService, PostService>();
+            services.AddScoped<ITimelineService, PostService>();
             services.AddScoped<IFollowService, FollowService>();
             services.AddScoped<IFollowRepository, FollowRepository>();
             services.AddScoped<IUserRepository, UserRepository>();

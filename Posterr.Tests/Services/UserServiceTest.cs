@@ -19,14 +19,14 @@ namespace Posterr.Tests.Services
         [Theory, MemberData(nameof(GetUserProfileTests))]
         public void GetUserProfileTest(GetUserProfileTestInput test)
         {
-            var postServiceSubstitute = Substitute.For<IPostService>();
-            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            var userTimelineServiceSubstitute = Substitute.For<IUserTimelineService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             userRepositorySubstitute.GetUser(Arg.Any<int>()).Returns(test.GetUserResponse);
-            postServiceSubstitute.GetUserPosts(Arg.Any<int>()).Returns(test.GetUserPostsResponse);
+            userTimelineServiceSubstitute.GetUserPosts(Arg.Any<int>()).Returns(test.GetUserPostsResponse);
             followRepositorySubstitute.IsUserFollowedBy(Arg.Any<int>(), Arg.Any<int>()).Returns(test.IsUserFollowedByAuthenticatedUserResponse);
 
-            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
+            var service = new UserService(userRepositorySubstitute, userTimelineServiceSubstitute, followRepositorySubstitute);
             BaseResponse<UserProfileModel> response = service.GetUserProfile(test.UserId, test.AuthenticatedUserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);
@@ -350,9 +350,9 @@ namespace Posterr.Tests.Services
         [Theory, MemberData(nameof(CreateUserTests))]
         public void CreateUserTest(CreateUserTestInput test)
         {
-            var postServiceSubstitute = Substitute.For<IPostService>();
-            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            var userTimelineServiceSubstitute = Substitute.For<IUserTimelineService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             userRepositorySubstitute.CreateUser(Arg.Any<string>());
             userRepositorySubstitute.UserExists(Arg.Any<string>(), out Arg.Any<int?>())
                 .Returns(x =>
@@ -365,7 +365,7 @@ namespace Posterr.Tests.Services
                     return test.UserExistsResponse2;
                 });
 
-            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
+            var service = new UserService(userRepositorySubstitute, userTimelineServiceSubstitute, followRepositorySubstitute);
             BaseResponse<int> response = service.CreateUser(test.Request);
 
             Assert.Equal(test.ExpectedResponse, response.Success);
@@ -412,17 +412,16 @@ namespace Posterr.Tests.Services
         }
         #endregion IsValidUser
 
-
         #region UserExists
         [Theory, MemberData(nameof(UserExistsTests))]
         public void UserExistsTest(UserExistsTestInput test)
         {
-            var postServiceSubstitute = Substitute.For<IPostService>();
-            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             var userRepositorySubstitute = Substitute.For<IUserRepository>();
+            var userTimelineServiceSubstitute = Substitute.For<IUserTimelineService>();
+            var followRepositorySubstitute = Substitute.For<IFollowRepository>();
             userRepositorySubstitute.UserExists(Arg.Any<int>()).Returns(test.UserExistsResponse);
 
-            var service = new UserService(postServiceSubstitute, followRepositorySubstitute, userRepositorySubstitute);
+            var service = new UserService(userRepositorySubstitute, userTimelineServiceSubstitute, followRepositorySubstitute);
             BaseResponse response = service.UserExists(test.UserId);
 
             response.Should().BeEquivalentTo(test.ExpectedResponse);

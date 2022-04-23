@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Posterr.Services
 {
-    public class PostService : IPostService
+    public class PostService : IPostService, IUserTimelineService, ITimelineService
     {
         private readonly IPostRepository _postRepository;
 

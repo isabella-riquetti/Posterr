@@ -26,7 +26,11 @@ The expected database name: **Posterr**
 
  ### Testing the API
 * Run `Posterr.API` project
-* Use Swagger at [https://localhost:44338/swagger/] on the API first page or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783].
+* No authentication is required
+  * If you want mock to be authenticated with one user that is not the first user, add a header with the name `AuthenticatedUserId` and the User Id you want to be authenticated in the value
+* Test endpoints
+  * Use Swagger on the API first page [https://localhost:44338/swagger/]
+  * Or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783].
 
 **I strongly recommend using Postman since a few test responses examples are there.**
 
@@ -123,15 +127,9 @@ Small issue, the posts are not flagged by type, so we need to check if the post 
 ##### IDs type
 The IDs were created as `int` in the distant future this could be an issue if the platform reaches more than 2 billion posts, so I would change it to at least a `bigint`.
 
-##### Sorting by
-I would change the sorting from the Posts to sort by the `ID` instead of by the `CreatedAt` since it's more efficient to sort by number and the post are saved in order and always with the present time.
-
 ### API changes I would make
 ##### Unit of work
 At first, I implemented a basic Context, without Unit Work, so currently is not possible to make changes in more than one repository and save the changes in a single transaction.
-
-##### More interfaces
-For some classes that had just one interface, I would make with multiple interfaces. For example, the `UserService` needs the `IPostService`, but just to use `GetUserPosts`, but the interface contains 4 more methods that are not used in the UserService, I should've segregated the interfaces more based on when they are going to be used and where this way they would be more specific.
 
 #### New API
 I create a new API just for the timeline endpoints, since these endpoints would require a lot more processing, this could be in a different more potent server. Even using some In-Memory Cache DB I would still place it in a different server.

@@ -32,7 +32,7 @@ namespace Posterr.Infra.Repository
             return _context.Follows
                 .Where(f => f.FollowerId == userId && !f.Unfollowed)
                 .SelectMany(f => f.Following.Posts)
-                .OrderByDescending(s => s.CreatedAt)
+                .OrderByDescending(s => s.Id)
                 .Skip(skipPages * pageSize)
                 .Take(pageSize);
         }
@@ -66,7 +66,7 @@ namespace Posterr.Infra.Repository
         private static IQueryable<Post> _OrderByAndTake(IQueryable<Post> posts, int skipPages = 0, int pageSize = 10)
         {
             return posts
-                .OrderByDescending(s => s.CreatedAt)
+                .OrderByDescending(s => s.Id)
                 .Skip(skipPages * pageSize)
                 .Take(pageSize);
         }

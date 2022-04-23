@@ -9,14 +9,13 @@ namespace Posterr.Services
 {
     public class UserService : IUserService
     {
-        private readonly IPostService _postService;
-        private readonly IFollowRepository _followRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IUserTimelineService _userPostService;
+        private readonly IFollowRepository _followRepository;
 
-
-        public UserService(IPostService postService, IFollowRepository followRepository, IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IUserTimelineService userPostService, IFollowRepository followRepository)
         {
-            _postService = postService;
+            _userPostService = userPostService;
             _followRepository = followRepository;
             _userRepository = userRepository;
         }
@@ -41,7 +40,7 @@ namespace Posterr.Services
                 return BaseResponse<UserProfileModel>.CreateError("User not found");
             }
 
-            BaseResponse<IList<PostResponseModel>> postsResponse = _postService.GetUserPosts(userId);
+            BaseResponse<IList<PostResponseModel>> postsResponse = _userPostService.GetUserPosts(userId);
             if (!postsResponse.Success)
             {
                 return BaseResponse<UserProfileModel>.CreateError(postsResponse.Message);
