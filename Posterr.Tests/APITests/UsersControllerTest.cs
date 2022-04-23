@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using Posterr.Controllers;
 using Posterr.Services.Model;
-using Posterr.Services.Model.User;
 using Posterr.Services.User;
 using System;
 using System.Collections.Generic;
@@ -264,84 +263,5 @@ namespace Posterr.Tests.Controllers
             public BaseResponse UserExistExpectedResponse { get; set; }
         }
         #endregion [Route("unfollow/{userId}")]
-
-        #region POST [Route("create")]
-        [Theory, MemberData(nameof(CreateUserTests))]
-        public void CreateUserTest(CreateUserTestInput test)
-        {
-            var userServiceSubstitute = Substitute.For<IUserService>();
-            var followServiceSubstitute = Substitute.For<IFollowService>();
-
-            userServiceSubstitute.CreateUser(Arg.Is(test.Request)).Returns(test.CreateUserResponse);
-
-            var controller = new UsersController(userServiceSubstitute, followServiceSubstitute);
-            IActionResult response = controller.CreateUser(test.Request);
-
-            if (!test.ExpectSuccess)
-            {
-                Assert.IsType<BadRequestObjectResult>(response);
-                Assert.Equal(test.ExpectedResponseMessage, ((BadRequestObjectResult)response).Value);
-            }
-            else
-            {
-                Assert.IsType<OkObjectResult>(response);
-                Assert.Equal(test.ExpectedResponseMessage, ((OkObjectResult)response).Value);
-            }
-        }
-
-
-        public static readonly TheoryData<CreateUserTestInput> CreateUserTests = new()
-        {
-            new CreateUserTestInput()
-            {
-                TestName = "Fail, invalid ModelState",
-                Request = new CreateUserRequestModel(),
-                ExpectSuccess = false,
-                ExpectedResponseMessage = "Username should be alphanumeric and under 14 characters"
-            },
-            new CreateUserTestInput()
-            {
-                TestName = "Fail, invalid username",
-                Request = new CreateUserRequestModel()
-                {
-                    Username = "invalid-user-name",
-                },
-                ExpectSuccess = false,
-                ExpectedResponseMessage = "Username should be alphanumeric and under 14 characters"
-            },
-            new CreateUserTestInput()
-            {
-                TestName = "Fail at creating user",
-                Request = new CreateUserRequestModel()
-                {
-                    Username = "validusername",
-                },
-                CreateUserResponse = BaseResponse<int>.CreateError("User already exists"),
-                ExpectSuccess = false,
-                ExpectedResponseMessage = "User already exists"
-            },
-            new CreateUserTestInput()
-            {
-                TestName = "Create the user",
-                Request = new CreateUserRequestModel()
-                {
-                    Username = "validusername",
-                },
-                CreateUserResponse = BaseResponse<int>.CreateSuccess(55),
-                ExpectSuccess = true,
-                ExpectedResponseMessage = "New user created with the id: 55"
-            },
-        };
-        public class CreateUserTestInput
-        {
-            public string TestName { get; set; }
-            public CreateUserRequestModel Request { get; set; }
-
-            public bool ExpectSuccess { get; set; }
-            public string ExpectedResponseMessage { get; set; }
-            public int UserId { get; set; }
-            public BaseResponse<int> CreateUserResponse { get; set; }
-        }
-        #endregion POST [Route("create")]
     }
 }

@@ -2,7 +2,6 @@
 using Posterr.API.Helper;
 using Posterr.Services.Helpers;
 using Posterr.Services.Model;
-using Posterr.Services.Model.User;
 using Posterr.Services.User;
 
 namespace Posterr.Controllers
@@ -78,30 +77,6 @@ namespace Posterr.Controllers
             }
 
             return Ok();
-        }
-
-        // Just to make easier to test new users
-        [HttpPost]
-        [Route("create")]
-        public IActionResult CreateUser([FromBody] CreateUserRequestModel request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (!ValidationHelper.IsValidUsername(request.Username, out string errorMessage))
-            {
-                return BadRequest(errorMessage);
-            }
-
-            BaseResponse<int> createUserResponse = _userService.CreateUser(request);
-            if (!createUserResponse.Success)
-            {
-                return BadRequest(createUserResponse.Message);
-            }
-
-            return Ok($"New user created with the id: {createUserResponse.Data}");
         }
     }
 }

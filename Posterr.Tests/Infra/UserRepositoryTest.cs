@@ -183,33 +183,5 @@ namespace Posterr.Tests.Repository
             public bool ExpectedResponse { get; set; }
         }
         #endregion UserExistsOutUserId
-
-        #region CreateUser
-        [Theory, MemberData(nameof(CreateUserTests))]
-        public void CreateUserTest(CreateUserTestInput test)
-        {
-            ApiContext apiContext = test.CreateNewInMemoryContext();
-
-            var repository = new UserRepository(apiContext);
-            repository.CreateUser(test.Username);
-
-            apiContext.Users.Should().ContainSingle(f => f.Username == test.Username);
-        }
-
-        public static readonly TheoryData<CreateUserTestInput> CreateUserTests = new()
-        {
-            new CreateUserTestInput()
-            {
-                TestName = "Create User with name",
-                Username = "user1"
-            }
-        };
-        public class CreateUserTestInput : DatatbaseTestInput
-        {
-            public string TestName { get; set; }
-
-            public string Username { get; set; }
-        }
-        #endregion CreateUser
     }
 }

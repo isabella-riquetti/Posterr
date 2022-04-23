@@ -25,12 +25,6 @@ namespace Posterr.Infra.Interfaces
         /// <param name="username">Expected username</param>
         /// <returns>The userid in case exists</returns>
         bool UserExists(string username, out int? userId);
-
-        /// <summary>
-        /// Create the user in the Users table
-        /// </summary>
-        /// <param name="username">The username of the user</param>
-        void CreateUser(string username);
     }
 }
 

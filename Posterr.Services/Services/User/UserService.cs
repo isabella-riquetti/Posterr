@@ -52,23 +52,6 @@ namespace Posterr.Services
             return BaseResponse<UserProfileModel>.CreateSuccess(response);
         }
 
-        public BaseResponse<int> CreateUser(CreateUserRequestModel request)
-        {
-            if (_userRepository.UserExists(request.Username, out int? _))
-            {
-                return BaseResponse<int>.CreateError("User already exists");
-            }
-
-            _userRepository.CreateUser(request.Username);
-
-            if (!_userRepository.UserExists(request.Username, out int? userId))
-            {
-                return BaseResponse<int>.CreateError("User could not be created");
-            }
-
-            return BaseResponse<int>.CreateSuccess((int)userId);
-        }
-
         public BaseResponse UserExists(int id)
         {
             if (!_userRepository.UserExists(id))

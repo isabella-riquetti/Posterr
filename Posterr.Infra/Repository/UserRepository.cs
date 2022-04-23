@@ -37,17 +37,5 @@ namespace Posterr.Infra.Repository
             userId = response == 0 ? (int?)null : response;
             return userId != null;
         }
-
-        public void CreateUser(string username)
-        {
-            var user = new User()
-            {
-                Username = username,
-                Name = username,
-                CreatedAt = DateTime.Now
-            };
-            _context.Users.Add(user);
-            _context.SaveChanges();
-        }
     }
 }

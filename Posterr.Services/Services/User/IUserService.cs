@@ -19,12 +19,5 @@ namespace Posterr.Services.User
         /// <param name="userId">The user id</param>
         /// <returns>If the user exist</returns>
         BaseResponse UserExists(int userId);
-
-        /// <summary>
-        /// Create the User (just for testing)
-        /// </summary>
-        /// <param name="request">The username and name</param>
-        /// <returns>The generate user id</returns>
-        BaseResponse<int> CreateUser(CreateUserRequestModel request);
     }
 }
