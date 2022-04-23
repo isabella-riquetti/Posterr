@@ -88,6 +88,7 @@ namespace Posterr.Services.Helpers
         /// <returns>The skip is valid or not</returns>
         public static bool IsValidPostRequest(CreatePostRequestModel request, out string errorMessage)
         {
+            int minContent = 0;
             if (request == null)
             {
                 errorMessage = "Request cannot be null";
@@ -103,7 +104,11 @@ namespace Posterr.Services.Helpers
                 errorMessage = "OriginalPostId must be positive";
                 return false;
             }
-            if (!IsValidContentLength(request.Content, out errorMessage,min: 0))
+            if(request.OriginalPostId != null && request.Content != null) //Is Quote Post
+            {
+                minContent = 1;                
+            }
+            if (!IsValidContentLength(request.Content, out errorMessage, min: minContent))
             {
                 return false;
             }

@@ -328,6 +328,17 @@ namespace Posterr.Tests.Helpers
             },
             new IsValidPostRequestTestInput()
             {
+                TestName = "Fail, quote post empty content",
+                Request = new CreatePostRequestModel()
+                {
+                    OriginalPostId = 1,
+                    Content = ""
+                },
+                ExpectedResponse = false,
+                ExpectedErrorMessage = "Text should have between 1 and 777 characters"
+            },
+            new IsValidPostRequestTestInput()
+            {
                 TestName = "Fail, over 777 characters (801)",
                 Request = new CreatePostRequestModel()
                 {

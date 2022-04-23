@@ -39,9 +39,17 @@ namespace Posterr.Services
 
         public BaseResponse<PostResponseModel> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
         {
-            if (request.OriginalPostId != null && !_postRepository.GetPostsById((int)request.OriginalPostId).Any())
+            if (request.OriginalPostId != null)
             {
-                return BaseResponse<PostResponseModel>.CreateError("Original Post not found");
+                Post referencedPost = _postRepository.GetPostsById((int)request.OriginalPostId).FirstOrDefault();
+                if (referencedPost == null)
+                {
+                    return BaseResponse<PostResponseModel>.CreateError("Original Post not found");
+                }
+                else if (String.IsNullOrEmpty(referencedPost.Content))
+                {
+                    return BaseResponse<PostResponseModel>.CreateError("Can't repost a repost");
+                }
             }
 
             var post = _postRepository.CreatePost(authenticatedUserId, request.Content, request.CreatedAt, request.OriginalPostId);

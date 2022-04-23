@@ -42,7 +42,7 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("timeline/following/")]
+        [Route("timeline/following")]
         public IActionResult GetUserTimeline(int skipPages = 0)
         {
             if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage))
@@ -61,7 +61,7 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("timeline/")]
+        [Route("timeline")]
         public IActionResult GetTimeline(int skipPages = 0)
         {
             if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage))
@@ -80,7 +80,7 @@ namespace Posterr.Controllers
         }
 
         [HttpGet]
-        [Route("search/{text}/")]
+        [Route("search")]
         public IActionResult Search(string text, int skipPages = 0)
         {
             if (!ValidationHelper.IsValuePositiveOrNeutral(skipPages, out string errorMessage)

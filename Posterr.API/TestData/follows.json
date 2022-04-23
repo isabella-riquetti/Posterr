@@ -7,7 +7,7 @@
   {
     "FollowerId": 2,
     "FollowingId": 3,
-    "Unfollowed": 0
+    "Unfollowed": 1
   },
   {
     "FollowerId": 3,
@@ -28,5 +28,10 @@
     "FollowerId": 1,
     "FollowingId": 4,
     "Unfollowed": 1
+  },
+  {
+    "FollowerId": 5,
+    "FollowingId": 4,
+    "Unfollowed": 0
   }
 ]

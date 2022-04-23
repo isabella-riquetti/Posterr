@@ -829,32 +829,17 @@ namespace Posterr.Tests.Services
             },
             new CreatePostTestInput()
             {
-                TestName = "Success, one repost from other user",
+                TestName = "Fail, repost a repost",
                 AuthenticatedUserId = 1,
                 CreatePostResponse = new Post()
                 {
                     Id = 2
                 },
-                Request = new CreatePostRequestModel(new DateTime(2022,4,19,13,19,15))
+                Request = new CreatePostRequestModel(new DateTime(2022, 4, 19, 13, 19, 15))
                 {
                     OriginalPostId = 1
                 },
-                ExpectedResponse = BaseResponse<PostResponseModel>.CreateSuccess(
-                    new PostResponseModel()
-                    {
-                        PostId = 1,
-                        Content = "Hello Posterr",
-                        CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
-                        Username = "TestUsername1",
-                        IsRepost = true,
-                        Repost = new RepostedModel()
-                        {
-                            PostId = 2,
-                            CreatedAt = new DateTime(2022,4,19,13,19,15).ToString(),
-                            Username = "TestUsername2"
-                        },
-                        IsRequote = false
-                    }),
+                ExpectedResponse = BaseResponse<PostResponseModel>.CreateError("Can't repost a repost"),
                 GetPostsByIdResponseForOriginal = new List<Post>() {
                     new Post()
                     {
@@ -871,7 +856,6 @@ namespace Posterr.Tests.Services
                         OriginalPost = new Post()
                         {
                             Id = 1,
-                            Content = "Hello Posterr",
                             CreatedAt = new DateTime(2022,4,19,13,19,15),
                             User = new User()
                             {
@@ -917,7 +901,8 @@ namespace Posterr.Tests.Services
                 GetPostsByIdResponseForOriginal = new List<Post>() {
                     new Post()
                     {
-                        Id = 1
+                        Id = 1,
+                        Content = "Hello Posterr"
                     }
                 }.AsQueryable(),
                 GetPostsByIdResponse = new List<Post>() {

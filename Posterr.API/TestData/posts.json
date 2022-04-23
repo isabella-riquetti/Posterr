@@ -1,145 +1,145 @@
 [
   {
-    "CreatedAt": "2022-04-18 20:52:01",
+    "CreatedAt": "2022-04-18 00:01:00",
     "Content": "Hello Posterr, I`m Isabella Emidio",
     "UserId": 1
   },
   {
-    "CreatedAt": "2022-04-18 20:52:02",
+    "CreatedAt": "2022-04-18 00:02:00",
     "Content": "Everyone is joining Posterr",
     "UserId": 3
   },
   {
-    "CreatedAt": "2022-04-18 20:52:03",
+    "CreatedAt": "2022-04-18 00:03:00",
     "Content": "Yeah, super cool",
     "UserId": 1,
     "OriginalPostId": 2
   },
   {
-    "CreatedAt": "2022-04-18 20:52:04",
+    "CreatedAt": "2022-04-18 00:04:00",
     "Content": "I`m soooooooooo hungry",
     "UserId": 1
   },
   {
-    "CreatedAt": "2022-04-18 20:53:05",
+    "CreatedAt": "2022-04-18 00:05:00",
     "Content": "I think I`m gonna order pizza",
     "UserId": 1
   },
   {
-    "CreatedAt": "2022-04-18 20:54:06",
+    "CreatedAt": "2022-04-18 00:06:00",
     "Content": "Pizza place is closed :(",
     "UserId": 1
   },
   {
-    "CreatedAt": "2022-04-18 20:54:07",
+    "CreatedAt": "2022-04-18 00:07:00",
     "Content": "I have an idea. My mom @sandra taught me how to make tacos last month, I think I`ll try to make it using some leftovers from yesterday as a filling",
     "UserId": 1
   },
   {
-    "CreatedAt": "2022-04-18 20:54:08",
+    "CreatedAt": "2022-04-18 00:08:00",
     "Content": "Homemade food is always better!!",
     "UserId": 2,
     "OriginalPostId": 7
   },
   {
-    "CreatedAt": "2022-04-18 21:35:10",
+    "CreatedAt": "2022-04-18 00:09:00",
     "Content": "NULL",
     "UserId": 1,
     "OriginalPostId": 8
   },
   {
-    "CreatedAt": "2022-04-18 21:38:12",
+    "CreatedAt": "2022-04-18 00:10:00",
     "Content": "Eating Pizza",
     "UserId": 3
   },
   {
-    "CreatedAt": "2022-04-18 21:38:13",
+    "CreatedAt": "2022-04-18 00:11:00",
     "Content": "I wish it was me :(",
     "UserId": 1,
     "OriginalPostId": 10
   },
   {
-    "CreatedAt": "2022-04-19 19:37:14",
-    "Content": "I just joinned",
-    "UserId": 4
-  },
-  {
-    "CreatedAt": "2022-04-19 19:59:15",
+    "CreatedAt": "2022-04-19 00:12:00",
     "Content": "Hello, this is ",
     "UserId": 3
   },
   {
-    "CreatedAt": "2022-04-19 19:59:16",
+    "CreatedAt": "2022-04-19 00:13:00",
     "Content": "Test 2",
     "UserId": 3
   },
   {
-    "CreatedAt": "2022-04-19 19:59:17",
+    "CreatedAt": "2022-04-19 00:14:00",
     "Content": "Test 3 - Not Followed",
     "UserId": 5
   },
   {
-    "CreatedAt": "2022-04-19 20:07:18",
+    "CreatedAt": "2022-04-19 00:15:00",
     "Content": "Tit for tat",
     "UserId": 5
   },
   {
-    "CreatedAt": "2022-04-19 20:07:19",
+    "CreatedAt": "2022-04-19 00:16:00",
     "Content": "Take the gilt off the gingerbread",
     "UserId": 5
   },
   {
-    "CreatedAt": "2022-04-19 20:07:20",
+    "CreatedAt": "2022-04-19 00:17:00",
     "Content": "A bunch of fives",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:21",
+    "CreatedAt": "2022-04-19 00:18:00",
     "Content": "Canterbury pace",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:22",
+    "CreatedAt": "2022-04-19 00:19:00",
     "Content": "Off the record",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:23",
+    "CreatedAt": "2022-04-19 00:20:00",
     "Content": "I'm stumped",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:24",
+    "CreatedAt": "2022-04-19 00:21:00",
     "Content": "Read 'Em and Weep",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:25",
+    "CreatedAt": "2022-04-19 00:22:00",
     "Content": "But, for my own part, it was Greek to me",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:07:26",
+    "CreatedAt": "2022-04-19 00:23:00",
     "Content": "Fixer-upper",
     "UserId": 2
   },
   {
-    "CreatedAt": "2022-04-19 20:08:27",
+    "CreatedAt": "2022-04-19 00:24:00",
     "Content": "Laid out in lavender",
     "UserId": 5
   },
   {
-    "CreatedAt": "2022-04-19 20:08:28",
+    "CreatedAt": "2022-04-19 00:25:00",
     "UserId": 3,
     "OriginalPostId": 19
   },
   {
-    "CreatedAt": "2022-04-19 20:08:29",
+    "CreatedAt": "2022-04-19 00:26:00",
     "Content": "New Tst for search",
     "UserId": 3
   },
   {
-    "CreatedAt": "2022-04-19 20:26:30",
+    "CreatedAt": "2022-04-19 00:27:00",
+    "UserId": 1,
+    "OriginalPostId": 20
+  },
+  {
+    "CreatedAt": "2022-04-19 00:28:00",
     "Content": "TheFinalTest",
     "UserId": 3,
     "OriginalPostId": 20
