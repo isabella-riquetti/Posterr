@@ -742,6 +742,7 @@ namespace Posterr.Tests.Services
             postRepositorySubstitute.CreatePost(Arg.Any<int>(), Arg.Any<string>(), Arg.Any<DateTime>(), Arg.Any<int?>()).Returns(test.CreatePostResponse);
             postRepositorySubstitute.GetPostsById(test?.Request?.OriginalPostId ?? 0).Returns(test.GetPostsByIdResponseForOriginal);
             postRepositorySubstitute.GetPostsById(test.CreatePostResponse.Id).Returns(test.GetPostsByIdResponse);
+            postRepositorySubstitute.GetPostsByUserId(test.AuthenticatedUserId).Returns(test.GetPostsByUserIdResponse);
 
             var service = new PostService(postRepositorySubstitute);
             BaseResponse<PostResponseModel> response = service.CreatePost(test.Request, test.AuthenticatedUserId);
@@ -788,6 +789,45 @@ namespace Posterr.Tests.Services
                             Username = "TestUsername2"
                         }
                     }
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>().AsQueryable()
+            },
+            new CreatePostTestInput()
+            {
+
+                TestName = "Over 5 posts in the same day",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(DateTime.Now)
+                {
+                    Content = "Hello"
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>.CreateError("You can't post more than 5 times per day"),
+                CreatePostResponse = new Post()
+                {
+                    Id = 1
+                },
+                GetPostsByIdResponseForOriginal = new List<Post>().AsQueryable(),
+                GetPostsByIdResponse = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = new DateTime(2022,4,19,13,19,15),
+                        OriginalPostId = null,
+                        User = new User()
+                        {
+                            Username = "TestUsername2"
+                        }
+                    }
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>()
+                {
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-1) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-5) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-10) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-12) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-23) }
                 }.AsQueryable()
             },
             new CreatePostTestInput()
@@ -825,7 +865,8 @@ namespace Posterr.Tests.Services
                             Username = "TestUsername2"
                         }
                     }
-                }.AsQueryable()
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>().AsQueryable()
             },
             new CreatePostTestInput()
             {
@@ -867,7 +908,8 @@ namespace Posterr.Tests.Services
                             Username = "TestUsername2"
                         }
                     }
-                }.AsQueryable()
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>().AsQueryable()
             },
             new CreatePostTestInput()
             {
@@ -928,8 +970,54 @@ namespace Posterr.Tests.Services
                             Username = "TestUsername2"
                         }
                     }
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>().AsQueryable()
+            },
+            new CreatePostTestInput()
+            {
+                TestName = "Success, 5 posts, but the last is older than a day",
+                AuthenticatedUserId = 1,
+                Request = new CreatePostRequestModel(DateTime.Now.Date)
+                {
+                    Content = "Hello"
+                },
+                CreatePostResponse = new Post()
+                {
+                    Id = 1
+                },
+                ExpectedResponse = BaseResponse<PostResponseModel>.CreateSuccess(
+                    new PostResponseModel()
+                    {
+                        PostId = 1,
+                        Content = "Hello",
+                        CreatedAt = DateTime.Now.Date.ToString(),
+                        Username = "TestUsername2",
+                        IsRepost = false,
+                        IsRequote = false
+                    }),
+                GetPostsByIdResponse = new List<Post>() {
+                    new Post()
+                    {
+                        Id = 1,
+                        UserId = 2,
+                        Content = "Hello",
+                        CreatedAt = DateTime.Now.Date,
+                        OriginalPostId = null,
+                        User = new User()
+                        {
+                            Username = "TestUsername2"
+                        }
+                    }
+                }.AsQueryable(),
+                GetPostsByUserIdResponse = new List<Post>()
+                {
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-1) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-5) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-10) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-12) },
+                    new Post() { CreatedAt = DateTime.Now.AddHours(-40) }
                 }.AsQueryable()
-            }
+            },
         };
 
         public class CreatePostTestInput
@@ -940,7 +1028,8 @@ namespace Posterr.Tests.Services
             public int AuthenticatedUserId { get; set; }
             public CreatePostRequestModel Request { get; set; }
             public IQueryable<Post> GetPostsByIdResponse { get; set; }
-            public IQueryable<Post> GetPostsByIdResponseForOriginal { get; internal set; }
+            public IQueryable<Post> GetPostsByIdResponseForOriginal { get; set; }
+            public IQueryable<Post> GetPostsByUserIdResponse { get; internal set; }
             public BaseResponse<PostResponseModel> ExpectedResponse { get; set; }
             public Post CreatePostResponse { get; internal set; }
         }
