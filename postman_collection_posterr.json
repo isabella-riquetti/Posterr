@@ -1,0 +1,2658 @@
+{
+    "info": {
+        "_postman_id": "8969c0f8-7bed-490f-91f4-09eb4caffb64",
+        "name": "Posterr",
+        "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    },
+    "item": [{
+            "name": "Posts",
+            "item": [{
+                    "name": "CreatePost",
+                    "item": [{
+                            "name": "BasicPost",
+                            "event": [{
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                                    }
+                                }
+                            ],
+                            "id": "104d8659-33a7-4c3b-bf81-ed9b392f0ddb",
+                            "request": {
+                                "method": "POST",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "4",
+                                        "type": "text"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"\r\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": "https://localhost:44338/api/posts/create"
+                            },
+                            "response": [{
+                                    "id": "bb0c9d1b-8274-490b-8d7a-d9f956dd0d9e",
+                                    "name": "[200] Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "4",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:14:16 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "205"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"postId\": 28,\n    \"username\": \"fabioemidio\",\n    \"createdAt\": \"4/23/2022 7:14:16 PM\",\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n    \"repost\": null,\n    \"isRepost\": false,\n    \"quoted\": null,\n    \"isRequote\": false\n}"
+                                }, {
+                                    "id": "6f7badfd-722b-4e02-bc46-b505833c129c",
+                                    "name": "[400] Empty content",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "4",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"\"\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:12:44 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "41"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Post must have a content or be a repost\""
+                                }, {
+                                    "id": "6b21e4c3-22c7-437a-9dee-baa7775f7fc9",
+                                    "name": "[400] Post content too long",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "4",
+                                                "type": "text"
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis sed enim a condimentum.\"\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:25:56 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "47"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Text should have between 0 and 777 characters\""
+                                }, {
+                                    "id": "a227a6d7-f136-49ad-8334-7026f7c9e2f8",
+                                    "name": "[400] Over 5 posts/day",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\"\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sun, 24 Apr 2022 02:10:01 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "42"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"You can't post more than 5 times per day\""
+                                }
+                            ]
+                        }, {
+                            "name": "Repost",
+                            "event": [{
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                                    }
+                                }
+                            ],
+                            "id": "c02e8068-3881-416c-8f43-50eab808612b",
+                            "request": {
+                                "method": "POST",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\r\n    \"OriginalPostId\": 1\r\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": "https://localhost:44338/api/posts/create"
+                            },
+                            "response": [{
+                                    "id": "51929189-a944-4860-b6ea-8db3e7285e5b",
+                                    "name": "[200] Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"OriginalPostId\": 20\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:20:27 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "233"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"postId\": 20,\n    \"username\": \"sandraregina\",\n    \"createdAt\": \"4/19/2022 12:20:00 AM\",\n    \"content\": \"I'm stumped\",\n    \"repost\": {\n        \"postId\": 30,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/23/2022 7:20:27 PM\"\n    },\n    \"isRepost\": true,\n    \"quoted\": null,\n    \"isRequote\": false\n}"
+                                }, {
+                                    "id": "5b5f8cb0-18a4-4e03-a4f3-d55a87b6f07a",
+                                    "name": "[400] Invalid OriginalPostId",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"OriginalPostId\": 0\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Transfer-Encoding",
+                                            "value": "chunked"
+                                        }, {
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:14:38 GMT"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"OriginalPostId must be positive\""
+                                }, {
+                                    "id": "4229e80e-915e-49fd-ae51-555d11959f6e",
+                                    "name": "[400] Original Post does not exist",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"OriginalPostId\": 100\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:15:01 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "25"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Original Post not found\""
+                                }, {
+                                    "id": "1705e591-0010-4567-85a9-0ad63b70c8f1",
+                                    "name": "[400] Repost a repost",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"OriginalPostId\": 27\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Transfer-Encoding",
+                                            "value": "chunked"
+                                        }, {
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:20:08 GMT"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Can't repost a repost\""
+                                }
+                            ]
+                        }, {
+                            "name": "QuotePost",
+                            "event": [{
+                                    "listen": "prerequest",
+                                    "script": {
+                                        "type": "text/javascript",
+                                        "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                                    }
+                                }
+                            ],
+                            "id": "54e226e8-3b4f-4b32-bb43-c2268fc48548",
+                            "request": {
+                                "method": "POST",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\r\n    \"OriginalPostId\": 1\r\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": "https://localhost:44338/api/posts/create"
+                            },
+                            "response": [{
+                                    "id": "58a13ac2-4a49-4346-8723-46142978164e",
+                                    "name": "[200] Success",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\r\n    \"OriginalPostId\": 1\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Transfer-Encoding",
+                                            "value": "chunked"
+                                        }, {
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:26:51 GMT"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "{\n    \"postId\": 30,\n    \"username\": \"isabellaemidio\",\n    \"createdAt\": \"4/23/2022 7:26:51 PM\",\n    \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n    \"repost\": null,\n    \"isRepost\": false,\n    \"quoted\": {\n        \"content\": \"Hello Posterr, I`m Isabella Emidio\",\n        \"postId\": 1,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 12:01:00 AM\"\n    },\n    \"isRequote\": true\n}"
+                                }, {
+                                    "id": "207ddaa0-b611-4c8d-98e4-990da4c6d0ca",
+                                    "name": "[400] Invalid OriginalPostId",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"I'm quoting\",\r\n    \"OriginalPostId\": -1\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:21:30 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "33"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"OriginalPostId must be positive\""
+                                }, {
+                                    "id": "63af27c5-5e37-4600-b576-9585fe21ab4b",
+                                    "name": "[400] Original post does not exist",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"I'm quoting\",\r\n    \"OriginalPostId\": 100\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:22:04 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "25"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Original Post not found\""
+                                }, {
+                                    "id": "74e4d0e6-06e6-44a0-8c36-009e590d1717",
+                                    "name": "[400] Empty content",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"\",\r\n    \"OriginalPostId\": 1\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Transfer-Encoding",
+                                            "value": "chunked"
+                                        }, {
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:24:28 GMT"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Text should have between 1 and 777 characters\""
+                                }, {
+                                    "id": "a8da87e9-a684-4783-8637-f9dcef83b746",
+                                    "name": "[400] Post content too long",
+                                    "originalRequest": {
+                                        "method": "POST",
+                                        "header": [{
+                                                "key": "AuthenticatedUserId",
+                                                "value": "{{authenticated_user_id}}",
+                                                "type": "text"
+                                            }, {
+                                                "key": "UserId",
+                                                "value": "",
+                                                "type": "text",
+                                                "disabled": true
+                                            }
+                                        ],
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\r\n    \"Content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis sed enim a condimentum.\",\r\n    \"OriginalPostId\": 1\r\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "url": "https://localhost:44338/api/posts/create"
+                                    },
+                                    "status": "Bad Request",
+                                    "code": 400,
+                                    "_postman_previewlanguage": "json",
+                                    "header": [{
+                                            "key": "Content-Type",
+                                            "value": "application/json; charset=utf-8"
+                                        }, {
+                                            "key": "Server",
+                                            "value": "Microsoft-IIS/10.0"
+                                        }, {
+                                            "key": "X-Powered-By",
+                                            "value": "ASP.NET"
+                                        }, {
+                                            "key": "Date",
+                                            "value": "Sat, 23 Apr 2022 22:26:27 GMT"
+                                        }, {
+                                            "key": "Content-Length",
+                                            "value": "47"
+                                        }
+                                    ],
+                                    "cookie": [],
+                                    "body": "\"Text should have between 1 and 777 characters\""
+                                }
+                            ]
+                        }
+                    ],
+                    "id": "f2ddb03f-5024-46d0-a4f2-5ce0ecf92dd3"
+                }
+            ],
+            "id": "7f1a4762-5613-432b-926d-3c08e74f216d"
+        }, {
+            "name": "Timeline",
+            "item": [{
+                    "name": "Get User Posts",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "74554452-d17b-47c9-a57f-9ae1d110f239",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://localhost:44338/api/timeline/user/1?skipPages=0",
+                            "protocol": "https",
+                            "host": ["localhost"],
+                            "port": "44338",
+                            "path": ["api", "timeline", "user", "1"],
+                            "query": [{
+                                    "key": "skipPages",
+                                    "value": "0"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [{
+                            "id": "e41b687e-4f03-4e6f-ae8a-7704110f48a9",
+                            "name": "[200] Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/user/1"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:53:33 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 11,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 9:38:13 PM\",\n        \"content\": \"I wish it was me :(\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Eating Pizza\",\n            \"postId\": 10,\n            \"username\": \"fabioemidio\",\n            \"createdAt\": \"4/18/2022 9:38:12 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 9,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 9:35:10 PM\",\n        \"content\": \"NULL\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Homemade food is always better!!\",\n            \"postId\": 8,\n            \"username\": \"sandraregina\",\n            \"createdAt\": \"4/18/2022 8:54:08 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 7,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:54:07 PM\",\n        \"content\": \"I have an idea. My mom @sandra taught me how to make tacos last month, I think I`ll try to make it using some leftovers from yesterday as a filling\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 6,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:54:06 PM\",\n        \"content\": \"Pizza place is closed :(\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 5,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:53:05 PM\",\n        \"content\": \"I think I`m gonna order pizza\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "c90186b0-0c78-483e-b527-1b7c2e07e4f1",
+                            "name": "[200] Last page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/user/1?skipPages=1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "user", "1"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:53:46 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "636"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 4,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:04 PM\",\n        \"content\": \"I`m soooooooooo hungry\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 3,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:03 PM\",\n        \"content\": \"Yeah, super cool\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Everyone is joining Posterr\",\n            \"postId\": 2,\n            \"username\": \"fabioemidio\",\n            \"createdAt\": \"4/18/2022 8:52:02 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 1,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:01 PM\",\n        \"content\": \"Hello Posterr, I`m Isabella Emidio\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "429448ab-0cf4-4452-91c6-88e578440882",
+                            "name": "[200] Empty page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/user/1?skipPages=2",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "user", "1"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "2"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:53:58 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "56059d93-8fb4-4ecf-95d3-dd1c6c8f806f",
+                            "name": "[200] No posts from user",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/user/4"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:54:35 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "2"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "2041bc72-75f7-4229-916a-52eb757c6a6d",
+                            "name": "[400] Invalid User ID format",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/user/A"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:03:18 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "243"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"type\": \"https://tools.ietf.org/html/rfc7231#section-6.5.1\",\n    \"title\": \"One or more validation errors occurred.\",\n    \"status\": 400,\n    \"traceId\": \"00-8fd777c2ea7c85e1f6a316f9668b4e6c-162ebd183d86c0c9-00\",\n    \"errors\": {\n        \"userId\": [\n            \"The value 'A' is not valid.\"\n        ]\n    }\n}"
+                        }, {
+                            "id": "d0373eae-e5c9-4738-859e-7c21fd7799de",
+                            "name": "[400] Invalid User ID value",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/user/0"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:04:11 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Invalid User Id, the ID should be between 1 and 2147483647\""
+                        }, {
+                            "id": "4e7d70b0-b4a0-4428-be67-69c467c85dda",
+                            "name": "[400] User does not exist",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/user/7"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:54:53 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "16"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"User not found\""
+                        }, {
+                            "id": "726ba7ef-14ab-4ce2-b6ac-d81ca983a577",
+                            "name": "[400] Invalid \"skipPages\"",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/user/1?skipPages=-1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "user", "1"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "-1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:04:35 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "30"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"The value cannot be negative\""
+                        }
+                    ]
+                }, {
+                    "name": "Get Following Timeline",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "aac3112d-4244-4516-9e13-af7d2b11c909",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://localhost:44338/api/timeline/following?skipPages=0",
+                            "protocol": "https",
+                            "host": ["localhost"],
+                            "port": "44338",
+                            "path": ["api", "timeline", "following"],
+                            "query": [{
+                                    "key": "skipPages",
+                                    "value": "0"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [{
+                            "id": "7cb8a59e-362f-4aae-be54-07e34cb0f459",
+                            "name": "[200] Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "2",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/following"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:49:02 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "1842"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 28,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 8:26:30 PM\",\n        \"content\": \"TheFinalTest\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Off the record\",\n            \"postId\": 20,\n            \"username\": \"sandraregina\",\n            \"createdAt\": \"4/19/2022 8:07:22 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 27,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 8:08:29 PM\",\n        \"content\": \"New Tst for search\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 19,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:21 PM\",\n        \"content\": \"Canterbury pace\",\n        \"repost\": {\n            \"postId\": 26,\n            \"username\": \"fabioemidio\",\n            \"createdAt\": \"4/19/2022 8:08:28 PM\"\n        },\n        \"isRepost\": true,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 24,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:26 PM\",\n        \"content\": \"Fixer-upper\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 23,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:25 PM\",\n        \"content\": \"But, for my own part, it was Greek to me\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 22,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:24 PM\",\n        \"content\": \"Read 'Em and Weep\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 21,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:23 PM\",\n        \"content\": \"I'm stumped\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 20,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:22 PM\",\n        \"content\": \"Off the record\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 19,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:21 PM\",\n        \"content\": \"Canterbury pace\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 18,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:20 PM\",\n        \"content\": \"A bunch of fives\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "3fa95601-2341-40e7-803a-491bb5f5b8ef",
+                            "name": "[200] Last page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "2",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/following?skipPages=1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "following"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:49:14 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "1072"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 14,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 7:59:16 PM\",\n        \"content\": \"Test 2\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 13,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 7:59:15 PM\",\n        \"content\": \"Hello, this is \",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 10,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/18/2022 9:38:12 PM\",\n        \"content\": \"Eating Pizza\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 8,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/18/2022 8:54:08 PM\",\n        \"content\": \"Homemade food is always better!!\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"I have an idea. My mom @sandra taught me how to make tacos last month, I think I`ll try to make it using some leftovers from yesterday as a filling\",\n            \"postId\": 7,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/18/2022 8:54:07 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 2,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/18/2022 8:52:02 PM\",\n        \"content\": \"Everyone is joining Posterr\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "e8d8b85f-c63c-4469-8208-048e8e553080",
+                            "name": "[200] Empty page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "2",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/following?skipPages=2",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "following"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "2"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:49:27 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "b0b9c3a4-a650-4220-9f33-ae343abb7cf4",
+                            "name": "[200] Empty follow list",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "2",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/following"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:50:29 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "0ed6c828-eeed-4ba0-8242-c11b0bd66ee6",
+                            "name": "[200] Following user with no posts",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "5",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline/following"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:52:50 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "13915050-7577-4ac3-92dd-bd64ba1a9783",
+                            "name": "[400] Invalid \"skipPages\"",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "5",
+                                        "type": "text"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/posts/following?skipPages=-1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "posts", "following"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "-1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:11:05 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "30"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"The value cannot be negative\""
+                        }
+                    ]
+                }, {
+                    "name": "Get Timeline",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "db30e2b6-393c-4958-b0d0-bc6d88a39ade",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://localhost:44338/api/timeline?skipPages=0",
+                            "protocol": "https",
+                            "host": ["localhost"],
+                            "port": "44338",
+                            "path": ["api", "timeline"],
+                            "query": [{
+                                    "key": "skipPages",
+                                    "value": "0"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [{
+                            "id": "9f23285b-3512-45a7-98d3-11d96ee12636",
+                            "name": "[200] Get Timeline - Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/timeline"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:45:06 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 25,\n        \"username\": \"aline\",\n        \"createdAt\": \"4/19/2022 8:08:27 PM\",\n        \"content\": \"Laid out in lavender\",\n        \"repost\": {\n            \"postId\": 29,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/23/2022 6:41:35 PM\"\n        },\n        \"isRepost\": true,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 28,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 8:26:30 PM\",\n        \"content\": \"TheFinalTest\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Off the record\",\n            \"postId\": 20,\n            \"username\": \"sandraregina\",\n            \"createdAt\": \"4/19/2022 8:07:22 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 27,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/19/2022 8:08:29 PM\",\n        \"content\": \"New Tst for search\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 19,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:21 PM\",\n        \"content\": \"Canterbury pace\",\n        \"repost\": {\n            \"postId\": 26,\n            \"username\": \"fabioemidio\",\n            \"createdAt\": \"4/19/2022 8:08:28 PM\"\n        },\n        \"isRepost\": true,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 25,\n        \"username\": \"aline\",\n        \"createdAt\": \"4/19/2022 8:08:27 PM\",\n        \"content\": \"Laid out in lavender\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 24,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:26 PM\",\n        \"content\": \"Fixer-upper\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 23,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:25 PM\",\n        \"content\": \"But, for my own part, it was Greek to me\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 22,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:24 PM\",\n        \"content\": \"Read 'Em and Weep\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 21,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:23 PM\",\n        \"content\": \"I'm stumped\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 20,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/19/2022 8:07:22 PM\",\n        \"content\": \"Off the record\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "f187936e-ea35-4b95-9ccb-0ab23be1061e",
+                            "name": "[200] Get Timeline - Last page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline?skipPages=2",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "2"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:45:33 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "2149"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 9,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 9:35:10 PM\",\n        \"content\": \"NULL\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Homemade food is always better!!\",\n            \"postId\": 8,\n            \"username\": \"sandraregina\",\n            \"createdAt\": \"4/18/2022 8:54:08 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 8,\n        \"username\": \"sandraregina\",\n        \"createdAt\": \"4/18/2022 8:54:08 PM\",\n        \"content\": \"Homemade food is always better!!\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"I have an idea. My mom @sandra taught me how to make tacos last month, I think I`ll try to make it using some leftovers from yesterday as a filling\",\n            \"postId\": 7,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/18/2022 8:54:07 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 7,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:54:07 PM\",\n        \"content\": \"I have an idea. My mom @sandra taught me how to make tacos last month, I think I`ll try to make it using some leftovers from yesterday as a filling\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 6,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:54:06 PM\",\n        \"content\": \"Pizza place is closed :(\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 5,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:53:05 PM\",\n        \"content\": \"I think I`m gonna order pizza\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 4,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:04 PM\",\n        \"content\": \"I`m soooooooooo hungry\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 3,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:03 PM\",\n        \"content\": \"Yeah, super cool\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": {\n            \"content\": \"Everyone is joining Posterr\",\n            \"postId\": 2,\n            \"username\": \"fabioemidio\",\n            \"createdAt\": \"4/18/2022 8:52:02 PM\"\n        },\n        \"isRequote\": true\n    },\n    {\n        \"postId\": 2,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/18/2022 8:52:02 PM\",\n        \"content\": \"Everyone is joining Posterr\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 1,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:52:01 PM\",\n        \"content\": \"Hello Posterr, I`m Isabella Emidio\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "d1852b79-1245-4839-b66a-c15282070b6b",
+                            "name": "[200] Get Timeline - Empty page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline?skipPages=3",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "3"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:47:31 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "2"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "7eaff914-2d48-4c22-9381-688c42723702",
+                            "name": "[400] Invalid \"skipPages\"",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline?skipPages=-1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline"],
+                                    "query": [{
+                                            "key": "skipPages",
+                                            "value": "-1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:10:45 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "30"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"The value cannot be negative\""
+                        }
+                    ]
+                }, {
+                    "name": "Search Posts",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "3a833f63-72f2-40c2-9601-0e56ee11bb8c",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": {
+                            "raw": "https://localhost:44338/api/timeline/search?text=Pizza&skipPages=0",
+                            "protocol": "https",
+                            "host": ["localhost"],
+                            "port": "44338",
+                            "path": ["api", "timeline", "search"],
+                            "query": [{
+                                    "key": "text",
+                                    "value": "Pizza"
+                                }, {
+                                    "key": "skipPages",
+                                    "value": "0"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [{
+                            "id": "1b92c90a-58b1-4890-8ce1-ccdb7602acf6",
+                            "name": "[200] Search Posts - Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=Pizza",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": "Pizza"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:42:26 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "339"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[\n    {\n        \"postId\": 10,\n        \"username\": \"fabioemidio\",\n        \"createdAt\": \"4/18/2022 9:38:12 PM\",\n        \"content\": \"Eating Pizza\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    },\n    {\n        \"postId\": 6,\n        \"username\": \"isabellaemidio\",\n        \"createdAt\": \"4/18/2022 8:54:06 PM\",\n        \"content\": \"Pizza place is closed :(\",\n        \"repost\": null,\n        \"isRepost\": false,\n        \"quoted\": null,\n        \"isRequote\": false\n    }\n]"
+                        }, {
+                            "id": "45655c5d-ac68-4db0-aa10-c5737a55932a",
+                            "name": "[200] Search Posts - Empty Page",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=Pizza&skipPages=1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": "Pizza"
+                                        }, {
+                                            "key": "skipPages",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:44:14 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "2"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "df5f789e-8e0d-4c5c-b509-ee7c2f3d9be0",
+                            "name": "[200] Search Posts - No matches to searched text",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=Hamburguer",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": "Hamburguer"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 21:43:51 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "[]"
+                        }, {
+                            "id": "97141f14-7b8a-4117-bee9-1bc6474fc132",
+                            "name": "[400] Empty search",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": ""
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:08:55 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Text cannot be null\""
+                        }, {
+                            "id": "900040b8-eee0-49f1-b29e-7d199b1d8fe2",
+                            "name": "[400] Search text longer than post limit",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis sed enim a condimentum.",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla non convallis lacus. Vestibulum eu sapien maximus, dictum orci eget, tincidunt libero. Nam euismod sem neque, eu congue mi volutpat ut. Pellentesque accumsan metus vel sem congue pretium. Fusce eget facilisis magna, eget sollicitudin magna. Etiam lobortis tellus hendrerit pellentesque fringilla. Nullam tristique auctor mauris, sit amet aliquam odio congue vel. Donec volutpat tortor vitae justo luctus tempor. Phasellus laoreet ex eu ipsum suscipit vestibulum. Nullam placerat scelerisque convallis. Aenean nunc sapien, consectetur eget hendrerit pulvinar, sodales convallis dui. Ut diam turpis, molestie ut ligula sed, scelerisque rutrum massa. Aenean non tristique eros. Ut a vulputate nisi. Maecenas venenatis sed enim a condimentum."
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:10:22 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "47"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Text should have between 1 and 777 characters\""
+                        }, {
+                            "id": "876c1b0f-a125-4920-9fac-7bd90238fd2a",
+                            "name": "[400] Invalid \"skipPages\"",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "https://localhost:44338/api/timeline/search?text=Pizza&skipPages=-1",
+                                    "protocol": "https",
+                                    "host": ["localhost"],
+                                    "port": "44338",
+                                    "path": ["api", "timeline", "search"],
+                                    "query": [{
+                                            "key": "text",
+                                            "value": "Pizza"
+                                        }, {
+                                            "key": "skipPages",
+                                            "value": "-1"
+                                        }
+                                    ]
+                                }
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:10:01 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"The value cannot be negative\""
+                        }
+                    ]
+                }
+            ],
+            "id": "3321633c-af03-4ea7-b629-7dd3d87cec00"
+        }, {
+            "name": "Users",
+            "item": [{
+                    "name": "Follow",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "5e8ade12-d8b0-4b3d-a1e9-b74657c43ab1",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": "https://localhost:44338/api/users/follow/5"
+                    },
+                    "response": [{
+                            "id": "6bdb3dfb-6d11-4846-a217-c8f75444182b",
+                            "name": "[200] Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/follow/5"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "plain",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:29:10 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": null
+                        }, {
+                            "id": "2f521270-ce11-4368-8b96-8e24380d8c33",
+                            "name": "[400] Invalid User ID",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/follow/-1"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:27:20 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Invalid User Id, the ID should be between 1 and 2147483647\""
+                        }, {
+                            "id": "bb419149-416c-4988-9f7c-5f316eca619d",
+                            "name": "[400] User not found",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/follow/100"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:28:13 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"User not found\""
+                        }, {
+                            "id": "ada5d20e-453b-4a7a-8f5f-688ae42e018c",
+                            "name": "[400] Already follow user",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/follow/2"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:28:33 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "33"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"User is already followed by you\""
+                        }, {
+                            "id": "f556b7ff-8960-421d-b1bc-dd70a41a669f",
+                            "name": "[400] Following Yourself",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/follow/1"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:31:06 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"You can't follow yourself\""
+                        }
+                    ]
+                }, {
+                    "name": "Unfollow",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "a87c54e8-3990-4869-987e-e0a8185be31b",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": "https://localhost:44338/api/users/unfollow/2"
+                    },
+                    "response": [{
+                            "id": "bd2f5982-5c38-43e4-9ed6-9b6d5256f1a2",
+                            "name": "[200] Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/unfollow/5"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "plain",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:29:28 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": null
+                        }, {
+                            "id": "717125c6-0176-43f4-a36f-f70924ed2789",
+                            "name": "[400] Invalid User ID",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/unfollow/-1"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:28:02 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "60"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Invalid User Id, the ID should be between 1 and 2147483647\""
+                        }, {
+                            "id": "f602781e-cddc-4440-96a4-a4ab301dc87e",
+                            "name": "[400] User not found",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/unfollow/100"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:27:35 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"User not found\""
+                        }, {
+                            "id": "656c9144-3e29-4d68-ad24-3e2cc0ebfa92",
+                            "name": "[400] User already unfollowed",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/unfollow/4"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:28:54 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "28"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"You don't follow this user\""
+                        }
+                    ]
+                }, {
+                    "name": "Get User Profile",
+                    "event": [{
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": ["pm.environment.set(\"user_id\", request.headers[\"userid\"]);\r", "pm.environment.set(\"authenticated_user_id\", pm.environment.get(\"user_id\") ?? \"1\");\r", "console.log(pm.environment.get(\"authenticated_user_id\"));"]
+                            }
+                        }
+                    ],
+                    "id": "e18a70b5-86f4-4535-bcdf-946dfd47b461",
+                    "request": {
+                        "method": "GET",
+                        "header": [{
+                                "key": "AuthenticatedUserId",
+                                "value": "{{authenticated_user_id}}",
+                                "type": "text"
+                            }, {
+                                "key": "UserId",
+                                "value": "",
+                                "type": "text",
+                                "disabled": true
+                            }
+                        ],
+                        "url": "https://localhost:44338/api/users/1"
+                    },
+                    "response": [{
+                            "id": "613d24d8-5b51-45ed-87db-ce6fa24f4f70",
+                            "name": "[200] With posts",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/1"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:33:18 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"userId\": 1,\n    \"createdAt\": \"April 18, 2022\",\n    \"username\": \"isabellaemidio\",\n    \"posts\": 11,\n    \"followers\": 1,\n    \"following\": 2,\n    \"followed\": false,\n    \"topPosts\": [\n        {\n            \"postId\": 30,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/23/2022 7:26:51 PM\",\n            \"content\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit.\",\n            \"repost\": null,\n            \"isRepost\": false,\n            \"quoted\": {\n                \"content\": \"Hello Posterr, I`m Isabella Emidio\",\n                \"postId\": 1,\n                \"username\": \"isabellaemidio\",\n                \"createdAt\": \"4/18/2022 12:01:00 AM\"\n            },\n            \"isRequote\": true\n        },\n        {\n            \"postId\": 1,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/18/2022 12:01:00 AM\",\n            \"content\": \"Hello Posterr, I`m Isabella Emidio\",\n            \"repost\": {\n                \"postId\": 29,\n                \"username\": \"isabellaemidio\",\n                \"createdAt\": \"4/23/2022 7:24:22 PM\"\n            },\n            \"isRepost\": true,\n            \"quoted\": null,\n            \"isRequote\": false\n        },\n        {\n            \"postId\": 20,\n            \"username\": \"sandraregina\",\n            \"createdAt\": \"4/19/2022 12:20:00 AM\",\n            \"content\": \"I'm stumped\",\n            \"repost\": {\n                \"postId\": 27,\n                \"username\": \"isabellaemidio\",\n                \"createdAt\": \"4/19/2022 12:27:00 AM\"\n            },\n            \"isRepost\": true,\n            \"quoted\": null,\n            \"isRequote\": false\n        },\n        {\n            \"postId\": 11,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/18/2022 12:11:00 AM\",\n            \"content\": \"I wish it was me :(\",\n            \"repost\": null,\n            \"isRepost\": false,\n            \"quoted\": {\n                \"content\": \"Eating Pizza\",\n                \"postId\": 10,\n                \"username\": \"fabioemidio\",\n                \"createdAt\": \"4/18/2022 12:10:00 AM\"\n            },\n            \"isRequote\": true\n        },\n        {\n            \"postId\": 9,\n            \"username\": \"isabellaemidio\",\n            \"createdAt\": \"4/18/2022 12:09:00 AM\",\n            \"content\": \"NULL\",\n            \"repost\": null,\n            \"isRepost\": false,\n            \"quoted\": {\n                \"content\": \"Homemade food is always better!!\",\n                \"postId\": 8,\n                \"username\": \"sandraregina\",\n                \"createdAt\": \"4/18/2022 12:08:00 AM\"\n            },\n            \"isRequote\": true\n        }\n    ]\n}"
+                        }, {
+                            "id": "e7dc3e22-f19e-4d60-adf0-3e29c98e126d",
+                            "name": "[200] No posts",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/4"
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:33:05 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "135"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "{\n    \"userId\": 4,\n    \"createdAt\": \"April 19, 2022\",\n    \"username\": \"davidwhiter\",\n    \"posts\": 0,\n    \"followers\": 1,\n    \"following\": 0,\n    \"followed\": false,\n    \"topPosts\": []\n}"
+                        }, {
+                            "id": "6ff82139-f763-4de5-a62e-7029eba9b474",
+                            "name": "[400] Invalid User ID",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/-1"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:32:28 GMT"
+                                }, {
+                                    "key": "Content-Length",
+                                    "value": "60"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"Invalid User Id, the ID should be between 1 and 2147483647\""
+                        }, {
+                            "id": "cfea88c6-9c39-40d2-9746-0636068b17ae",
+                            "name": "[400] User not found",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [{
+                                        "key": "AuthenticatedUserId",
+                                        "value": "{{authenticated_user_id}}",
+                                        "type": "text"
+                                    }, {
+                                        "key": "UserId",
+                                        "value": "",
+                                        "type": "text",
+                                        "disabled": true
+                                    }
+                                ],
+                                "url": "https://localhost:44338/api/users/100"
+                            },
+                            "status": "Bad Request",
+                            "code": 400,
+                            "_postman_previewlanguage": "json",
+                            "header": [{
+                                    "key": "Transfer-Encoding",
+                                    "value": "chunked"
+                                }, {
+                                    "key": "Content-Type",
+                                    "value": "application/json; charset=utf-8"
+                                }, {
+                                    "key": "Server",
+                                    "value": "Microsoft-IIS/10.0"
+                                }, {
+                                    "key": "X-Powered-By",
+                                    "value": "ASP.NET"
+                                }, {
+                                    "key": "Date",
+                                    "value": "Sat, 23 Apr 2022 22:32:40 GMT"
+                                }
+                            ],
+                            "cookie": [],
+                            "body": "\"User not found\""
+                        }
+                    ]
+                }
+            ],
+            "id": "48101288-ba45-4cea-9907-8cb5f047d797"
+        }
+    ]
+}

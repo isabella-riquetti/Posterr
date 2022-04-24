@@ -30,7 +30,7 @@ The expected database name: **Posterr**
   * If you want mock to be authenticated with one user that is not the first user, add a header with the name `AuthenticatedUserId` and the User Id you want to be authenticated in the value
 * Test endpoints
   * Use Swagger on the API first page [https://localhost:44338/swagger/]
-  * Or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783].
+  * Or import the following Postman collection to test the endpoints [https://www.getpostman.com/collections/f5a6a37d55f23292d783]. Also available as `postman_collection_posterr.json` in the solution folder.
 
 **I strongly recommend using Postman since a few test responses examples are there.**
 
