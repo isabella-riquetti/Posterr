@@ -40,8 +40,8 @@ namespace Posterr.Services
         public BaseResponse<PostResponseModel> CreatePost(CreatePostRequestModel request, int authenticatedUserId)
         {
             var userLastPosts = _postRepository.GetPostsByUserId(authenticatedUserId)
-                .Select(p => p.CreatedAt);
-            if (userLastPosts.Count() == 5 && userLastPosts.LastOrDefault() > DateTime.Now.AddDays(-1))
+                .Select(p => p.CreatedAt.Date);
+            if (userLastPosts.Count() == 5 && userLastPosts.LastOrDefault() >= DateTime.Now.Date)
             {
                 return BaseResponse<PostResponseModel>.CreateError("You can't post more than 5 times per day");
             }

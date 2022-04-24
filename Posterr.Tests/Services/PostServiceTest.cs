@@ -823,11 +823,11 @@ namespace Posterr.Tests.Services
                 }.AsQueryable(),
                 GetPostsByUserIdResponse = new List<Post>()
                 {
-                    new Post() { CreatedAt = DateTime.Now.AddHours(-1) },
-                    new Post() { CreatedAt = DateTime.Now.AddHours(-5) },
-                    new Post() { CreatedAt = DateTime.Now.AddHours(-10) },
-                    new Post() { CreatedAt = DateTime.Now.AddHours(-12) },
-                    new Post() { CreatedAt = DateTime.Now.AddHours(-23) }
+                    new Post() { CreatedAt = DateTime.Now },
+                    new Post() { CreatedAt = DateTime.Now },
+                    new Post() { CreatedAt = DateTime.Now },
+                    new Post() { CreatedAt = DateTime.Now },
+                    new Post() { CreatedAt = DateTime.Now }
                 }.AsQueryable()
             },
             new CreatePostTestInput()
