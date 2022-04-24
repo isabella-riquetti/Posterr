@@ -68,6 +68,7 @@ The expected database name: **Posterr**
 **API**
 * Need to create a new endpoint to grab the replies. This endpoint can be similar to the timelines but would need to return the main post and a list of replies.
 * The filter for the replies would be Posts with `IsReply = true` and `OriginalPostId = {The main post ID}`
+* No need to change anything in the search feature since this will be a normal register in the `Posts` table
 * The reply should be handled in a separate service and controller since they are going to be loaded on a different page
 * The return format would be somewhat like this:
 ```
