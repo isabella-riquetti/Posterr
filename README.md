@@ -25,6 +25,7 @@ The expected database name: **Posterr**
 * Uncomment lines 38 and 39 in `Posterr.API/Startup.cs`
 
  ### Testing the API
+* Rebuild the entire solution to download Nuget Packages
 * Run `Posterr.API` project
 * No authentication is required
   * If you want mock to be authenticated with one user that is not the first user, add a header with the name `AuthenticatedUserId` and the User Id you want to be authenticated in the value
